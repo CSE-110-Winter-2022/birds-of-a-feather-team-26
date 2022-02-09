@@ -6,4 +6,28 @@
     android:layout_height="match_parent"
     tools:context=".BluetoothActivity">
 
+    <TextView
+        android:id="@+id/bluetooth_activity_declare"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="150dp"
+        android:layout_marginTop="67dp"
+        android:layout_marginEnd="151dp"
+        android:text="@string/bluetooth_activity_declare"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/start_name_activity_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="103dp"
+        android:layout_marginEnd="103dp"
+        android:layout_marginBottom="52dp"
+        android:text="@string/start_name_activity"
+        android:onClick="onStartNameActivityClicked"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
