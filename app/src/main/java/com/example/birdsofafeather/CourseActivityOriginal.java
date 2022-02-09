@@ -9,9 +9,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.iteration1.model.IPerson;
-import com.example.iteration1.model.db.AppDatabase;
-import com.example.iteration1.model.db.Course;
+import com.example.birdsofafeather.model.db.AppDatabase;
+import com.example.birdsofafeather.model.IPerson;
+import com.example.birdsofafeather.model.db.AppDatabase;
+import com.example.birdsofafeather.model.db.Course;
 
 import java.util.List;
 

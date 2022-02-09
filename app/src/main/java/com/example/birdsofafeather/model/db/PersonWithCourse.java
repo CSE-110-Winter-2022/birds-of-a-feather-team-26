@@ -1,8 +1,9 @@
-package com.example.birdsofafeather.db;
+package com.example.birdsofafeather.model.db;
 
 import androidx.room.Embedded;
 import androidx.room.Relation;
 
+import com.example.birdsofafeather.model.IPerson;
 import com.example.iteration1.model.IPerson;
 
 public class PersonWithCourse implements IPerson {

@@ -1,4 +1,4 @@
-package com.example.birdsofafeather.db;
+package com.example.birdsofafeather.model;
 
 public interface IPerson {
 

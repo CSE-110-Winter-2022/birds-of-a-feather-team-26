@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.iteration1.model.db.Course;
+import com.example.birdsofafeather.model.db.Course;
 
 import java.util.List;
 import java.util.function.Consumer;

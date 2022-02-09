@@ -1,4 +1,4 @@
-package com.example.birdsofafeather.db;
+package com.example.birdsofafeather.model;
 public class PersonInfo {
     private final String name;
     private final String photo;

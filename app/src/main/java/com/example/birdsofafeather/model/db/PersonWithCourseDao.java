@@ -1,4 +1,4 @@
-package com.example.birdsofafeather.db;
+package com.example.birdsofafeather.model.db;
 
 import androidx.room.Dao;
 import androidx.room.Query;
