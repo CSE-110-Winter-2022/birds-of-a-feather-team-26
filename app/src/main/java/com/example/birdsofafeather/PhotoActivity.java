@@ -16,10 +16,10 @@ public class PhotoActivity extends AppCompatActivity {
     }
 
     public void onClickToCourse(View view) {
-        Intent intent=new Intent(this, CourseActivity.class);
-        TextView text=findViewById(R.id.editTextPhoto);
-        String photo=text.getText().toString();
-        intent.putExtra("photo_url",photo);
+        Intent intent = new Intent(this, CourseActivity.class);
+        TextView urlView = findViewById(R.id.editTextPhoto);
+        String url = urlView.getText().toString();
+        intent.putExtra("photo_url",url);
         startActivity(intent);
     }
 }

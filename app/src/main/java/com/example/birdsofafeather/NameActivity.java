@@ -16,10 +16,10 @@ public class NameActivity extends AppCompatActivity {
     }
 
     public void onClickToPhoto(View view) {
-        Intent intent=new Intent(this,PhotoActivity.class);
-        TextView text=findViewById(R.id.name_enter);
-        String tt=text.getText().toString();
-        intent.putExtra("person_name",tt);
+        Intent intent = new Intent(this,PhotoActivity.class);
+        TextView nameView = findViewById(R.id.name_enter);
+        String name = nameView.getText().toString();
+        intent.putExtra("person_name", name);
         startActivity(intent);
     }
 
