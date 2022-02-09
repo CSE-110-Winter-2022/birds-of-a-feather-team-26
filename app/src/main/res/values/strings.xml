@@ -16,12 +16,13 @@
 
     <!--Picture Activity Strings-->
 
-    <!--Add Course Activity Strings-->
+    <!--Course Activity Strings-->
 
-    <!--Edit Course Activity Strings-->
 
     <!--Home Activity Workflow-->
     <!--Home Activity Strings-->
+    <string name="start_search_btn_text_off">START SEARCH</string>
+    <string name="start_search_btn_text_on">STOP SEARCH</string>
 
     <!--Profile Activity Strings-->
 

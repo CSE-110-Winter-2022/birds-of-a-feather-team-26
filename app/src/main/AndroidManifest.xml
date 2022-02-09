@@ -10,16 +10,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BirdsOfAFeather">
         <activity
+            android:name=".CourseActivity"
+            android:exported="false" />
+        <activity
             android:name=".ProfileActivity"
             android:exported="false" />
         <activity
             android:name=".HomeActivity"
-            android:exported="false" />
-        <activity
-            android:name=".EditCourseActivity"
-            android:exported="false" />
-        <activity
-            android:name=".AddCourseActivity"
             android:exported="false" />
         <activity
             android:name=".PictureActivity"

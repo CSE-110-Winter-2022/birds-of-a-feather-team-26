@@ -6,26 +6,26 @@ import android.os.Bundle;
 
 /**
  * DESCRIPTION
- * The Name Activity module takes in the user's name for future storage in app Database
+ * The Course Activity module allows the user to input, edit, and view prior class information in his/her user profile
  *
  * WORKFLOW
- * The Name Activity workflow is as follows:
+ * The Course Activity workflow is as follows:
  *
- * (Ivy and Huaner please fill this out)
+ * (Ivy, Huaner, and Zehua please fill this out)
  * (Refer to Main Activity for a template on commenting)
  * (its like pseudocode)
  *
  **/
 
-public class NameActivity extends AppCompatActivity {
+public class CourseActivity extends AppCompatActivity {
 
     /**
-     * This method creates the Name Activity
+     * This method creates the Course Activity
      * @param savedInstanceState
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_name);
+        setContentView(R.layout.activity_course);
     }
 }
