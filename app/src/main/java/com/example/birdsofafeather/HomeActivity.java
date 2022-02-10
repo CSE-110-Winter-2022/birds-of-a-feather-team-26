@@ -2,7 +2,9 @@ package com.example.birdsofafeather;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -72,4 +74,12 @@ public class HomeActivity extends AppCompatActivity {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * temporary button to switch to Profile Activity
+     * @param view
+     */
+    public void onProfileActivityClicked(View view) {
+        Intent intentProfileActivityWorkflow = new Intent(this, ProfileActivity.class);
+        startActivity(intentProfileActivityWorkflow);
+    }
 }

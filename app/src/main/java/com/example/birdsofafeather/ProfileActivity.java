@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.birdsofafeather.Model.Course;
 import com.example.birdsofafeather.Model.Student;
 
 import java.util.ArrayList;
@@ -39,24 +40,43 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         RecyclerView recyclerView = findViewById(R.id.profile_student_list);
+
+        // Testing Student objects
         ArrayList<Student> students = new ArrayList<>();
-        students.add(new Student("first"));
+
+        Student student1 = new Student("first", "student1.png", new ArrayList<Course>({
+                new Course("2022", "Winter", "CSE", "110")
+        }));
+
         students.add(new Student("second"));
         students.add(new Student("third"));
         students.add(new Student("fourth"));
+
         StudentItemAdapter studentItemAdapter = new StudentItemAdapter(students);
         recyclerView.setAdapter(studentItemAdapter);
         LinearLayoutManager lManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(lManager);
     }
 
+
     class StudentItemAdapter extends RecyclerView.Adapter<StudentItemAdapter.ItemViewHolder> {
         private ArrayList<Student> mList;
         private RecyclerView.ViewHolder holder;
 
+        /**
+         * StudentItemAdapter constructor
+         * @param list
+         */
         public StudentItemAdapter(ArrayList<Student> list) {
             mList = list;
         }
+
+        /**
+         *
+         * @param parent
+         * @param viewType
+         * @return
+         */
         public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             LayoutInflater inflater = LayoutInflater.from(parent.getContext());
             View view = inflater.inflate(R.layout.student_item,parent,false);

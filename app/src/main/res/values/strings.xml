@@ -24,6 +24,8 @@
     <string name="start_search_btn_text_off">START SEARCH</string>
     <string name="start_search_btn_text_on">STOP SEARCH</string>
 
+    <string name="go_to_profile_activity_btn">GO TO PROFILE ACTIVITY</string>
+
     <!--Profile Activity Strings-->
 
 </resources>
