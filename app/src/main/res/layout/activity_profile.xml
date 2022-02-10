@@ -6,4 +6,9 @@
     android:layout_height="match_parent"
     tools:context=".ProfileActivity">
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/profile_student_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:listitem="@layout/student_item"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
