@@ -9,8 +9,8 @@
 
     <!--User Information Workflow-->
     <!--Bluetooth Activity Strings-->
-    <string name="bluetooth_activity_declare">Bluetooth Activity</string>
-    <string name="start_name_activity">START NAME ACTIVITY</string>
+    <string name="bluetooth_activity_declare">Do you give permission to access the Bluetooth?</string>
+    <string name="start_name_activity">Yes</string>
 
     <!--Name Activity Strings-->
 
