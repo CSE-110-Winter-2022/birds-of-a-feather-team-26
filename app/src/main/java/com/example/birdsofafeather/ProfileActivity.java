@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.birdsofafeather.Model.Course;
@@ -31,6 +32,9 @@ import java.util.ArrayList;
 
 public class ProfileActivity extends AppCompatActivity {
 
+    TextView studentName;
+    ImageView avatar;
+    RecyclerView courseList;
     /**
      * This method creates the Profile Activity
      * @param savedInstanceState
@@ -39,35 +43,44 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-        RecyclerView recyclerView = findViewById(R.id.profile_student_list);
+        studentName = findViewById(R.id.profile_name);
+        avatar = findViewById(R.id.avatar);
+        courseList = findViewById(R.id.profile_course_list);
 
         // Testing Student objects
-        ArrayList<Student> students = new ArrayList<>();
+        ArrayList<Course> cList = new ArrayList<>();
+        cList.add(new Course("2022", "Winter", "CSE", "110"));
+        cList.add(new Course("2022", "Winter", "CSE", "110"));
+        cList.add(new Course("2022", "Winter", "CSE", "110"));
 
-        Student student1 = new Student("first", "student1.png", new ArrayList<Course>({
-                new Course("2022", "Winter", "CSE", "110")
-        }));
 
-        students.add(new Student("second"));
-        students.add(new Student("third"));
-        students.add(new Student("fourth"));
-
-        StudentItemAdapter studentItemAdapter = new StudentItemAdapter(students);
-        recyclerView.setAdapter(studentItemAdapter);
+        CourseItemAdapter courseItemAdapter = new CourseItemAdapter(cList);
+        courseList.setAdapter(courseItemAdapter);
         LinearLayoutManager lManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(lManager);
+        courseList.setLayoutManager(lManager);
     }
 
+    public void setStudentName() {
+        //set student's name to textview
+    }
 
-    class StudentItemAdapter extends RecyclerView.Adapter<StudentItemAdapter.ItemViewHolder> {
-        private ArrayList<Student> mList;
+    public void setAvatar() {
+        //set student's avatar to imageview
+    }
+
+    public void getStudentCourse() {
+        //load student's course list from db and initialize recyclerview.
+    }
+
+    class CourseItemAdapter extends RecyclerView.Adapter<CourseItemAdapter.ItemViewHolder> {
+        private ArrayList<Course> mList;
         private RecyclerView.ViewHolder holder;
 
         /**
          * StudentItemAdapter constructor
          * @param list
          */
-        public StudentItemAdapter(ArrayList<Student> list) {
+        public CourseItemAdapter(ArrayList<Course> list) {
             mList = list;
         }
 
@@ -79,13 +92,13 @@ public class ProfileActivity extends AppCompatActivity {
          */
         public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-            View view = inflater.inflate(R.layout.student_item,parent,false);
+            View view = inflater.inflate(R.layout.course_item,parent,false);
             return new ItemViewHolder(view);
         }
 
         @Override
         public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
-            holder.firstName.setText(mList.get(position).getFirstName());
+            holder.course.setText(mList.get(position).getCourse());
             //holder.pid.setText(mList.get(position).getPid());
         }
 
@@ -95,11 +108,11 @@ public class ProfileActivity extends AppCompatActivity {
         }
 
         class ItemViewHolder extends RecyclerView.ViewHolder {
-            public TextView firstName;
+            public TextView course;
             //public TextView pid;
             public ItemViewHolder(@NonNull View itemView) {
                 super(itemView);
-                firstName = itemView.findViewById(R.id.student_name);
+                course = itemView.findViewById(R.id.course_name);
                 //findViewById()
             }
         }

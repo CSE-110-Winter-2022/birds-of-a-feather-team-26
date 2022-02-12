@@ -16,4 +16,7 @@ public class Course {
     /**
      * getter methods
      */
+    public String getCourse() {
+        return quarter + " " + year + " " + subject + " " + courseNumber;
+    }
 }

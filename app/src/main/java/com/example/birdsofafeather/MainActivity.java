@@ -72,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
      */
     public void onHomeActivityClicked(View view) {
         Intent intentHomeActivityWorkflow = new Intent(this, HomeActivity.class);
+        //Intent intentHomeActivityWorkflow = new Intent(this, ProfileActivity.class);
         startActivity(intentHomeActivityWorkflow);
     }
 }
