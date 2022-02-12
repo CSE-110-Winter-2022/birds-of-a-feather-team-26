@@ -13,6 +13,12 @@ public class Course {
     @ColumnInfo(name="person_id")
     public int personId;
 
+    @ColumnInfo(name="person_name")
+    public String personName;
+
+    @ColumnInfo(name="photo_url")
+    public String url;
+
     @ColumnInfo(name="year")
     public String year;
 
@@ -25,9 +31,11 @@ public class Course {
     @ColumnInfo(name="courseNum")
     public String courseNum;
 
-    public Course(int courseId, int personId, String year, String quarter, String courseName, String courseNum){
+    public Course(int courseId, int personId, String personName, String url, String year, String quarter, String courseName, String courseNum){
         this.courseId = courseId;
         this.personId = personId;
+        this.personName = personName;
+        this.url = url;
         this.year = year;
         this.quarter = quarter;
         this.courseName = courseName;

@@ -4,7 +4,7 @@ import androidx.room.Embedded;
 import androidx.room.Relation;
 
 import com.example.birdsofafeather.model.IPerson;
-import com.example.iteration1.model.IPerson;
+
 
 public class PersonWithCourse implements IPerson {
 
@@ -24,11 +24,14 @@ public class PersonWithCourse implements IPerson {
     public String courseNum;
 
     @Override
+    public String getUrl() { return this.person.url; }
+
+    @Override
     public int getId() { return this.person.personId; }
 
     @Override
     public String getName() {
-        return this.person.name;
+        return this.person.personName;
     }
 
     @Override

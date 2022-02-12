@@ -1,21 +1,28 @@
 package com.example.birdsofafeather.model.db;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "persons")
-public class Person {
+public class Person{
 
     @PrimaryKey
     @ColumnInfo(name="id")
     public int personId;
 
-    @ColumnInfo(name="name")
-    public String name;
+    @ColumnInfo(name="person_name")
+    public String personName;
 
-    public Person(int personId, String name){
+    @ColumnInfo(name="photo_url")
+    public String url;
+
+    public Person(int personId, String personName, String url){
         this.personId = personId;
-        this.name = name;
+        this.personName = personName;
+        this.url = url;
     }
 
 }

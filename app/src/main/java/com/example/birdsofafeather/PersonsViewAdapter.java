@@ -10,7 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.iteration1.model.IPerson;
+import com.example.birdsofafeather.model.IPerson;
 
 import java.util.List;
 
@@ -63,7 +63,9 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
         public void onClick(View view) {
             Context context = view.getContext();
             Intent intent = new Intent(context, CourseActivity.class);
+            intent.putExtra("person_name", this.person.getName());
             intent.putExtra("person_id", this.person.getId());
+            intent.putExtra("photo_url", this.person.getUrl());
 
             context.startActivity(intent);
         }

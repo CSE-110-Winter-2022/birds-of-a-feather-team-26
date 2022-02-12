@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.birdsofafeather">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,14 +11,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.BirdsOfAFeather">
+
         <activity
-            android:name=".InfoActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ListActivity"
-            android:exported="false" />
-        <activity
-            android:name=".EditCourseActivity"
+            android:name=".NamePhotoDisplayActivity"
             android:exported="false" />
         <activity
             android:name=".NameActivity"
@@ -26,9 +23,6 @@
             android:exported="false" />
         <activity
             android:name=".CourseActivity"
-            android:exported="false" />
-        <activity
-            android:name=".BluetoothActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

@@ -13,20 +13,20 @@ import java.util.List;
 public interface CourseDao {
     @Transaction
     @Query("SELECT * FROM course where person_id=:personId")
-    List<com.example.iteration1.model.db.Course> getForPerson(int personId);
+    List<Course> getForPerson(int personId);
 
     @Query("SELECT * FROM course WHERE id=:id")
-    com.example.iteration1.model.db.Course get(int id);
+    Course get(int id);
 
     @Query("SELECT COUNT(*) from course")
     int count();
 
     @Insert
-    void insert(com.example.iteration1.model.db.Course course);
+    void insert(Course course);
 
     @Delete
-    void delete(com.example.iteration1.model.db.Course course);
+    void delete(Course course);
 
     @Query("SELECT * FROM course")
-    LiveData<List<com.example.iteration1.model.db.Course>> getAllCourses();
+    LiveData<List<Course>> getAllCourses();
 }
