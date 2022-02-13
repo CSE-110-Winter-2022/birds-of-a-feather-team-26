@@ -19,4 +19,7 @@ public interface PersonDao {
 
     @Delete
     void deletePerson(Person person);
+
+    @Query("SELECT COUNT(*) FROM persons")
+    int count();
 }

@@ -49,8 +49,9 @@ public class CourseActivity extends AppCompatActivity {
 
     }
 
-    public void onGoBackClicked(View view){
-        finish();
+    public void onExitClicked(View view){
+        Intent intent = new Intent(this,MainActivity.class);
+        startActivity(intent);
     }
 
     public void onEnterCourseClicked(View view) {
@@ -75,8 +76,5 @@ public class CourseActivity extends AppCompatActivity {
         db.CourseDao().insert(newCourse);
 
         courseViewAdapter.addCourse(newCourse);
-    }
-
-    public void onEditClicked(View view) {
     }
 }

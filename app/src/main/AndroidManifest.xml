@@ -13,9 +13,6 @@
         android:theme="@style/Theme.BirdsOfAFeather">
 
         <activity
-            android:name=".NamePhotoDisplayActivity"
-            android:exported="false" />
-        <activity
             android:name=".NameActivity"
             android:exported="false" />
         <activity
