@@ -23,9 +23,12 @@ public class ExampleInstrumentedTest {
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
         assertEquals("com.example.birdsofafeather", appContext.getPackageName());
     }
+<<<<<<< HEAD
 
     @Test
     public void testing_Github_Actions() {
         assertEquals(1, 2);
     }
+=======
+>>>>>>> main
 }
