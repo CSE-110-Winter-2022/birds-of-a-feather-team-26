@@ -64,25 +64,24 @@ public class ProfileActivity extends AppCompatActivity {
         cList.add(new Course("2022", "Winter", "CSE", "110"));
         cList.add(new Course("2023", "Spring", "ECE", "120"));
         cList.add(new Course("2024", "Fall", "MATH", "130"));
-        //Student student = new Student("firstName","pictureURL",new ArrayList<>(cList));
+        Student student = new Student("firstName","pictureURL",new ArrayList<>(cList));
         // Testing Student objects
 
-
-        CourseItemAdapter courseItemAdapter = new CourseItemAdapter(cList);
+        CourseItemAdapter courseItemAdapter = new CourseItemAdapter((ArrayList<Course>) student.getCourses());
         courseList.setAdapter(courseItemAdapter);
         LinearLayoutManager lManager = new LinearLayoutManager(this);
         courseList.setLayoutManager(lManager);
     }
 
-    public void setStudentName() {
+    public void setStudentName(Student student) {
         //set student's name to textview
     }
 
-    public void setAvatar() {
+    public void setAvatar(Student student) {
         //set student's avatar to imageview
     }
 
-    public void getStudentCourse() {
+    public void getStudentCourse(Student student) {
         //load student's course list from db and initialize recyclerview.
     }
 
