@@ -16,6 +16,12 @@ import com.example.birdsofafeather.model.db.Course;
 
 import java.util.List;
 
+/**
+ * The course activity here asks the user to add his/her course he/she has taken. The format is like
+ * the year, quarter, the course name and the course number. Once the user clicked the enter, the
+ * name of the course will appear on the screen, like a list of courses. If you hit the exit button,
+ * then the user will be directed to the home page for the next potential moves.
+ */
 
 public class CourseActivity extends AppCompatActivity {
     private AppDatabase db;
