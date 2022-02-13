@@ -45,19 +45,22 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        // Set pointers to main attributes of Profile Activity page
         studentName = findViewById(R.id.profile_name);
         avatar = findViewById(R.id.avatar);
         courseList = findViewById(R.id.profile_course_list);
-        //Button back =findViewById(R.id.back);
 
-        /*back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(ProfileActivity.this, back.getClass());
-                startActivity(intent);
-            }
-        });*/
-
+        /**
+         * Student data to display
+         *
+         * A. My user's profile
+         *      - Information taken from BOF database
+         *
+         * B. Another user's profile
+         *      - Information retrieved from Bluetooth transmissions
+         *      - Information stored in SharedPreferences in Home Activity, must be extracted in Profile Activity
+         */
         //Student student = getIntent()....
         ArrayList<Course> cList = new ArrayList<>();
         cList.add(new Course("2022", "Winter", "CSE", "110"));
@@ -89,13 +92,12 @@ public class ProfileActivity extends AppCompatActivity {
      * @param view
      */
     public void onBackClicked(View view) {
-        // Intent intentProfileActivityWorkflow = new Intent(this, HomeActivity.class);
-        //Intent intentHomeActivityWorkflow = new Intent(this, ProfileActivity.class);
-        // startActivity(intentProfileActivityWorkflow);
-
         finish();   // Finish Profile Activity and return to home
     }
 
+    /**
+     * EXPLAIN COURSE ITEM ADAPTER CLASS BRIEFLY PLEASE
+     */
     class CourseItemAdapter extends RecyclerView.Adapter<CourseItemAdapter.ItemViewHolder> {
         private ArrayList<Course> mList;
         private RecyclerView.ViewHolder holder;
