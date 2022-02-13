@@ -9,7 +9,7 @@ import android.os.Bundle;
  * The Photo Activity module takes in the user's picture URL for future storage in app Database
  *
  * WORKFLOW
- * The Picture Activity workflow is as follows:
+ * The Photo Activity workflow is as follows:
  *
  * (Ivy and Huaner please fill this out)
  * (Refer to Main Activity for a template on commenting)
@@ -20,7 +20,7 @@ import android.os.Bundle;
 public class PhotoActivity extends AppCompatActivity {
 
     /**
-     * This method creates the Picture Activity
+     * This method creates the Photo Activity
      * @param savedInstanceState
      */
     @Override
