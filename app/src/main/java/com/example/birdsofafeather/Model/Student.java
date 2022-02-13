@@ -17,4 +17,11 @@ public class Student {
     public String getFirstName() {
         return firstName;
     }
+    public String getPictureURL() {
+        return pictureURL;
+    }
+
+    public List<Course> getCourses() {
+        return courses;
+    }
 }

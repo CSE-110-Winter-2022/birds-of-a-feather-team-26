@@ -8,7 +8,7 @@ public class Course {
 
     public Course(String year, String quarter, String subject, String courseNumber) {
         this.year = year;
-        this.quarter = subject;
+        this.quarter = quarter;
         this.subject = subject;
         this.courseNumber = courseNumber;
     }
