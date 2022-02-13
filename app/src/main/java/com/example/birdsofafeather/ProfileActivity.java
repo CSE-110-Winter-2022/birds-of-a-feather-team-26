@@ -13,8 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.birdsofafeather.Model.Course;
-import com.example.birdsofafeather.Model.Student;
+import com.example.birdsofafeather.model.Course;
+import com.example.birdsofafeather.model.Student;
 
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package com.example.birdsofafeather.Model;
+package com.example.birdsofafeather.model;
 
 public class Course {
     String year;
