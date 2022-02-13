@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BirdsOfAFeather">
         <activity
+            android:name=".PhotoActivity"
+            android:exported="false" />
+        <activity
             android:name=".CourseActivity"
             android:exported="false" />
         <activity
@@ -17,9 +20,6 @@
             android:exported="false" />
         <activity
             android:name=".HomeActivity"
-            android:exported="false" />
-        <activity
-            android:name=".PictureActivity"
             android:exported="false" />
         <activity
             android:name=".NameActivity"
