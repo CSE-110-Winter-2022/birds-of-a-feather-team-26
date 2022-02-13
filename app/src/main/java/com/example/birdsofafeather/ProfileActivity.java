@@ -1,19 +1,17 @@
 package com.example.birdsofafeather;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.example.birdsofafeather.Model.Course;
 import com.example.birdsofafeather.Model.Student;
@@ -38,6 +36,7 @@ public class ProfileActivity extends AppCompatActivity {
     TextView studentName;
     ImageView avatar;
     RecyclerView courseList;
+
     /**
      * This method creates the Profile Activity
      * @param savedInstanceState
@@ -85,10 +84,16 @@ public class ProfileActivity extends AppCompatActivity {
         //load student's course list from db and initialize recyclerview.
     }
 
-    public void onLaunchProfileClicked(View view) {
-        Intent intentProfileActivityWorkflow = new Intent(this, HomeActivity.class);
+    /**
+     * Finish Profile Activity and return to home when BACK button is clicked
+     * @param view
+     */
+    public void onBackClicked(View view) {
+        // Intent intentProfileActivityWorkflow = new Intent(this, HomeActivity.class);
         //Intent intentHomeActivityWorkflow = new Intent(this, ProfileActivity.class);
-        startActivity(intentProfileActivityWorkflow);
+        // startActivity(intentProfileActivityWorkflow);
+
+        finish();   // Finish Profile Activity and return to home
     }
 
     class CourseItemAdapter extends RecyclerView.Adapter<CourseItemAdapter.ItemViewHolder> {
