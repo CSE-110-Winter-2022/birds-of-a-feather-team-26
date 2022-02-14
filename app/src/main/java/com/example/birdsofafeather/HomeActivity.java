@@ -1,13 +1,26 @@
 package com.example.birdsofafeather;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+
+import com.example.birdsofafeather.model.Course;
+import com.example.birdsofafeather.model.Student;
+
+import java.util.ArrayList;
 
 /**
  * DESCRIPTION
@@ -38,11 +51,14 @@ import android.widget.ToggleButton;
  *      - Adapter
  *      - onClick
  *          - Intent.putExtra(Person.getName())
- *          - startActvity(ProfileActivity)
+ *          - startActivity(ProfileActivity)
  *
  **/
 
 public class HomeActivity extends AppCompatActivity {
+
+    Button myProfile;
+    RecyclerView studentList;
 
     /**
      * This method creates the Home Activity
@@ -89,9 +105,34 @@ public class HomeActivity extends AppCompatActivity {
 
 
         /**
-         * C. Display list of Students with Common Courses
+         * C. Display list of Students with Common Courses (zzh)
          */
-        
+
+        myProfile = findViewById(R.id.my_profile);
+        myProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), ProfileActivity.class);
+                intent.putExtra("Student name", "MY NAME");
+                startActivity(intent);
+            }
+        });
+        studentList = findViewById(R.id.student_list);
+
+        ArrayList<Student> sList = new ArrayList<>();
+        ArrayList<Course> cList = new ArrayList<>();
+        cList.add(new Course("2022", "Winter", "CSE", "110"));
+        cList.add(new Course("2023", "Spring", "ECE", "120"));
+        cList.add(new Course("2024", "Fall", "MATH", "130"));
+        Student student = new Student("firstName","pictureURL",new ArrayList<>(cList));
+        sList.add(student);
+        sList.add(new Student("firstName2", "pictureURL2", new ArrayList<>(cList)));
+        sList.add(new Student("firstName3", "pictureURL3", new ArrayList<>(cList)));
+
+        StudentItemAdapter studentItemAdapter = new StudentItemAdapter(sList);
+        studentList.setAdapter(studentItemAdapter);
+        LinearLayoutManager lManager = new LinearLayoutManager(this);
+        studentList.setLayoutManager(lManager);
     }
 
     /**
@@ -110,5 +151,61 @@ public class HomeActivity extends AppCompatActivity {
     public void onProfileActivityClicked(View view) {
         Intent intentProfileActivityWorkflow = new Intent(this, ProfileActivity.class);
         startActivity(intentProfileActivityWorkflow);
+    }
+    class StudentItemAdapter extends RecyclerView.Adapter<StudentItemAdapter.ItemViewHolder> {
+        private ArrayList<Student> mList;
+        private RecyclerView.ViewHolder holder;
+
+        /**
+         * StudentItemAdapter constructor
+         * @param list
+         */
+        public StudentItemAdapter(ArrayList<Student> list) {
+            mList = list;
+        }
+
+        /**
+         *
+         * @param parent
+         * @param viewType
+         * @return
+         */
+        public StudentItemAdapter.ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+            View view = inflater.inflate(R.layout.student_item,parent,false);
+            return new StudentItemAdapter.ItemViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull StudentItemAdapter.ItemViewHolder holder, int position) {
+            String studentName = mList.get(position).getFirstName();
+            holder.name.setText(studentName);
+            holder.findName.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(view.getContext(), ProfileActivity.class);
+                    intent.putExtra("Student name", studentName);
+                    startActivity(intent);
+                }
+            });
+            //holder.pid.setText(mList.get(position).getPid());
+        }
+
+        @Override
+        public int getItemCount() {
+            return mList.size();
+        }
+
+        class ItemViewHolder extends RecyclerView.ViewHolder {
+            public TextView name;
+            public LinearLayout findName;
+            //public TextView pid;
+            public ItemViewHolder(@NonNull View itemView) {
+                super(itemView);
+                name = itemView.findViewById(R.id.student_name);
+                findName = itemView.findViewById(R.id.find_student);
+                //findViewById()
+            }
+        }
     }
 }
