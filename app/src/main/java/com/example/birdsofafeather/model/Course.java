@@ -20,9 +20,9 @@ public class Course implements Serializable {
 //    /**
 //     * getter methods
 //     */
-//    public String getCourse() {
-//        return quarter + " " + year + " " + subject + " " + courseNumber;
-//    }
+    public String getCourse() {
+        return quarter + " " + year + " " + subject + " " + courseNumber;
+    }
 
     @Override
     public boolean equals(@Nullable Object obj) {
