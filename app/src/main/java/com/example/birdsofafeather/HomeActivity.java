@@ -2,10 +2,17 @@ package com.example.birdsofafeather;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+
+import com.example.birdsofafeather.model.db.Person;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * DESCRIPTION
@@ -15,9 +22,28 @@ import android.widget.ToggleButton;
  * WORKFLOW
  * Home Activity workflow is as follows:
  *
- * (Rick please fill this out)
- * (Refer to Main Activity for a template on commenting)
- * (its like pseudocode)
+ * A. Bluetooth Search Functionality
+ *      - Triggered by the START SEARCH Toggle Button
+ *      - Connect to all Bluetooth devices within range and try to fetch other BOF user's data
+ *      - Person objects
+ *
+ * B. Filter Students with Common Courses (main Home Activity algorithm)
+ *      - Person myPerson = new Person("Rick", "rick.png", ...);
+ *
+ *      personsInCommon = []
+ *      for person in Persons:
+ *          if (myPerson.course == person.course)
+ *              personsInCommon.append(person)
+ *
+ *      return personsInCommon
+ *
+ *      - return Person(s) (List<Person>) that have taken a course in common with myPerson (myUser)
+ *
+ * C. Display list of Students with Common Courses
+ *      - Adapter
+ *      - onClick
+ *          - Intent.putExtra(Person.getName())
+ *          - startActvity(ProfileActivity)
  *
  **/
 
@@ -33,7 +59,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         /**
-         * TOGGLE BUTTON WHICH TRIGGERS BLUETOOTH FUNCTIONALITY
+         * A. TOGGLE BUTTON WHICH TRIGGERS BLUETOOTH FUNCTIONALITY
          */
         ToggleButton startSearch = (ToggleButton) findViewById(R.id.start_search_btn);
         startSearch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -61,6 +87,43 @@ public class HomeActivity extends AppCompatActivity {
 
         });
 
+        /**
+         * B. Filter Students with Common Courses (main Home Activity algorithm)
+         *
+         */
+
+
+
+        /**
+         * C. Display list of Students with Common Courses
+         */
+
+    }
+
+    public void listenAndFetchOtherStudentsData() {}
+
+    public List<Person> transformStudentData() { return null; }
+
+    /**
+     * B. Filter Students with Common Courses (main Home Activity algorithm)
+     * @param allStudents
+     * @return
+     */
+    public List<Person> filterStudentsWithCommonCourses(List<Person> allStudents) {
+        List<Person> filteredStudents = new ArrayList<>();
+
+        return filteredStudents;
+    }
+
+    public void stopListenAndFetchOtherStudentsData() {}
+
+    /**
+     * temporary button to switch to Profile Activity
+     * @param view
+     */
+    public void onProfileActivityClicked(View view) {
+        Intent intentProfileActivityWorkflow = new Intent(this, ProfileActivity.class);
+        startActivity(intentProfileActivityWorkflow);
     }
 
     /**
@@ -71,5 +134,4 @@ public class HomeActivity extends AppCompatActivity {
     private void showMessage(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
-
 }
