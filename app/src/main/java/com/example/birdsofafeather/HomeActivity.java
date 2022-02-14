@@ -17,9 +17,28 @@ import android.widget.ToggleButton;
  * WORKFLOW
  * Home Activity workflow is as follows:
  *
- * (Rick please fill this out)
- * (Refer to Main Activity for a template on commenting)
- * (its like pseudocode)
+ * A. Bluetooth Search Functionality
+ *      - Triggered by the START SEARCH Toggle Button
+ *      - Connect to all Bluetooth devices within range and try to fetch other BOF user's data
+ *      - Person objects
+ *
+ * B. Filter Students with Common Courses (main Home Activity algorithm)
+ *      - Person myPerson = new Person("Rick", "rick.png", ...);
+ *
+ *      personsInCommon = []
+ *      for person in Persons:
+ *          if (myPerson.course == person.course)
+ *              personsInCommon.append(person)
+ *
+ *      return personsInCommon
+ *
+ *      - return Person(s) (List<Person>) that have taken a course in common with myPerson (myUser)
+ *
+ * C. Display list of Students with Common Courses
+ *      - Adapter
+ *      - onClick
+ *          - Intent.putExtra(Person.getName())
+ *          - startActvity(ProfileActivity)
  *
  **/
 
@@ -35,7 +54,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         /**
-         * TOGGLE BUTTON WHICH TRIGGERS BLUETOOTH FUNCTIONALITY
+         * A. TOGGLE BUTTON WHICH TRIGGERS BLUETOOTH FUNCTIONALITY
          */
         ToggleButton startSearch = (ToggleButton) findViewById(R.id.start_search_btn);
         startSearch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -63,6 +82,16 @@ public class HomeActivity extends AppCompatActivity {
 
         });
 
+        /**
+         * B. Filter Students with Common Courses (main Home Activity algorithm)
+         *
+         */
+
+
+        /**
+         * C. Display list of Students with Common Courses
+         */
+        
     }
 
     /**
