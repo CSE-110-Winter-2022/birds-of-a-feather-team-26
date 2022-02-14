@@ -32,20 +32,20 @@
         app:layout_constraintHorizontal_bias="0.571"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
-        android:id="@+id/go_to_profile_activity_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="94dp"
-        android:layout_marginEnd="94dp"
-        android:layout_marginBottom="44dp"
-        android:onClick="onProfileActivityClicked"
-        android:text="@string/go_to_profile_activity_btn"
-        app:layout_constraintTop_toBottomOf="@+id/student_list"
-        app:layout_constraintBottom_toTopOf="@+id/start_search_btn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
+<!--    <Button-->
+<!--        android:id="@+id/go_to_profile_activity_btn"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="94dp"-->
+<!--        android:layout_marginEnd="94dp"-->
+<!--        android:layout_marginBottom="44dp"-->
+<!--        android:onClick="onProfileActivityClicked"-->
+<!--        android:text="@string/go_to_profile_activity_btn"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/student_list"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/start_search_btn"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.0"-->
+<!--        app:layout_constraintStart_toStartOf="parent" />-->
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/student_list"

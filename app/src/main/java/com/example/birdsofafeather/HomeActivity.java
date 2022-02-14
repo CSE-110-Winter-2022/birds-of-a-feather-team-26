@@ -103,6 +103,50 @@ public class HomeActivity extends AppCompatActivity {
         // All students is our fabricated list of students
         allStudents = new ArrayList<>();
 
+        // Student Zehua
+        List<Course> zehua_courses = new ArrayList<>();
+
+        zehua_courses.add(new Course("2022", "Winter", "CSE", "110"));
+        zehua_courses.add(new Course("2022", "Winter", "CSE", "141"));
+        zehua_courses.add(new Course("2022", "Winter", "CSE", "152A"));
+
+        Student zehua = new Student("zehua", "zehua.png", zehua_courses);
+
+        // Student Vishvesh
+        List<Course> vishvesh_courses = new ArrayList<>();
+
+        vishvesh_courses.add(new Course("2022", "Winter", "CSE", "110"));
+
+        Student vishvesh = new Student("vishvesh", "vishesh.png", vishvesh_courses);
+
+        // Student Derek
+        List<Course> derek_courses = new ArrayList<>();
+
+        derek_courses.add(new Course("2022", "Winter", "COGS", "10"));
+
+        Student derek = new Student("derek", "derek.png", derek_courses);
+
+        // Student Huaner
+        List<Course> huaner_courses = new ArrayList<>();
+
+        huaner_courses.add(new Course("2019", "Fall", "CSE", "110"));
+        huaner_courses.add(new Course("2022", "Winter", "CSE", "141"));
+
+        Student huaner = new Student("huaner", "huaner.png", huaner_courses);
+
+        // Student Ivy
+        List<Course> ivy_courses = new ArrayList<>();
+
+        ivy_courses.add(new Course("2022", "Winter", "CSE", "151B"));
+
+        Student ivy = new Student("ivy", "ivy.png", ivy_courses);
+
+        // Add all Students into allStudents
+        allStudents.add(zehua);
+        allStudents.add(vishvesh);
+        allStudents.add(derek);
+        allStudents.add(huaner);
+        allStudents.add(ivy);
 
         /**
          * A. TOGGLE BUTTON WHICH TRIGGERS BLUETOOTH FUNCTIONALITY
@@ -128,14 +172,14 @@ public class HomeActivity extends AppCompatActivity {
                 if (isChecked) {
 
                     /**
-                     * B. Filter Students with Common Courses (main Home Activity algorithm)
+                     * 2. Filter Students with Common Courses (main Home Activity algorithm)
                      *
                      */
                     filteredStudents = filterStudentsWithCommonCourses(allStudents);
 
 
                     /**
-                     * C. Display list of Students with Common Courses (zzh)
+                     * 3. Display list of Students with Common Courses (zzh)
                      */
                     studentList = findViewById(R.id.student_list);
 
