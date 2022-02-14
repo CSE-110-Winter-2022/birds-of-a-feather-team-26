@@ -13,10 +13,21 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.3170289855072464" />
         <entry key="app/src/main/res/layout/activity_name.xml" value="0.37083333333333335" />
         <entry key="app/src/main/res/layout/activity_photo.xml" value="0.26358695652173914" />
-<<<<<<< HEAD
         <entry key="app/src/main/res/layout/activity_profile.xml" value="0.25769927536231885" />
-=======
->>>>>>> main
+        <entry key="..\:/CSE110/Milestone1/app/src/main/res/layout/activity_add_course.xml" value="0.1" />
+        <entry key="..\:/CSE110/Milestone1/app/src/main/res/layout/activity_bluetooth.xml" value="0.17916666666666667" />
+        <entry key="..\:/CSE110/Milestone1/app/src/main/res/layout/activity_course.xml" value="0.17916666666666667" />
+        <entry key="..\:/CSE110/Milestone1/app/src/main/res/layout/activity_main.xml" value="0.17916666666666667" />
+        <entry key="..\:/CSE110/Milestone1/app/src/main/res/layout/activity_name.xml" value="0.17916666666666667" />
+        <entry key="..\:/CSE110/Milestone1/app/src/main/res/layout/activity_name_photo_display.xml" value="0.17916666666666667" />
+        <entry key="..\:/CSE110/Milestone1/app/src/main/res/layout/activity_photo.xml" value="0.17916666666666667" />
+        <entry key="..\:/CSE110/Milestone1/app/src/main/res/layout/activity_picture.xml" value="0.17916666666666667" />
+        <entry key="..\:/CSE110/Milestone1/app/src/main/res/layout/activity_profile.xml" value="0.17916666666666667" />
+        <entry key="..\:/CSE110/Milestone1/app/src/main/res/layout/course_row.xml" value="0.1" />
+        <entry key="..\:/CSE110/Milestone1/app/src/main/res/layout/person_row.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_list.xml" value="0.3567708333333333" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.37083333333333335" />
+        <entry key="app/src/main/res/layout/activity_profile.xml" value="0.3567708333333333" />
       </map>
     </option>
   </component>

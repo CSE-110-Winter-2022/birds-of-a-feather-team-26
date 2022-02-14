@@ -103,6 +103,12 @@ public class CourseActivity extends AppCompatActivity {
         TextView courseNumView = findViewById(R.id.courseNum_view);
         String newCourseNumText = courseNumView.getText().toString();
 
+        // Raise alerts if the information is incomplete
+        if(newYearText.equals("")||newQuarterText.equals("")||newCourseNameText.equals("")||newCourseNumText.equals("")){
+            Utilities.showAlert(CourseActivity.this,"Please enter the full course information please");
+            return;
+        }
+
         // Create course object from course information
         Course newCourse = new Course(newCourseId, personId, name, url, newYearText, newQuarterText, newCourseNameText, newCourseNumText);
 
