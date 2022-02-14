@@ -1,6 +1,7 @@
 package com.example.birdsofafeather;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,7 +10,12 @@ import android.widget.CompoundButton;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.example.birdsofafeather.model.Course;
+import com.example.birdsofafeather.model.IPerson;
+import com.example.birdsofafeather.model.Student;
+import com.example.birdsofafeather.model.db.AppDatabase;
 import com.example.birdsofafeather.model.db.Person;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +55,13 @@ import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
 
+    private AppDatabase db;
+    private Student myUser;
+
+    private RecyclerView studentRecyclerView;
+    private RecyclerView.LayoutManager studentLayoutManager;
+    private StudentViewAdapter studentViewAdapter;
+
     /**
      * This method creates the Home Activity
      * @param savedInstanceState
@@ -57,6 +70,9 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        // Student object of my user
+        myUser = getPersonFromDBAndReturnStudent(0);
 
         /**
          * A. TOGGLE BUTTON WHICH TRIGGERS BLUETOOTH FUNCTIONALITY
@@ -100,17 +116,48 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Helper method for getting a person from BOF database with id and transforming Person data to Student object
+     * @param id of person we want to get from database
+     * @return Student object of queried Person
+     */
+    public Student getPersonFromDBAndReturnStudent(int id) {
+
+        // Connect to BOF database
+        db = AppDatabase.singleton(this);
+
+        // Retrieve my user's information from BOF database
+        IPerson myPerson = db.personWithCourseDao().get(id);
+        List<com.example.birdsofafeather.model.db.Course> myCoursesRaw = db.CourseDao().getForPerson(id);
+
+        // Convert List<db.Course> to List<Course>
+        List<Course> myCourses = new ArrayList<>();
+        for (com.example.birdsofafeather.model.db.Course course : myCoursesRaw) {
+            Course c = new Course(course.year, course.quarter, course.courseName, course.courseNum);
+            myCourses.add(c);
+        }
+
+        return new Student(myPerson.getName(), myPerson.getUrl(), myCourses);
+    }
+
     public void listenAndFetchOtherStudentsData() {}
 
-    public List<Person> transformStudentData() { return null; }
+    public List<Student> transformStudentData() { return null; }
 
     /**
      * B. Filter Students with Common Courses (main Home Activity algorithm)
      * @param allStudents
      * @return
      */
-    public List<Person> filterStudentsWithCommonCourses(List<Person> allStudents) {
-        List<Person> filteredStudents = new ArrayList<>();
+    public List<Student> filterStudentsWithCommonCourses(List<Student> allStudents) {
+        List<Student> filteredStudents = new ArrayList<>();
+
+        // O(n^3) comparison as main algorithm
+        for (Student student : allStudents)
+            for (Course course : student.getCourses())
+                for (Course c : myUser.getCourses())
+                    if (course.equals(c))
+                        filteredStudents.add(student);
 
         return filteredStudents;
     }

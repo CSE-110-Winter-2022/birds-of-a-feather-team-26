@@ -1,5 +1,7 @@
 package com.example.birdsofafeather.model;
 
+import androidx.annotation.Nullable;
+
 public class Course {
     String year;
     String quarter;
@@ -13,10 +15,16 @@ public class Course {
         this.courseNumber = courseNumber;
     }
 
-    /**
-     * getter methods
-     */
-    public String getCourse() {
-        return quarter + " " + year + " " + subject + " " + courseNumber;
+//    /**
+//     * getter methods
+//     */
+//    public String getCourse() {
+//        return quarter + " " + year + " " + subject + " " + courseNumber;
+//    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        Course course = (Course) obj;
+        return this.year.equals(course.year) && this.quarter.equals(course.quarter) && this.subject.equals(course.subject) && this.courseNumber.equals(course.courseNumber);
     }
 }

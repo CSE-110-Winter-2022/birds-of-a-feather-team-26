@@ -8,7 +8,7 @@ public class Student {
     String pictureURL;
     List<Course> courses;
 
-    public Student(String firstName, String pictureURL, ArrayList<Course> courses) {
+    public Student(String firstName, String pictureURL, List<Course> courses) {
         this.firstName = firstName;
         this.pictureURL = pictureURL;
         this.courses = courses;
