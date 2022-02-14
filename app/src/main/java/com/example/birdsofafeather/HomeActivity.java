@@ -96,6 +96,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), ProfileActivity.class);
                 // Insert myUser data
+                intent.putExtra("Student", myUser);
                 startActivity(intent);
             }
         });
