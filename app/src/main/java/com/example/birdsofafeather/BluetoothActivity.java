@@ -41,4 +41,16 @@ public class BluetoothActivity extends AppCompatActivity {
         Intent intentNameActivity = new Intent(this, NameActivity.class);
         startActivity(intentNameActivity);
     }
+
+    /**
+     * This method starts Name Activity when the no button is clicked.
+     *
+     * @param view
+     */
+    public void onStillStartNameActivityClicked(View view) {
+        Intent intentNameActivity = new Intent(this, NameActivity.class);
+        startActivity(intentNameActivity);
+
+        finish();
+    }
 }

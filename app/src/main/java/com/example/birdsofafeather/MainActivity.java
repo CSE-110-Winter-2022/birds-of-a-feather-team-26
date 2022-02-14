@@ -64,15 +64,6 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intentHomeActivityWorkflow);
     }
 
-//    /**
-//     * TEMPORARY BUTTON TO START USER INFORMATION WORKFLOW
-//     * @param view
-//     */
-//    public void onUserInformationClicked(View view) {
-//        Intent intentUserInformationWorkflow = new Intent(this, BluetoothActivity.class);
-//        startActivity(intentUserInformationWorkflow);
-//    }
-
     /**
      * TEMPORARY BUTTON TO START HOME ACTIVITY WORKFLOW
      * @param view

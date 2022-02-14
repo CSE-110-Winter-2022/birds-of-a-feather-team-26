@@ -44,7 +44,7 @@ public class NameActivity extends AppCompatActivity {
 
         // If user does not enter name, raise alert
         if(name.equals("")||nameView.getText().length()==0){
-            Utilities.showAlert(NameActivity.this,"Enter your name");
+            Utilities.showAlert(NameActivity.this,"Please enter your name");
             return;
         }
 
