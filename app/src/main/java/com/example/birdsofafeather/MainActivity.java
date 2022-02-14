@@ -20,8 +20,7 @@ import com.example.birdsofafeather.model.db.AppDatabase;
  *          - Start Bluetooth Activity (bluetooth permission is remembered)
  *          - Do Name Activity
  *          - Do Picture Activity
- *          - Do Add Course Activity
- *          - Do Edit Course Activity
+ *          - Do Course Activity
  *          - Finish & Return to Main Activity to start Home Activity
  *
  * B. Launch the Birds of a Feather Home Activity workflow
@@ -65,18 +64,14 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intentHomeActivityWorkflow);
     }
 
-    public void onClick(View view) {
-
-    }
-
-    /**
-     * TEMPORARY BUTTON TO START USER INFORMATION WORKFLOW
-     * @param view
-     */
-    public void onUserInformationClicked(View view) {
-        Intent intentUserInformationWorkflow = new Intent(this, BluetoothActivity.class);
-        startActivity(intentUserInformationWorkflow);
-    }
+//    /**
+//     * TEMPORARY BUTTON TO START USER INFORMATION WORKFLOW
+//     * @param view
+//     */
+//    public void onUserInformationClicked(View view) {
+//        Intent intentUserInformationWorkflow = new Intent(this, BluetoothActivity.class);
+//        startActivity(intentUserInformationWorkflow);
+//    }
 
     /**
      * TEMPORARY BUTTON TO START HOME ACTIVITY WORKFLOW

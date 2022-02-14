@@ -51,7 +51,5 @@ public class NameActivity extends AppCompatActivity {
         // Pass user's name onto Photo Activity
         intent.putExtra("person_name", name);
         startActivity(intent);  // Start Photo Activity
-
-        finish();   // Finish Name Activity after Photo Activity finishes (this is how to get back to home)
     }
 }

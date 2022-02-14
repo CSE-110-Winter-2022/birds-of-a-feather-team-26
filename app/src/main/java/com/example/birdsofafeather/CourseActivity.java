@@ -70,10 +70,8 @@ public class CourseActivity extends AppCompatActivity {
      * @param view
      */
     public void onExitClicked(View view){
-        // Intent intent = new Intent(this,MainActivity.class);
-        // startActivity(intent);
-
-        finish();   // Finish Course Activity and return to Home Activity
+         Intent intent = new Intent(this, HomeActivity.class);
+         startActivity(intent);
     }
 
     /**

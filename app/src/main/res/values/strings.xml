@@ -2,10 +2,11 @@
     <string name="app_name">Birds of a Feather</string>
 
     <!--Main Activity Strings-->
+    <string name="birds_of_a_feather">Birds of a Feather</string>
     <string name="main_activity_declare">Main Activity</string>
     <string name="main_activity_launchpad">Team 26 BOF App Launch Pad</string>
     <string name="start_user_information_workflow">START USER INFORMATION WORKFLOW</string>
-    <string name="start_home_activity">START HOME ACTIVITY</string>
+    <string name="start_home_activity">HOME</string>
 
     <!--User Information Workflow-->
     <!--Bluetooth Activity Strings-->

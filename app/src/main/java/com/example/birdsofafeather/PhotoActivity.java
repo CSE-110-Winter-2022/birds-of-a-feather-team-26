@@ -67,7 +67,5 @@ public class PhotoActivity extends AppCompatActivity {
         db.PersonDao().insertPerson(p);
 
         startActivity(intent);  // Start Course Activity
-
-        finish();   // Finish Photo Activity after Course Activity finishes through FINISH button (this is how to get back to home)
     }
 }

@@ -40,7 +40,5 @@ public class BluetoothActivity extends AppCompatActivity {
     public void onStartNameActivityClicked(View view) {
         Intent intentNameActivity = new Intent(this, NameActivity.class);
         startActivity(intentNameActivity);
-
-        finish();   // Finish Bluetooth Activity after Name Activity finishes (this is how to get back to home)
     }
 }
