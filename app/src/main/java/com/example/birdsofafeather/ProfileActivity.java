@@ -1,22 +1,20 @@
 package com.example.birdsofafeather;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.example.birdsofafeather.Model.Course;
-import com.example.birdsofafeather.Model.Student;
+import com.example.birdsofafeather.model.Course;
+import com.example.birdsofafeather.model.Student;
 
 import java.util.ArrayList;
 
@@ -38,6 +36,7 @@ public class ProfileActivity extends AppCompatActivity {
     TextView studentName;
     ImageView avatar;
     RecyclerView courseList;
+
     /**
      * This method creates the Profile Activity
      * @param savedInstanceState
@@ -46,19 +45,22 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        // Set pointers to main attributes of Profile Activity page
         studentName = findViewById(R.id.profile_name);
         avatar = findViewById(R.id.avatar);
         courseList = findViewById(R.id.profile_course_list);
-        //Button back =findViewById(R.id.back);
 
-        /*back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(ProfileActivity.this, back.getClass());
-                startActivity(intent);
-            }
-        });*/
-
+        /**
+         * Student data to display
+         *
+         * A. My user's profile
+         *      - Information taken from BOF database
+         *
+         * B. Another user's profile
+         *      - Information retrieved from Bluetooth transmissions
+         *      - Information stored in SharedPreferences in Home Activity, must be extracted in Profile Activity
+         */
         //Student student = getIntent()....
         ArrayList<Course> cList = new ArrayList<>();
         cList.add(new Course("2022", "Winter", "CSE", "110"));
@@ -85,12 +87,17 @@ public class ProfileActivity extends AppCompatActivity {
         //load student's course list from db and initialize recyclerview.
     }
 
-    public void onLaunchProfileClicked(View view) {
-        Intent intentProfileActivityWorkflow = new Intent(this, HomeActivity.class);
-        //Intent intentHomeActivityWorkflow = new Intent(this, ProfileActivity.class);
-        startActivity(intentProfileActivityWorkflow);
+    /**
+     * Finish Profile Activity and return to home when BACK button is clicked
+     * @param view
+     */
+    public void onBackClicked(View view) {
+        finish();   // Finish Profile Activity and return to home
     }
 
+    /**
+     * EXPLAIN COURSE ITEM ADAPTER CLASS BRIEFLY PLEASE
+     */
     class CourseItemAdapter extends RecyclerView.Adapter<CourseItemAdapter.ItemViewHolder> {
         private ArrayList<Course> mList;
         private RecyclerView.ViewHolder holder;

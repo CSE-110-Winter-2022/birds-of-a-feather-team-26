@@ -1,4 +1,4 @@
-package com.example.birdsofafeather.Model;
+package com.example.birdsofafeather.model;
 
 import java.util.ArrayList;
 import java.util.List;
