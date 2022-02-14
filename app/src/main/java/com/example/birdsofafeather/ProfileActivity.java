@@ -46,11 +46,6 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        // Set pointers to main attributes of Profile Activity page
-        studentName = findViewById(R.id.profile_name);
-        avatar = findViewById(R.id.avatar);
-        courseList = findViewById(R.id.profile_course_list);
-
         /**
          * Student data to display
          *
@@ -61,30 +56,27 @@ public class ProfileActivity extends AppCompatActivity {
          *      - Information retrieved from Bluetooth transmissions
          *      - Information stored in SharedPreferences in Home Activity, must be extracted in Profile Activity
          */
-        //Student student = getIntent()....
-        ArrayList<Course> cList = new ArrayList<>();
-        cList.add(new Course("2022", "Winter", "CSE", "110"));
-        cList.add(new Course("2023", "Spring", "ECE", "120"));
-        cList.add(new Course("2024", "Fall", "MATH", "130"));
-        Student student = new Student("firstName","pictureURL",new ArrayList<>(cList));
-        // Testing Student objects
 
-        CourseItemAdapter courseItemAdapter = new CourseItemAdapter((ArrayList<Course>) student.getCourses());
+        // Intent
+        Intent i = getIntent();
+        Student user = (Student) i.getSerializableExtra("Student");
+
+        // Set user profile name
+        String name = user.getFirstName();
+        studentName = findViewById(R.id.profile_name);
+        studentName.setText(name);
+
+        // Set user picture
+        String pictureURL = user.getPictureURL();
+        avatar = findViewById(R.id.avatar);
+
+        // Course Item Adapter to display courses of user
+        courseList = findViewById(R.id.profile_course_list);
+
+        CourseItemAdapter courseItemAdapter = new CourseItemAdapter((ArrayList<Course>) user.getCourses());
         courseList.setAdapter(courseItemAdapter);
         LinearLayoutManager lManager = new LinearLayoutManager(this);
         courseList.setLayoutManager(lManager);
-    }
-
-    public void setStudentName(Student student) {
-        //set student's name to textview
-    }
-
-    public void setAvatar(Student student) {
-        //set student's avatar to imageview
-    }
-
-    public void getStudentCourse(Student student) {
-        //load student's course list from db and initialize recyclerview.
     }
 
     /**

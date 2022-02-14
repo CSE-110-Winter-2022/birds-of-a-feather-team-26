@@ -18,7 +18,7 @@ public interface PersonWithCourseDao {
     @Query("SELECT * FROM persons WHERE id=:id")
     PersonWithCourse get(int id);
 
-    @Query("SELECT * FROM course")
+    @Query("SELECT count(*) FROM course")
     int count();
 
 }

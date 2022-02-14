@@ -2,7 +2,9 @@ package com.example.birdsofafeather.model;
 
 import androidx.annotation.Nullable;
 
-public class Course {
+import java.io.Serializable;
+
+public class Course implements Serializable {
     String year;
     String quarter;
     String subject;

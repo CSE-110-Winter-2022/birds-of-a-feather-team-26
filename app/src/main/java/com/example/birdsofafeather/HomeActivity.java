@@ -1,12 +1,19 @@
 package com.example.birdsofafeather;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -19,6 +26,9 @@ import com.example.birdsofafeather.model.db.Person;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.example.birdsofafeather.model.Course;
+import com.example.birdsofafeather.model.Student;
 
 /**
  * DESCRIPTION
@@ -49,7 +59,7 @@ import java.util.List;
  *      - Adapter
  *      - onClick
  *          - Intent.putExtra(Person.getName())
- *          - startActvity(ProfileActivity)
+ *          - startActivity(ProfileActivity)
  *
  **/
 
@@ -58,9 +68,12 @@ public class HomeActivity extends AppCompatActivity {
     private AppDatabase db;
     private Student myUser;
 
-    private RecyclerView studentRecyclerView;
-    private RecyclerView.LayoutManager studentLayoutManager;
-    private StudentViewAdapter studentViewAdapter;
+    Button myProfile;
+    LinearLayoutManager lManager = new LinearLayoutManager(this);
+    RecyclerView studentList;
+
+    private List<Student> allStudents;
+    private List<Student> filteredStudents;
 
     /**
      * This method creates the Home Activity
@@ -73,6 +86,68 @@ public class HomeActivity extends AppCompatActivity {
 
         // Student object of my user
         myUser = getPersonFromDBAndReturnStudent(0);
+
+        /**
+         * My Profile button to display myUser data
+         */
+        myProfile = findViewById(R.id.my_profile);
+        myProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), ProfileActivity.class);
+                // Insert myUser data
+                intent.putExtra("Student", myUser);
+                startActivity(intent);
+            }
+        });
+
+        // All students is our fabricated list of students
+        allStudents = new ArrayList<>();
+
+        // Student Zehua
+        List<Course> zehua_courses = new ArrayList<>();
+
+        zehua_courses.add(new Course("2022", "Winter", "CSE", "110"));
+        zehua_courses.add(new Course("2022", "Winter", "CSE", "141"));
+        zehua_courses.add(new Course("2022", "Winter", "CSE", "152A"));
+
+        Student zehua = new Student("zehua", "zehua.png", zehua_courses);
+
+        // Student Vishvesh
+        List<Course> vishvesh_courses = new ArrayList<>();
+
+        vishvesh_courses.add(new Course("2022", "Winter", "CSE", "110"));
+
+        Student vishvesh = new Student("vishvesh", "vishesh.png", vishvesh_courses);
+
+        // Student Derek
+        List<Course> derek_courses = new ArrayList<>();
+
+        derek_courses.add(new Course("2022", "Winter", "COGS", "10"));
+
+        Student derek = new Student("derek", "derek.png", derek_courses);
+
+        // Student Huaner
+        List<Course> huaner_courses = new ArrayList<>();
+
+        huaner_courses.add(new Course("2019", "Fall", "CSE", "110"));
+        huaner_courses.add(new Course("2022", "Winter", "CSE", "141"));
+
+        Student huaner = new Student("huaner", "huaner.png", huaner_courses);
+
+        // Student Ivy
+        List<Course> ivy_courses = new ArrayList<>();
+
+        ivy_courses.add(new Course("2022", "Winter", "CSE", "151B"));
+
+        Student ivy = new Student("ivy", "ivy.png", ivy_courses);
+
+        // Add all Students into allStudents
+        allStudents.add(zehua);
+        allStudents.add(vishvesh);
+        allStudents.add(derek);
+        allStudents.add(huaner);
+        allStudents.add(ivy);
 
         /**
          * A. TOGGLE BUTTON WHICH TRIGGERS BLUETOOTH FUNCTIONALITY
@@ -89,30 +164,44 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
+                /**
+                 * When SEARCH button is toggled ON:
+                 *      1. Start bluetooth search
+                 *      2. Filter students by common courses
+                 *      3. Display list of students with common courses
+                 */
                 if (isChecked) {
-                    // The toggle is enabled
-                    showMessage("Start search toggle is on");
+
+                    /**
+                     * 2. Filter Students with Common Courses (main Home Activity algorithm)
+                     *
+                     */
+                    filteredStudents = filterStudentsWithCommonCourses(allStudents);
+
+
+                    /**
+                     * 3. Display list of Students with Common Courses (zzh)
+                     */
+                    studentList = findViewById(R.id.student_list);
+
+                    // Student Item Adapter to display list of students with common courses
+                    StudentItemAdapter studentItemAdapter = new StudentItemAdapter(filteredStudents);
+                    studentList.setAdapter(studentItemAdapter);
+                    studentList.setLayoutManager(lManager);
                 }
 
+                /**
+                 * When SEARCH button is toggled OFF:
+                 *      1. Stop bluetooth search
+                 *      3. Stop displaying list of students with common courses
+                 */
                 else {
-                    // The toggle is disabled
-                    showMessage("Start search toggle is off");
+
                 }
 
             }
 
         });
-
-        /**
-         * B. Filter Students with Common Courses (main Home Activity algorithm)
-         *
-         */
-
-
-
-        /**
-         * C. Display list of Students with Common Courses
-         */
 
     }
 
@@ -140,10 +229,6 @@ public class HomeActivity extends AppCompatActivity {
         return new Student(myPerson.getName(), myPerson.getUrl(), myCourses);
     }
 
-    public void listenAndFetchOtherStudentsData() {}
-
-    public List<Student> transformStudentData() { return null; }
-
     /**
      * B. Filter Students with Common Courses (main Home Activity algorithm)
      * @param allStudents
@@ -162,23 +247,63 @@ public class HomeActivity extends AppCompatActivity {
         return filteredStudents;
     }
 
+    public void listenAndFetchOtherStudentsData() {}
+
     public void stopListenAndFetchOtherStudentsData() {}
 
-    /**
-     * temporary button to switch to Profile Activity
-     * @param view
-     */
-    public void onProfileActivityClicked(View view) {
-        Intent intentProfileActivityWorkflow = new Intent(this, ProfileActivity.class);
-        startActivity(intentProfileActivityWorkflow);
-    }
+    class StudentItemAdapter extends RecyclerView.Adapter<StudentItemAdapter.ItemViewHolder> {
+        private List<Student> mList;
+        private RecyclerView.ViewHolder holder;
 
-    /**
-     * Helper method to show messages for testing
-     *
-     * @param message
-     */
-    private void showMessage(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        /**
+         * StudentItemAdapter constructor
+         * @param list
+         */
+        public StudentItemAdapter(List<Student> list) {
+            mList = list;
+        }
+
+        /**
+         *
+         * @param parent
+         * @param viewType
+         * @return
+         */
+        public StudentItemAdapter.ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+            View view = inflater.inflate(R.layout.student_item,parent,false);
+            return new StudentItemAdapter.ItemViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull StudentItemAdapter.ItemViewHolder holder, int position) {
+            Student student = mList.get(position);
+            holder.name.setText(student.getFirstName());
+            holder.findName.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(view.getContext(), ProfileActivity.class);
+                    intent.putExtra("Student", student);
+                    startActivity(intent);
+                }
+            });
+            //holder.pid.setText(mList.get(position).getPid());
+        }
+
+        @Override
+        public int getItemCount() {
+            return mList.size();
+        }
+
+        class ItemViewHolder extends RecyclerView.ViewHolder {
+            public TextView name;
+            public LinearLayout findName;
+            //public TextView pid;
+            public ItemViewHolder(@NonNull View itemView) {
+                super(itemView);
+                name = itemView.findViewById(R.id.student_name);
+                findName = itemView.findViewById(R.id.find_student);
+            }
+        }
     }
 }
