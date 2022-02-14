@@ -21,9 +21,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BirdsOfAFeather">
         <activity
-            android:name=".StudentViewAdapter"
-            android:exported="false" />
-        <activity
             android:name=".NameActivity"
             android:exported="false" />
         <activity

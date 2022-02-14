@@ -58,10 +58,6 @@ public class HomeActivity extends AppCompatActivity {
     private AppDatabase db;
     private Student myUser;
 
-    private RecyclerView studentRecyclerView;
-    private RecyclerView.LayoutManager studentLayoutManager;
-    private StudentViewAdapter studentViewAdapter;
-
     /**
      * This method creates the Home Activity
      * @param savedInstanceState
