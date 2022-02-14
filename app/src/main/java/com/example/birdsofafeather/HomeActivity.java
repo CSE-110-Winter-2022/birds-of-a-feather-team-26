@@ -69,7 +69,11 @@ public class HomeActivity extends AppCompatActivity {
     private Student myUser;
 
     Button myProfile;
+    LinearLayoutManager lManager = new LinearLayoutManager(this);
     RecyclerView studentList;
+
+    private List<Student> allStudents;
+    private List<Student> filteredStudents;
 
     /**
      * This method creates the Home Activity
@@ -82,6 +86,23 @@ public class HomeActivity extends AppCompatActivity {
 
         // Student object of my user
         myUser = getPersonFromDBAndReturnStudent(0);
+
+        /**
+         * My Profile button to display myUser data
+         */
+        myProfile = findViewById(R.id.my_profile);
+        myProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), ProfileActivity.class);
+                // Insert myUser data
+                startActivity(intent);
+            }
+        });
+
+        // All students is our fabricated list of students
+        allStudents = new ArrayList<>();
+
 
         /**
          * A. TOGGLE BUTTON WHICH TRIGGERS BLUETOOTH FUNCTIONALITY
@@ -98,54 +119,45 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
+                /**
+                 * When SEARCH button is toggled ON:
+                 *      1. Start bluetooth search
+                 *      2. Filter students by common courses
+                 *      3. Display list of students with common courses
+                 */
                 if (isChecked) {
-                    // The toggle is enabled
-                    showMessage("Start search toggle is on");
+
+                    /**
+                     * B. Filter Students with Common Courses (main Home Activity algorithm)
+                     *
+                     */
+                    filteredStudents = filterStudentsWithCommonCourses(allStudents);
+
+
+                    /**
+                     * C. Display list of Students with Common Courses (zzh)
+                     */
+                    studentList = findViewById(R.id.student_list);
+
+                    // Student Item Adapter to display list of students with common courses
+                    StudentItemAdapter studentItemAdapter = new StudentItemAdapter(filteredStudents);
+                    studentList.setAdapter(studentItemAdapter);
+                    studentList.setLayoutManager(lManager);
                 }
 
+                /**
+                 * When SEARCH button is toggled OFF:
+                 *      1. Stop bluetooth search
+                 *      3. Stop displaying list of students with common courses
+                 */
                 else {
-                    // The toggle is disabled
-                    showMessage("Start search toggle is off");
+
                 }
 
             }
 
         });
 
-        /**
-         * B. Filter Students with Common Courses (main Home Activity algorithm)
-         *
-         */
-
-        /**
-         * C. Display list of Students with Common Courses (zzh)
-         */
-
-        myProfile = findViewById(R.id.my_profile);
-        myProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), ProfileActivity.class);
-                intent.putExtra("Student name", "MY NAME");
-                startActivity(intent);
-            }
-        });
-        studentList = findViewById(R.id.student_list);
-
-        ArrayList<Student> sList = new ArrayList<>();
-        ArrayList<Course> cList = new ArrayList<>();
-        cList.add(new Course("2022", "Winter", "CSE", "110"));
-        cList.add(new Course("2023", "Spring", "ECE", "120"));
-        cList.add(new Course("2024", "Fall", "MATH", "130"));
-        Student student = new Student("firstName","pictureURL",new ArrayList<>(cList));
-        sList.add(student);
-        sList.add(new Student("firstName2", "pictureURL2", new ArrayList<>(cList)));
-        sList.add(new Student("firstName3", "pictureURL3", new ArrayList<>(cList)));
-
-        StudentItemAdapter studentItemAdapter = new StudentItemAdapter(sList);
-        studentList.setAdapter(studentItemAdapter);
-        LinearLayoutManager lManager = new LinearLayoutManager(this);
-        studentList.setLayoutManager(lManager);
     }
 
     /**
@@ -215,14 +227,14 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     class StudentItemAdapter extends RecyclerView.Adapter<StudentItemAdapter.ItemViewHolder> {
-        private ArrayList<Student> mList;
+        private List<Student> mList;
         private RecyclerView.ViewHolder holder;
 
         /**
          * StudentItemAdapter constructor
          * @param list
          */
-        public StudentItemAdapter(ArrayList<Student> list) {
+        public StudentItemAdapter(List<Student> list) {
             mList = list;
         }
 
