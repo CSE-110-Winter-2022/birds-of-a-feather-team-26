@@ -9,6 +9,11 @@ import android.widget.CompoundButton;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.example.birdsofafeather.model.db.Person;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * DESCRIPTION
  * The Home Activity module is the Birds of a Feather homepage and takes care of the application's main functionality.
@@ -88,10 +93,37 @@ public class HomeActivity extends AppCompatActivity {
          */
 
 
+
         /**
          * C. Display list of Students with Common Courses
          */
-        
+
+    }
+
+    public void listenAndFetchOtherStudentsData() {}
+
+    public List<Person> transformStudentData() { return null; }
+
+    /**
+     * B. Filter Students with Common Courses (main Home Activity algorithm)
+     * @param allStudents
+     * @return
+     */
+    public List<Person> filterStudentsWithCommonCourses(List<Person> allStudents) {
+        List<Person> filteredStudents = new ArrayList<>();
+
+        return filteredStudents;
+    }
+
+    public void stopListenAndFetchOtherStudentsData() {}
+
+    /**
+     * temporary button to switch to Profile Activity
+     * @param view
+     */
+    public void onProfileActivityClicked(View view) {
+        Intent intentProfileActivityWorkflow = new Intent(this, ProfileActivity.class);
+        startActivity(intentProfileActivityWorkflow);
     }
 
     /**
@@ -101,14 +133,5 @@ public class HomeActivity extends AppCompatActivity {
      */
     private void showMessage(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-    }
-
-    /**
-     * temporary button to switch to Profile Activity
-     * @param view
-     */
-    public void onProfileActivityClicked(View view) {
-        Intent intentProfileActivityWorkflow = new Intent(this, ProfileActivity.class);
-        startActivity(intentProfileActivityWorkflow);
     }
 }
