@@ -9,6 +9,11 @@ public class Student implements Serializable {
     String pictureURL;
     List<Course> courses;
 
+    public Student(Student s) {
+        firstName = s.getFirstName();
+        pictureURL = s.getPictureURL();
+        courses = s.getCourses();
+    }
     public Student(String firstName, String pictureURL, List<Course> courses) {
         this.firstName = firstName;
         this.pictureURL = pictureURL;

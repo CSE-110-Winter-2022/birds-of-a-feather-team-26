@@ -148,6 +148,12 @@ public class HomeActivity extends AppCompatActivity {
         allStudents.add(derek);
         allStudents.add(huaner);
         allStudents.add(ivy);
+        studentList = findViewById(R.id.student_list);
+
+        // Student Item Adapter to display list of students with common courses
+        StudentItemAdapter studentItemAdapter = new StudentItemAdapter(allStudents);
+        studentList.setAdapter(studentItemAdapter);
+        studentList.setLayoutManager(lManager);
 
         /**
          * A. TOGGLE BUTTON WHICH TRIGGERS BLUETOOTH FUNCTIONALITY
@@ -283,7 +289,7 @@ public class HomeActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(view.getContext(), ProfileActivity.class);
-                    intent.putExtra("Student name", studentName);
+                    intent.putExtra("Student", new Student(mList.get(position)));
                     startActivity(intent);
                 }
             });

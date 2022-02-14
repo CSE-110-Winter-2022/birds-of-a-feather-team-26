@@ -2,6 +2,7 @@ package com.example.birdsofafeather;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,7 +73,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         // Course Item Adapter to display courses of user
         courseList = findViewById(R.id.profile_course_list);
-
+        Log.wtf("course", user.getCourses().get(0).getCourse());
         CourseItemAdapter courseItemAdapter = new CourseItemAdapter((ArrayList<Course>) user.getCourses());
         courseList.setAdapter(courseItemAdapter);
         LinearLayoutManager lManager = new LinearLayoutManager(this);
@@ -116,7 +117,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
-//            holder.course.setText(mList.get(position).getCourse());
+            holder.course.setText(mList.get(position).getCourse());
             //holder.pid.setText(mList.get(position).getPid());
         }
 
