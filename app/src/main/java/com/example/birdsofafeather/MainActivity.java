@@ -6,6 +6,8 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.birdsofafeather.model.db.AppDatabase;
+
 /**
  * DESCRIPTION
  * The Main Activity module acts as the "application launch pad"
@@ -43,21 +45,27 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-    }
-
-    public void onClick(View view) {
-        Intent intent=new Intent(this,NameActivity.class);
-        startActivity(intent);
-
 
         /**
          * A. USER INFORMATION WORKFLOW
          * */
+        // Connect to BOF database
+        AppDatabase db = AppDatabase.singleton(this.getApplicationContext());
 
+        // If there is no Person data stored in the database, start User Information Workflow
+        if (db.PersonDao().count() < 1) {
+            Intent intentUserInformationWorkflow = new Intent(this, BluetoothActivity.class);
+            startActivity(intentUserInformationWorkflow);
+        }
 
         /**
          * B. HOME ACTIVITY WORKFLOW
          * */
+        Intent intentHomeActivityWorkflow = new Intent(this, HomeActivity.class);
+        startActivity(intentHomeActivityWorkflow);
+    }
+
+    public void onClick(View view) {
 
     }
 
@@ -76,7 +84,6 @@ public class MainActivity extends AppCompatActivity {
      */
     public void onHomeActivityClicked(View view) {
         Intent intentHomeActivityWorkflow = new Intent(this, HomeActivity.class);
-        //Intent intentHomeActivityWorkflow = new Intent(this, ProfileActivity.class);
         startActivity(intentHomeActivityWorkflow);
     }
 }

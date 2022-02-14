@@ -124,7 +124,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
-            holder.course.setText(mList.get(position).getCourse());
+//            holder.course.setText(mList.get(position).getCourse());
             //holder.pid.setText(mList.get(position).getPid());
         }
 
