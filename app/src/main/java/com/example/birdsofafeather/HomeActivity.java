@@ -228,10 +228,6 @@ public class HomeActivity extends AppCompatActivity {
         return new Student(myPerson.getName(), myPerson.getUrl(), myCourses);
     }
 
-    public void listenAndFetchOtherStudentsData() {}
-
-    public List<Student> transformStudentData() { return null; }
-
     /**
      * B. Filter Students with Common Courses (main Home Activity algorithm)
      * @param allStudents
@@ -250,25 +246,9 @@ public class HomeActivity extends AppCompatActivity {
         return filteredStudents;
     }
 
+    public void listenAndFetchOtherStudentsData() {}
+
     public void stopListenAndFetchOtherStudentsData() {}
-
-    /**
-     * temporary button to switch to Profile Activity
-     * @param view
-     */
-    public void onProfileActivityClicked(View view) {
-        Intent intentProfileActivityWorkflow = new Intent(this, ProfileActivity.class);
-        startActivity(intentProfileActivityWorkflow);
-    }
-
-    /**
-     * Helper method to show messages for testing
-     *
-     * @param message
-     */
-    private void showMessage(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-    }
 
     class StudentItemAdapter extends RecyclerView.Adapter<StudentItemAdapter.ItemViewHolder> {
         private List<Student> mList;
