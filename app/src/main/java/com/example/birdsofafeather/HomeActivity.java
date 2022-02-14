@@ -283,13 +283,13 @@ public class HomeActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NonNull StudentItemAdapter.ItemViewHolder holder, int position) {
-            String studentName = mList.get(position).getFirstName();
-            holder.name.setText(studentName);
+            Student student = mList.get(position);
+            holder.name.setText(student.getFirstName());
             holder.findName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(view.getContext(), ProfileActivity.class);
-                    intent.putExtra("Student", new Student(mList.get(position)));
+                    intent.putExtra("Student", student);
                     startActivity(intent);
                 }
             });
