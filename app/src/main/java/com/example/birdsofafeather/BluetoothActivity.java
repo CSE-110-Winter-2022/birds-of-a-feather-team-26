@@ -43,4 +43,16 @@ public class BluetoothActivity extends AppCompatActivity {
 
         finish();   // Finish Bluetooth Activity after Name Activity finishes (this is how to get back to home)
     }
+
+    /**
+     * This method starts Name Activity when the no button is clicked.
+     *
+     * @param view
+     */
+    public void onStillStartNameActivityClicked(View view) {
+        Intent intentNameActivity = new Intent(this, NameActivity.class);
+        startActivity(intentNameActivity);
+
+        finish();
+    }
 }
