@@ -56,18 +56,6 @@ public class ExampleUnitTest {
     }
 
     @Test
-    public void testInsertPerson() throws IOException {
-        Person p = new Person(8,"Huaner","JPG");
-        Person p1 = new Person(5,"haha","KKKK");
-        personDao.insertPerson(p);
-        personDao.insertPerson(p1);
-        personList = new ArrayList<Person>(2);
-        personList.add(p);
-        personList.add(p1);
-        assertEquals(personList, personDao.getAllPersons());
-    }
-
-    @Test
     public void testDeletePerson(){
         Person p = new Person(8,"Huaner","JPG");
         personDao.insertPerson(p);
@@ -84,17 +72,6 @@ public class ExampleUnitTest {
         courseDao.delete(c);
         assertEquals(1, courseDao.count());
     }
-
-    @Test
-    public void testgetIdCourse(){
-        Course c = new Course(0,8,"Huaner","JPG","2022","WI","CSE","110");
-        Course c1  = new Course(1,2,"chenhan", "thisisthelink", "2021", "FA", "CSE", "110");
-        courseDao.insert(c);
-        courseDao.insert(c1);
-        courseDao.delete(c);
-        assertEquals(c1, courseDao.get(1));
-    }
-
 
     @Test
     public void testPersonWithCourse(){
