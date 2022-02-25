@@ -103,18 +103,24 @@ public class CourseActivity extends AppCompatActivity {
         TextView courseNumView = findViewById(R.id.courseNum_view);
         String newCourseNumText = courseNumView.getText().toString();
 
+        // Fetches the size of the course typed in by user
+        TextView courseSizeView = findViewById(R.id.courseSize_view);
+        String newCourseSizeText = courseSizeView.getText().toString();
+
         // Raise alerts if the information is incomplete
-        if(newYearText.equals("")||newQuarterText.equals("")||newCourseNameText.equals("")||newCourseNumText.equals("")){
+        if(newYearText.equals("")||newQuarterText.equals("")||newCourseNameText.equals("")||newCourseNumText.equals("")||newCourseSizeText.equals("")){
             Utilities.showAlert(CourseActivity.this,"Please enter the full course information please");
             return;
         }
 
         // Create course object from course information
-        Course newCourse = new Course(newCourseId, personId, name, url, newYearText, newQuarterText, newCourseNameText, newCourseNumText);
+        Course newCourse = new Course(newCourseId, personId, name, url, newYearText, newQuarterText, newCourseNameText, newCourseNumText, newCourseSizeText);
 
         // Store course information into BOF database
         db.CourseDao().insert(newCourse);
 
         courseViewAdapter.addCourse(newCourse); // Add course for display on Course Activity screen
+
+
     }
 }

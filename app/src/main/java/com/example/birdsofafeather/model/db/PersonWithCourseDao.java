@@ -21,4 +21,7 @@ public interface PersonWithCourseDao {
     @Query("SELECT count(*) FROM course")
     int count();
 
+    @Query("SELECT courseSize FROM course WHERE person_id=:personId")
+    String getCourseSize(int personId);
+
 }

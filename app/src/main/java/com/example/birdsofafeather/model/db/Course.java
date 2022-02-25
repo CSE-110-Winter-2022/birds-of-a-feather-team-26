@@ -31,7 +31,10 @@ public class Course {
     @ColumnInfo(name="courseNum")
     public String courseNum;
 
-    public Course(int courseId, int personId, String personName, String url, String year, String quarter, String courseName, String courseNum){
+    @ColumnInfo(name="courseSize")
+    public String courseSize;
+
+    public Course(int courseId, int personId, String personName, String url, String year, String quarter, String courseName, String courseNum, String courseSize){
         this.courseId = courseId;
         this.personId = personId;
         this.personName = personName;
@@ -40,6 +43,7 @@ public class Course {
         this.quarter = quarter;
         this.courseName = courseName;
         this.courseNum = courseNum;
+        this.courseSize = courseSize;
     }
 
 }
