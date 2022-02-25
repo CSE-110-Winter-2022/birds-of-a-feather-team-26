@@ -9,6 +9,7 @@ public class Course implements Serializable {
     String quarter;
     String subject;
     String courseNumber;
+    String courseSize;
 
     public Course(String year, String quarter, String subject, String courseNumber) {
         this.year = year;
