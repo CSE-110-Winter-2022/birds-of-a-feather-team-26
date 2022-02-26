@@ -246,8 +246,9 @@ public class HomeActivity extends AppCompatActivity {
         new_session.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // start new blank Session
-                currSession = new Session(new ArrayList<>());
+                currSession = new Session(new ArrayList<>());   // start new blank Session
+
+                dialog.dismiss();                               // close start_session dialog
             }
         });
     }
@@ -408,13 +409,12 @@ public class HomeActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     Toast.makeText(HomeActivity.this, session.getName(), Toast.LENGTH_LONG).show();
 
-                    // return and load clicked Session
                     /**
                      * When a Session ViewHolder is clicked, BoF will load the respective session
                      */
-                    currSession = session;
+                    currSession = session;              // return and load clicked Session
 
-                    dialog.dismiss();       // close start_session dialog
+                    dialog.dismiss();                   // close start_session dialog
                 }
             });
         }
