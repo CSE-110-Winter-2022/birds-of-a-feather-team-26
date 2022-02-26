@@ -14,7 +14,7 @@ import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.util.UUID;
 
-public class BluetoothConnectionService {
+public class mBluetoothConnectionService {
     private static final String TAG = "BluetoothConnectionService";
 
     private static final String appName = "birdsofafeather";
@@ -33,7 +33,7 @@ public class BluetoothConnectionService {
 
     private ConnectedThread myConnectedThread;
 
-    public BluetoothConnectionService(Context context) {
+    public mBluetoothConnection(Context context) {
         this.myContext = context;
         this.myBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     }

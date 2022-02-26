@@ -104,12 +104,19 @@ public class HomeActivity extends AppCompatActivity {
         // All students is our fabricated list of students
         allStudents = new ArrayList<>();
 
+        // Student Rick
+        List<Course> rick_courses = new ArrayList<>();
+
+        rick_courses.add(new Course("2022", "Winter", "CSE", "110"));
+        rick_courses.add(new Course("2022", "Winter", "PHIL", "141"));
+
+        Student rick = new Student("rick", "rick.png", rick_courses);
+
         // Student Zehua
         List<Course> zehua_courses = new ArrayList<>();
 
         zehua_courses.add(new Course("2022", "Winter", "CSE", "110"));
         zehua_courses.add(new Course("2022", "Winter", "CSE", "141"));
-        zehua_courses.add(new Course("2022", "Winter", "CSE", "152A"));
 
         Student zehua = new Student("zehua", "zehua.png", zehua_courses);
 
@@ -121,33 +128,40 @@ public class HomeActivity extends AppCompatActivity {
         Student vishvesh = new Student("vishvesh", "vishesh.png", vishvesh_courses);
 
         // Student Derek
-        List<Course> derek_courses = new ArrayList<>();
-
-        derek_courses.add(new Course("2022", "Winter", "COGS", "10"));
-
-        Student derek = new Student("derek", "derek.png", derek_courses);
+//        List<Course> derek_courses = new ArrayList<>();
+//
+//        derek_courses.add(new Course("2022", "Winter", "COGS", "10"));
+//
+//        Student derek = new Student("derek", "derek.png", derek_courses);
 
         // Student Huaner
-        List<Course> huaner_courses = new ArrayList<>();
-
-        huaner_courses.add(new Course("2019", "Fall", "CSE", "110"));
-        huaner_courses.add(new Course("2022", "Winter", "CSE", "141"));
-
-        Student huaner = new Student("huaner", "huaner.png", huaner_courses);
+//        List<Course> huaner_courses = new ArrayList<>();
+//
+//        huaner_courses.add(new Course("2019", "Fall", "CSE", "110"));
+//        huaner_courses.add(new Course("2022", "Winter", "CSE", "141"));
+//
+//        Student huaner = new Student("huaner", "huaner.png", huaner_courses);
 
         // Student Ivy
-        List<Course> ivy_courses = new ArrayList<>();
-
-        ivy_courses.add(new Course("2022", "Winter", "CSE", "151B"));
-
-        Student ivy = new Student("ivy", "ivy.png", ivy_courses);
+//        List<Course> ivy_courses = new ArrayList<>();
+//
+//        ivy_courses.add(new Course("2022", "Winter", "CSE", "151B"));
+//
+//        Student ivy = new Student("ivy", "ivy.png", ivy_courses);
 
         // Add all Students into allStudents
-        allStudents.add(zehua);
-        allStudents.add(vishvesh);
-        allStudents.add(derek);
-        allStudents.add(huaner);
-        allStudents.add(ivy);
+        if (myUser.getFirstName().equals("rick")) {
+            allStudents.add(zehua);
+            allStudents.add(vishvesh);
+        }
+        else if (myUser.getFirstName().equals("zehua")) {
+            allStudents.add(vishvesh);
+            allStudents.add(rick);
+        }
+
+//        allStudents.add(derek);
+//        allStudents.add(huaner);
+//        allStudents.add(ivy);
         studentList = findViewById(R.id.student_list);
 
         // Student Item Adapter to display list of students with common courses
@@ -283,13 +297,13 @@ public class HomeActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NonNull StudentItemAdapter.ItemViewHolder holder, int position) {
-            String studentName = mList.get(position).getFirstName();
-            holder.name.setText(studentName);
+            Student student = mList.get(position);
+            holder.name.setText(student.getFirstName());
             holder.findName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(view.getContext(), ProfileActivity.class);
-                    intent.putExtra("Student", new Student(mList.get(position)));
+                    intent.putExtra("Student", student);
                     startActivity(intent);
                 }
             });
