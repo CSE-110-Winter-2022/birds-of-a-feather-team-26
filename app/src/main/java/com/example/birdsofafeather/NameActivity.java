@@ -12,10 +12,11 @@ import com.example.birdsofafeather.model.db.Person;
 import com.example.birdsofafeather.model.db.PersonWithCourseDao;
 
 /**
- * The name activity lets user enter their name, and navigates to the next photo activity by clicking
- * the CONFIRM button.
- * If the user does not enter their name, then when they click the button, there will be an alert
- * message reminding them to input the name.
+ * DESCRIPTION
+ *
+ * The name activity lets user enter their name, and navigates to the next photo activity by
+ * clicking the CONFIRM button. If the user does not enter their name, then when they click the
+ * button, there will be an alert message reminding them to input the name.
  */
 
 public class NameActivity extends AppCompatActivity {

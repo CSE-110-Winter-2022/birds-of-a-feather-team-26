@@ -2,6 +2,7 @@
 package com.example.birdsofafeather;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,6 +22,7 @@ import android.widget.ToggleButton;
 
 import com.example.birdsofafeather.model.Course;
 import com.example.birdsofafeather.model.IPerson;
+import com.example.birdsofafeather.model.Session;
 import com.example.birdsofafeather.model.Student;
 import com.example.birdsofafeather.model.db.AppDatabase;
 import com.example.birdsofafeather.model.db.Person;
@@ -47,12 +49,12 @@ import com.example.birdsofafeather.model.Student;
  * WORKFLOW
  * Home Activity workflow is as follows:
  *
- * A. Bluetooth Search Functionality
+ * I. Bluetooth Search Functionality
  *      - Triggered by the START SEARCH Toggle Button
  *      - Connect to all Bluetooth devices within range and try to fetch other BOF user's data
  *      - Person objects
  *
- * B. Filter Students with Common Courses (main Home Activity algorithm)
+ * II. Filter Students with Common Courses (main Home Activity algorithm)
  *      - Person myPerson = new Person("Rick", "rick.png", ...);
  *
  *      personsInCommon = []
@@ -64,7 +66,7 @@ import com.example.birdsofafeather.model.Student;
  *
  *      - return Person(s) (List<Person>) that have taken a course in common with myPerson (myUser)
  *
- * C. Display list of Students with Common Courses
+ * III. Display list of Students with Common Courses
  *      - Adapter
  *      - onClick
  *          - Intent.putExtra(Person.getName())
@@ -73,6 +75,9 @@ import com.example.birdsofafeather.model.Student;
  **/
 
 public class HomeActivity extends AppCompatActivity {
+
+    private AlertDialog.Builder dialogBuilder;
+    private AlertDialog dialog;
 
     private AppDatabase db;
     private Student myUser;
@@ -84,9 +89,10 @@ public class HomeActivity extends AppCompatActivity {
     private List<Student> allStudents;
     private List<Student> filteredStudents;
 
+    private Session currSession;
+
     /**
-     * This method creates the Home Activity
-     * @param savedInstanceState
+     * Home Activity onCreate
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,17 +117,16 @@ public class HomeActivity extends AppCompatActivity {
         });
 
         // All students is our fabricated list of students
-        allStudents = Data.fabricate();
+        allStudents = Data.fab_students();
 
         /**
-         * A. TOGGLE BUTTON WHICH TRIGGERS BLUETOOTH FUNCTIONALITY
+         * I. TOGGLE BUTTON WHICH TRIGGERS BLUETOOTH FUNCTIONALITY
          */
         ToggleButton startSearch = (ToggleButton) findViewById(R.id.start_search_btn);
         startSearch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
             /**
              * This method will execute the bluetooth search functionality when toggled on.
-             *
              * @param buttonView
              * @param isChecked boolean which represents state of startSearch ToggleButton
              */
@@ -129,7 +134,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
                 /**
-                 * When SEARCH button is toggled ON:
+                 * A. When SEARCH button is toggled ON:
                  *      1. Ask user if they want to resume a previous session or start a new session (MS 2)
                  *      2. Start bluetooth search (MS 1)
                  *      3. Filter students by common courses (MS 1)
@@ -139,7 +144,7 @@ public class HomeActivity extends AppCompatActivity {
                     /**
                      * 1. Ask user if they want to resume a previous session or start a new session
                      */
-
+                    createNewContactDialog();
 
                     /**
                      * 2. Start bluetooth search
@@ -156,15 +161,12 @@ public class HomeActivity extends AppCompatActivity {
                     /**
                      * 4. Display list of Students with Common Courses
                      */
-                    // Student Item Adapter to display list of students with common courses
-                    StudentItemAdapter studentItemAdapter = new StudentItemAdapter(filteredStudents);
-                    studentList = findViewById(R.id.student_list);
-                    studentList.setAdapter(studentItemAdapter);
-                    studentList.setLayoutManager(lManager);
+                    // fill Student Item Adapter with list of students with common courses
+                    fillStudentItemAdapter(filteredStudents);
                 }
 
                 /**
-                 * When SEARCH button is toggled OFF:
+                 * B. When SEARCH button is toggled OFF:
                  *      1. Stop bluetooth search (MS 1)
                  *      2. Ask user to save session with <session_name> (MS 2)
                  *      3. Stop displaying list of students with common courses (MS 1)
@@ -184,22 +186,16 @@ public class HomeActivity extends AppCompatActivity {
                      * 3. Stop displaying list of students with common courses
                      */
                     // Clear Student Item Adapter
-                    StudentItemAdapter clear = new StudentItemAdapter(new ArrayList<>());
-                    studentList = findViewById(R.id.student_list);
-                    studentList.setAdapter(clear);
-                    studentList.setLayoutManager(lManager);
+                    fillStudentItemAdapter(new ArrayList<>());
                 }
-
             }
-
         });
-
     }
 
     /**
      * Helper method for getting a person from BOF database with id and transforming Person data to Student object
-     * @param id of person we want to get from database
-     * @return Student object of queried Person
+     * @param id of Student we want to get from database
+     * @return queried Student
      */
     public Student getPersonFromDBAndReturnStudent(int id) {
 
@@ -221,7 +217,43 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     /**
-     * B. Filter Students with Common Courses (main Home Activity algorithm)
+     * A.1. Ask user if they want to resume a previous session or start a new session
+     */
+    public void createNewContactDialog() {
+        dialogBuilder = new AlertDialog.Builder(this);
+        final View start_session = getLayoutInflater().inflate(R.layout.start_session, null);
+
+        // Display Adapter of sessions
+        LinearLayoutManager sessionManager = new LinearLayoutManager(this); //
+        RecyclerView sessionList;
+
+        List<Session> session_data = Data.fab_sessions();                           // fabricated session data
+
+        SessionItemAdapter sessions = new SessionItemAdapter(session_data);         // create Session Item Adapter
+        sessionList = start_session.findViewById(R.id.session_list);
+        sessionList.setAdapter(sessions);                                           // set Session Item Adapter to hold session_data
+        sessionList.setLayoutManager(sessionManager);                               // display LayoutManager with session list
+
+        // Create and show start_session contact dialog
+        dialogBuilder.setView(start_session);
+        dialog = dialogBuilder.create();
+        dialog.show();
+
+        /**
+         * When new_session Button is clicked, BoF will start a new blank session
+         */
+        Button new_session = (Button) start_session.findViewById(R.id.new_session_btn);
+        new_session.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // start new blank Session
+                currSession = new Session(new ArrayList<>());
+            }
+        });
+    }
+
+    /**
+     * A.3. Filter Students with Common Courses (main Home Activity algorithm)
      * @param allStudents
      * @return
      */
@@ -242,7 +274,6 @@ public class HomeActivity extends AppCompatActivity {
             // Add to frequency map if there is a course in common with student and myUser
             if (freq > 0)
                 frequencyStudents.put(student, freq);
-
         }
 
         // Sort frequency map by value
@@ -258,7 +289,7 @@ public class HomeActivity extends AppCompatActivity {
     /**
      * Helper function to sort HashMap by values
      * @param freq
-     * @return HashMap sorted by values
+     * @return Map sorted by values
      */
     public Map<Student, Integer> sortByValue(Map<Student, Integer> freq) {
         // Create a linked list from elements of HashMap
@@ -281,25 +312,30 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     /**
-     * STUDENT ITEM ADAPTER CLASS
+     * A.4. Method to fill Student Item Adapter
+     */
+    public void fillStudentItemAdapter(List<Student> student_data) {
+        StudentItemAdapter students = new StudentItemAdapter(student_data);     // create Student Item Adapter
+        studentList = findViewById(R.id.student_list);
+        studentList.setAdapter(students);                                       // set Student Item Adapter to hold student_data
+        studentList.setLayoutManager(lManager);                                 // display LayoutManager with student list
+    }
+
+
+    /**
+     * DESCRIPTION
+     * The StudentItemAdapter class sets up an Adapter interface for displaying Student information in Home Activity
      */
     class StudentItemAdapter extends RecyclerView.Adapter<StudentItemAdapter.ItemViewHolder> {
         private List<Student> mList;
         private RecyclerView.ViewHolder holder;
 
-        /**
-         * StudentItemAdapter constructor
-         * @param list
-         */
         public StudentItemAdapter(List<Student> list) {
             mList = list;
         }
 
         /**
-         *
-         * @param parent
-         * @param viewType
-         * @return
+         * Creates Student Item View Holder
          */
         public StudentItemAdapter.ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             LayoutInflater inflater = LayoutInflater.from(parent.getContext());
@@ -311,6 +347,8 @@ public class HomeActivity extends AppCompatActivity {
         public void onBindViewHolder(@NonNull StudentItemAdapter.ItemViewHolder holder, int position) {
             Student student = mList.get(position);
             holder.name.setText(student.getFirstName());
+
+            // When click on Student ViewHolder, display Student profile
             holder.findName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -319,7 +357,6 @@ public class HomeActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
             });
-            //holder.pid.setText(mList.get(position).getPid());
         }
 
         @Override
@@ -330,7 +367,7 @@ public class HomeActivity extends AppCompatActivity {
         class ItemViewHolder extends RecyclerView.ViewHolder {
             public TextView name;
             public LinearLayout findName;
-            //public TextView pid;
+
             public ItemViewHolder(@NonNull View itemView) {
                 super(itemView);
                 name = itemView.findViewById(R.id.student_name);
@@ -338,17 +375,82 @@ public class HomeActivity extends AppCompatActivity {
             }
         }
     }
+
+    /**
+     * DESCRIPTION
+     * The SessionsItemAdapter class sets up an Adapter interface for displaying Session information in start_session popup
+     */
+    class SessionItemAdapter extends RecyclerView.Adapter<SessionItemAdapter.ItemViewHolder> {
+        private List<Session> sessionList;
+        private RecyclerView.ViewHolder holder;
+
+        public SessionItemAdapter(List<Session> list) {
+            sessionList = list;
+        }
+
+        /**
+         * Creates Session Item View Holder
+         */
+        public SessionItemAdapter.ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+            View view = inflater.inflate(R.layout.session_item, parent,false);
+            return new SessionItemAdapter.ItemViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull SessionItemAdapter.ItemViewHolder holder, int position) {
+            Session session = sessionList.get(position);
+            holder.name.setText(session.getName());
+
+            // When click on Session ViewHolder, load clicked Session
+            holder.findName.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(HomeActivity.this, session.getName(), Toast.LENGTH_LONG).show();
+
+                    // return and load clicked Session
+                    /**
+                     * When a Session ViewHolder is clicked, BoF will load the respective session
+                     */
+                    currSession = session;
+
+                    dialog.dismiss();       // close start_session dialog
+                }
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            return sessionList.size();
+        }
+
+        class ItemViewHolder extends RecyclerView.ViewHolder {
+            public TextView name;
+            public LinearLayout findName;
+
+            public ItemViewHolder(@NonNull View itemView) {
+                super(itemView);
+                name = itemView.findViewById(R.id.session_name);
+                findName = itemView.findViewById(R.id.find_session);
+            }
+        }
+    }
 }
+
 
 /**
  * FABRICATE DATA HELPER CLASS
+ *
+ * DESCRIPTION
+ * The Data class fabricates data for Student Lists and Session Lists
  */
 class Data {
     /**
      * Fabricate student data method
+     *
      * @return ArrayList of fake Students
      */
-    public static List<Student> fabricate() {
+    public static List<Student> fab_students() {
         // All students is our fabricated list of students
         List<Student> allStudents = new ArrayList<>();
 
@@ -400,5 +502,73 @@ class Data {
         allStudents.add(ivy);
 
         return allStudents;
+    }
+
+    /**
+     * Fabricate session data method
+     *
+     * @return ArrayList of fake Sessions
+     */
+    public static List<Session> fab_sessions() {
+        // All sessions is our fabricated list of students
+        List<Session> allSessions = new ArrayList<>();
+
+        // All students is our fabricated list of students
+        List<Student> students1 = new ArrayList<>();
+
+        // Student Zehua
+        List<Course> zehua_courses = new ArrayList<>();
+
+        zehua_courses.add(new Course("2022", "Winter", "CSE", "110", "large"));
+        zehua_courses.add(new Course("2022", "Winter", "CSE", "151B", "medium"));
+        zehua_courses.add(new Course("2022", "Winter", "PHIL", "141", "small"));
+        zehua_courses.add(new Course("2022", "Winter", "CSE", "152A", "small"));
+
+        Student zehua = new Student("zehua", "zehua.png", zehua_courses);
+
+        // Student Derek
+        List<Course> derek_courses = new ArrayList<>();
+
+        derek_courses.add(new Course("2022", "Winter", "COGS", "10", "huge"));
+
+        Student derek = new Student("derek", "derek.png", derek_courses);
+
+        // Add session1 Students into students1
+        students1.add(zehua);
+        students1.add(derek);
+
+        // Set up session1 to have student1 as Student List
+        Session session1 = new Session("session 1", students1);
+
+        // All students is our fabricated list of students
+        List<Student> students2 = new ArrayList<>();
+
+        // Student Vishvesh
+        List<Course> vishvesh_courses = new ArrayList<>();
+
+        vishvesh_courses.add(new Course("2022", "Winter", "CSE", "110", "large"));
+
+        Student vishvesh = new Student("vishvesh", "vishesh.png", vishvesh_courses);
+
+        // Student Huaner
+        List<Course> huaner_courses = new ArrayList<>();
+
+        huaner_courses.add(new Course("2019", "Fall", "CSE", "110", "large"));
+        huaner_courses.add(new Course("2022", "Winter", "CSE", "141", "large"));
+
+        Student huaner = new Student("huaner", "huaner.png", huaner_courses);
+
+        // Add session2 Students into students2
+        students2.add(vishvesh);
+        students2.add(huaner);
+
+        // Set up session1 to have student1 as Student List
+        Session session2 = new Session("session 2", students2);
+
+        // Add sessions to allSessions
+        allSessions.add(session1);
+        allSessions.add(session2);
+
+        return allSessions;
     }
 }
