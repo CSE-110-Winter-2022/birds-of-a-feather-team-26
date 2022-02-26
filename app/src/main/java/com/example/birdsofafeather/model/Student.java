@@ -26,7 +26,6 @@ public class Student implements Serializable {
     public String getPictureURL() {
         return pictureURL;
     }
-
     public List<Course> getCourses() {
         return courses;
     }

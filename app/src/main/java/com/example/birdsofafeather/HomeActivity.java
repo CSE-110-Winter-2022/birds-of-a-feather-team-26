@@ -108,38 +108,38 @@ public class HomeActivity extends AppCompatActivity {
         // Student Zehua
         List<Course> zehua_courses = new ArrayList<>();
 
-        zehua_courses.add(new Course("2022", "Winter", "CSE", "110"));
-        zehua_courses.add(new Course("2022", "Winter", "CSE", "141"));
-        zehua_courses.add(new Course("2022", "Winter", "CSE", "152A"));
+        zehua_courses.add(new Course("2022", "Winter", "CSE", "110", "large"));
+        zehua_courses.add(new Course("2022", "Winter", "CSE", "141", "large"));
+        zehua_courses.add(new Course("2022", "Winter", "CSE", "152A", "small"));
 
         Student zehua = new Student("zehua", "zehua.png", zehua_courses);
 
         // Student Vishvesh
         List<Course> vishvesh_courses = new ArrayList<>();
 
-        vishvesh_courses.add(new Course("2022", "Winter", "CSE", "110"));
+        vishvesh_courses.add(new Course("2022", "Winter", "CSE", "110", "large"));
 
         Student vishvesh = new Student("vishvesh", "vishesh.png", vishvesh_courses);
 
         // Student Derek
         List<Course> derek_courses = new ArrayList<>();
 
-        derek_courses.add(new Course("2022", "Winter", "COGS", "10"));
+        derek_courses.add(new Course("2022", "Winter", "COGS", "10", "huge"));
 
         Student derek = new Student("derek", "derek.png", derek_courses);
 
         // Student Huaner
         List<Course> huaner_courses = new ArrayList<>();
 
-        huaner_courses.add(new Course("2019", "Fall", "CSE", "110"));
-        huaner_courses.add(new Course("2022", "Winter", "CSE", "141"));
+        huaner_courses.add(new Course("2019", "Fall", "CSE", "110", "large"));
+        huaner_courses.add(new Course("2022", "Winter", "CSE", "141", "large"));
 
         Student huaner = new Student("huaner", "huaner.png", huaner_courses);
 
         // Student Ivy
         List<Course> ivy_courses = new ArrayList<>();
 
-        ivy_courses.add(new Course("2022", "Winter", "CSE", "151B"));
+        ivy_courses.add(new Course("2022", "Winter", "CSE", "151B", "medium"));
 
         Student ivy = new Student("ivy", "ivy.png", ivy_courses);
 
@@ -149,10 +149,10 @@ public class HomeActivity extends AppCompatActivity {
         allStudents.add(derek);
         allStudents.add(huaner);
         allStudents.add(ivy);
-        studentList = findViewById(R.id.student_list);
 
         // Student Item Adapter to display list of students with common courses
         StudentItemAdapter studentItemAdapter = new StudentItemAdapter(allStudents);
+        studentList = findViewById(R.id.student_list);
         studentList.setAdapter(studentItemAdapter);
         studentList.setLayoutManager(lManager);
 
@@ -229,7 +229,7 @@ public class HomeActivity extends AppCompatActivity {
         // Convert List<db.Course> to List<Course>
         List<Course> myCourses = new ArrayList<>();
         for (com.example.birdsofafeather.model.db.Course course : myCoursesRaw) {
-            Course c = new Course(course.year, course.quarter, course.courseName, course.courseNum);
+            Course c = new Course(course.year, course.quarter, course.courseName, course.courseNum, course.courseSize);
             myCourses.add(c);
         }
 
