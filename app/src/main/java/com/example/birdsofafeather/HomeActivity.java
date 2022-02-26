@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +27,14 @@ import com.example.birdsofafeather.model.db.Person;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import com.example.birdsofafeather.model.Course;
 import com.example.birdsofafeather.model.Student;
@@ -109,7 +117,8 @@ public class HomeActivity extends AppCompatActivity {
         List<Course> zehua_courses = new ArrayList<>();
 
         zehua_courses.add(new Course("2022", "Winter", "CSE", "110", "large"));
-        zehua_courses.add(new Course("2022", "Winter", "CSE", "141", "large"));
+        zehua_courses.add(new Course("2022", "Winter", "CSE", "151B", "medium"));
+        zehua_courses.add(new Course("2022", "Winter", "PHIL", "141", "small"));
         zehua_courses.add(new Course("2022", "Winter", "CSE", "152A", "small"));
 
         Student zehua = new Student("zehua", "zehua.png", zehua_courses);
@@ -140,6 +149,7 @@ public class HomeActivity extends AppCompatActivity {
         List<Course> ivy_courses = new ArrayList<>();
 
         ivy_courses.add(new Course("2022", "Winter", "CSE", "151B", "medium"));
+        ivy_courses.add(new Course("2022", "Winter", "PHIL", "141", "small"));
 
         Student ivy = new Student("ivy", "ivy.png", ivy_courses);
 
@@ -184,7 +194,6 @@ public class HomeActivity extends AppCompatActivity {
                      *
                      */
                     filteredStudents = filterStudentsWithCommonCourses(allStudents);
-
 
                     /**
                      * 3. Display list of Students with Common Courses (zzh)
@@ -242,22 +251,62 @@ public class HomeActivity extends AppCompatActivity {
      * @return
      */
     public List<Student> filterStudentsWithCommonCourses(List<Student> allStudents) {
-        List<Student> filteredStudents = new ArrayList<>();
+        // Map which records number of common courses each student takes with myUser
+        Map<Student, Integer> frequencyStudents = new HashMap<>();
 
-        // O(n^3) comparison as main algorithm
-        for (Student student : allStudents)
-            for (Course course : student.getCourses())
-                for (Course c : myUser.getCourses())
+        // Count number of common courses each student takes with myUser
+        for (Student student : allStudents) {
+            int freq = 0;
+            for (Course course : student.getCourses()) {
+                for (Course c : myUser.getCourses()) {
                     if (course.equals(c))
-                        filteredStudents.add(student);
+                        freq++;
+                }
+            }
 
-        return filteredStudents;
+            // Add to frequency map if there is a course in common with student and myUser
+            if (freq > 0)
+                frequencyStudents.put(student, freq);
+
+        }
+
+        // Sort frequency map by value
+        Map<Student, Integer> frequencyStudents_sorted = sortByValue(frequencyStudents);
+
+        for (Map.Entry<Student, Integer> entry : frequencyStudents_sorted.entrySet())
+            Log.i("HashMap", "key=" + entry.getKey().getFirstName() + ", value=" + entry.getValue());
+
+        return new ArrayList<>(frequencyStudents_sorted.keySet());
     }
 
-    public void listenAndFetchOtherStudentsData() {}
+    /**
+     * Helper function to sort HashMap by values
+     * @param freq
+     * @return HashMap sorted by values
+     */
+    public Map<Student, Integer> sortByValue(Map<Student, Integer> freq) {
+        // Create a linked list from elements of HashMap
+        List<Map.Entry<Student, Integer>> linkedFreq = new LinkedList<>(freq.entrySet());
 
-    public void stopListenAndFetchOtherStudentsData() {}
+        // Sort the linked list
+        Collections.sort(linkedFreq, new Comparator<Map.Entry<Student, Integer>>() {
+            @Override
+            public int compare(Map.Entry<Student, Integer> freq1, Map.Entry<Student, Integer> freq2) {
+                return freq2.getValue().compareTo(freq1.getValue());
+            }
+        });
 
+        // Convert sorted linked list to HashMap
+        Map<Student, Integer> freq_sorted = new LinkedHashMap<>();
+        for (Map.Entry<Student, Integer> entry : linkedFreq)
+            freq_sorted.put(entry.getKey(), entry.getValue());
+
+        return freq_sorted;
+    }
+
+    /**
+     * STUDENT ITEM ADAPTER CLASS
+     */
     class StudentItemAdapter extends RecyclerView.Adapter<StudentItemAdapter.ItemViewHolder> {
         private List<Student> mList;
         private RecyclerView.ViewHolder holder;
