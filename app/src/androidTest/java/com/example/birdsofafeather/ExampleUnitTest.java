@@ -65,8 +65,8 @@ public class ExampleUnitTest {
 
     @Test
     public void testInsertDeleteCourse(){
-        Course c = new Course(0,8,"Huaner","JPG","2022","WI","CSE","110");
-        Course c1  = new Course(1,2,"chenhan", "thisisthelink", "2021", "FA", "CSE", "110");
+        Course c = new Course(0,8,"Huaner","JPG","2022","WI","CSE","110", "Huge");
+        Course c1  = new Course(1,2,"chenhan", "thisisthelink", "2021", "FA", "CSE", "110", "Large");
         courseDao.insert(c);
         courseDao.insert(c1);
         courseDao.delete(c);
@@ -81,9 +81,9 @@ public class ExampleUnitTest {
         personDao.insertPerson(p);
         personDao.insertPerson(p1);
         personDao.insertPerson(p2);
-        Course c = new Course(0,8,"Huaner","JPG","2022","WI","CSE","110");
-        Course c1  = new Course(1,2,"chenhan", "thisisthelink", "2021", "FA", "CSE", "110");
-        Course c2 = new Course(2,3, "zehua", "alinkagain", "2022", "WI", "CSE", "120");
+        Course c = new Course(0,8,"Huaner","JPG","2022","WI","CSE","110", "Large");
+        Course c1  = new Course(1,2,"chenhan", "thisisthelink", "2021", "FA", "CSE", "110", "Large");
+        Course c2 = new Course(2,3, "zehua", "alinkagain", "2022", "WI", "CSE", "120", "Huge");
         courseDao.insert(c);
         courseDao.insert(c1);
         courseDao.insert(c2);
@@ -99,9 +99,9 @@ public class ExampleUnitTest {
         personDao.insertPerson(p);
         personDao.insertPerson(p1);
         personDao.insertPerson(p2);
-        Course c = new Course(0,8,"Huaner","JPG","2022","WI","CSE","110");
-        Course c1  = new Course(1,2,"chenhan", "thisisthelink", "2021", "FA", "CSE", "110");
-        Course c2 = new Course(2,3, "zehua", "alinkagain", "2022", "WI", "CSE", "120");
+        Course c = new Course(0,8,"Huaner","JPG","2022","WI","CSE","110", "Large");
+        Course c1  = new Course(1,2,"chenhan", "thisisthelink", "2021", "FA", "CSE", "110", "Large");
+        Course c2 = new Course(2,3, "zehua", "alinkagain", "2022", "WI", "CSE", "120", "Large");
         courseDao.insert(c);
         courseDao.insert(c1);
         courseDao.insert(c2);
@@ -134,14 +134,14 @@ public class ExampleUnitTest {
         personDao.insertPerson(p);
         personDao.insertPerson(p1);
         personDao.insertPerson(p2);
-        Course c = new Course(0,8,"Huaner","JPG","2022","WI","CSE","110");
-        Course c1  = new Course(1,2,"chenhan", "thisisthelink", "2021", "FA", "CSE", "110");
-        Course c2 = new Course(2,3, "zehua", "alinkagain", "2022", "WI", "CSE", "120");
+        Course c = new Course(0,8,"Huaner","JPG","2022","WI","CSE","110", "Large");
+        Course c1  = new Course(1,2,"chenhan", "thisisthelink", "2021", "FA", "CSE", "110", "Large");
+        Course c2 = new Course(2,3, "zehua", "alinkagain", "2022", "WI", "CSE", "120","Large");
         courseDao.insert(c);
         courseDao.insert(c1);
         courseDao.insert(c2);
         PersonWithCourse n = personWithCourseDao.get(8);
-        assertEquals("2022WICSE110",n.getCourseInfo());
+        assertEquals("2022WICSE110 Large",n.getCourseInfo());
     }
 
     @Test
@@ -152,13 +152,24 @@ public class ExampleUnitTest {
         personDao.insertPerson(p);
         personDao.insertPerson(p1);
         personDao.insertPerson(p2);
-        Course c = new Course(4,1,"Huaner","JPG","2022","WI","CSE","110");
-        Course c1  = new Course(5,2,"chenhan", "thisisthelink", "2021", "FA", "CSE", "110");
-        Course c2 = new Course(6,3, "zehua", "alinkagain", "2022", "WI", "CSE", "120");
+        Course c = new Course(4,1,"Huaner","JPG","2022","WI","CSE","110", "Large");
+        Course c1  = new Course(5,2,"chenhan", "thisisthelink", "2021", "FA", "CSE", "110", "Large");
+        Course c2 = new Course(6,3, "zehua", "alinkagain", "2022", "WI", "CSE", "120", "Large");
         courseDao.insert(c);
         courseDao.insert(c1);
         courseDao.insert(c2);
         assertEquals(3, personWithCourseDao.count());
+    }
+
+    @Test
+    public void testCourseSize(){
+        Course c = new Course(4,1,"Huaner","JPG","2022","WI","CSE","110", "Huge");
+        Course c1  = new Course(5,2,"chenhan", "thisisthelink", "2021", "FA", "CSE", "110", "Large");
+        Course c2 = new Course(6,3, "zehua", "alinkagain", "2022", "WI", "CSE", "120", "Gigantic");
+        courseDao.insert(c);
+        courseDao.insert(c1);
+        courseDao.insert(c2);
+        assertEquals("Gigantic", courseDao.getCourseSize(3));
     }
 
 }

@@ -15,11 +15,14 @@ public interface CourseDao {
     @Query("SELECT * FROM course where person_id=:personId")
     List<Course> getForPerson(int personId);
 
-    @Query("SELECT * FROM course WHERE id=:id")
-    Course get(int id);
+    @Query("SELECT * FROM course WHERE id=:courseId")
+    Course get(int courseId);
 
     @Query("SELECT COUNT(*) from course")
     int count();
+
+    @Query("SELECT courseSize FROM course WHERE person_id=:personId")
+    String getCourseSize(int personId);
 
     @Insert
     void insert(Course course);
