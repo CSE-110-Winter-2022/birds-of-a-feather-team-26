@@ -93,7 +93,7 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        // Student object of my user
+        // myUser Student object
         myUser = getPersonFromDBAndReturnStudent(0);
 
         /**
@@ -111,60 +111,7 @@ public class HomeActivity extends AppCompatActivity {
         });
 
         // All students is our fabricated list of students
-        allStudents = new ArrayList<>();
-
-        // Student Zehua
-        List<Course> zehua_courses = new ArrayList<>();
-
-        zehua_courses.add(new Course("2022", "Winter", "CSE", "110", "large"));
-        zehua_courses.add(new Course("2022", "Winter", "CSE", "151B", "medium"));
-        zehua_courses.add(new Course("2022", "Winter", "PHIL", "141", "small"));
-        zehua_courses.add(new Course("2022", "Winter", "CSE", "152A", "small"));
-
-        Student zehua = new Student("zehua", "zehua.png", zehua_courses);
-
-        // Student Vishvesh
-        List<Course> vishvesh_courses = new ArrayList<>();
-
-        vishvesh_courses.add(new Course("2022", "Winter", "CSE", "110", "large"));
-
-        Student vishvesh = new Student("vishvesh", "vishesh.png", vishvesh_courses);
-
-        // Student Derek
-        List<Course> derek_courses = new ArrayList<>();
-
-        derek_courses.add(new Course("2022", "Winter", "COGS", "10", "huge"));
-
-        Student derek = new Student("derek", "derek.png", derek_courses);
-
-        // Student Huaner
-        List<Course> huaner_courses = new ArrayList<>();
-
-        huaner_courses.add(new Course("2019", "Fall", "CSE", "110", "large"));
-        huaner_courses.add(new Course("2022", "Winter", "CSE", "141", "large"));
-
-        Student huaner = new Student("huaner", "huaner.png", huaner_courses);
-
-        // Student Ivy
-        List<Course> ivy_courses = new ArrayList<>();
-
-        ivy_courses.add(new Course("2022", "Winter", "CSE", "151B", "medium"));
-        ivy_courses.add(new Course("2022", "Winter", "PHIL", "141", "small"));
-
-        Student ivy = new Student("ivy", "ivy.png", ivy_courses);
-
-        // Add all Students into allStudents
-        allStudents.add(zehua);
-        allStudents.add(vishvesh);
-        allStudents.add(derek);
-        allStudents.add(huaner);
-        allStudents.add(ivy);
-
-        // Student Item Adapter to display list of students with common courses
-        StudentItemAdapter studentItemAdapter = new StudentItemAdapter(allStudents);
-        studentList = findViewById(R.id.student_list);
-        studentList.setAdapter(studentItemAdapter);
-        studentList.setLayoutManager(lManager);
+        allStudents = Data.fabricate();
 
         /**
          * A. TOGGLE BUTTON WHICH TRIGGERS BLUETOOTH FUNCTIONALITY
@@ -183,36 +130,64 @@ public class HomeActivity extends AppCompatActivity {
 
                 /**
                  * When SEARCH button is toggled ON:
-                 *      1. Start bluetooth search
-                 *      2. Filter students by common courses
-                 *      3. Display list of students with common courses
+                 *      1. Ask user if they want to resume a previous session or start a new session (MS 2)
+                 *      2. Start bluetooth search (MS 1)
+                 *      3. Filter students by common courses (MS 1)
+                 *      4. Display list of students with common courses (MS 1)
                  */
                 if (isChecked) {
+                    /**
+                     * 1. Ask user if they want to resume a previous session or start a new session
+                     */
+
 
                     /**
-                     * 2. Filter Students with Common Courses (main Home Activity algorithm)
+                     * 2. Start bluetooth search
+                     */
+
+
+                    /**
+                     * 3. Filter Students with Common Courses (main Home Activity algorithm)
                      *
                      */
                     filteredStudents = filterStudentsWithCommonCourses(allStudents);
 
-                    /**
-                     * 3. Display list of Students with Common Courses (zzh)
-                     */
-                    studentList = findViewById(R.id.student_list);
 
+                    /**
+                     * 4. Display list of Students with Common Courses
+                     */
                     // Student Item Adapter to display list of students with common courses
                     StudentItemAdapter studentItemAdapter = new StudentItemAdapter(filteredStudents);
+                    studentList = findViewById(R.id.student_list);
                     studentList.setAdapter(studentItemAdapter);
                     studentList.setLayoutManager(lManager);
                 }
 
                 /**
                  * When SEARCH button is toggled OFF:
-                 *      1. Stop bluetooth search
-                 *      3. Stop displaying list of students with common courses
+                 *      1. Stop bluetooth search (MS 1)
+                 *      2. Ask user to save session with <session_name> (MS 2)
+                 *      3. Stop displaying list of students with common courses (MS 1)
                  */
                 else {
+                    /**
+                     * 1. Stop bluetooth search
+                     */
 
+
+                    /**
+                     * 2. Ask user to save session with <session_name>
+                     */
+
+
+                    /**
+                     * 3. Stop displaying list of students with common courses
+                     */
+                    // Clear Student Item Adapter
+                    StudentItemAdapter clear = new StudentItemAdapter(new ArrayList<>());
+                    studentList = findViewById(R.id.student_list);
+                    studentList.setAdapter(clear);
+                    studentList.setLayoutManager(lManager);
                 }
 
             }
@@ -273,6 +248,7 @@ public class HomeActivity extends AppCompatActivity {
         // Sort frequency map by value
         Map<Student, Integer> frequencyStudents_sorted = sortByValue(frequencyStudents);
 
+        // Log frequency map student name and common course frequency
         for (Map.Entry<Student, Integer> entry : frequencyStudents_sorted.entrySet())
             Log.i("HashMap", "key=" + entry.getKey().getFirstName() + ", value=" + entry.getValue());
 
@@ -361,5 +337,68 @@ public class HomeActivity extends AppCompatActivity {
                 findName = itemView.findViewById(R.id.find_student);
             }
         }
+    }
+}
+
+/**
+ * FABRICATE DATA HELPER CLASS
+ */
+class Data {
+    /**
+     * Fabricate student data method
+     * @return ArrayList of fake Students
+     */
+    public static List<Student> fabricate() {
+        // All students is our fabricated list of students
+        List<Student> allStudents = new ArrayList<>();
+
+        // Student Zehua
+        List<Course> zehua_courses = new ArrayList<>();
+
+        zehua_courses.add(new Course("2022", "Winter", "CSE", "110", "large"));
+        zehua_courses.add(new Course("2022", "Winter", "CSE", "151B", "medium"));
+        zehua_courses.add(new Course("2022", "Winter", "PHIL", "141", "small"));
+        zehua_courses.add(new Course("2022", "Winter", "CSE", "152A", "small"));
+
+        Student zehua = new Student("zehua", "zehua.png", zehua_courses);
+
+        // Student Vishvesh
+        List<Course> vishvesh_courses = new ArrayList<>();
+
+        vishvesh_courses.add(new Course("2022", "Winter", "CSE", "110", "large"));
+
+        Student vishvesh = new Student("vishvesh", "vishesh.png", vishvesh_courses);
+
+        // Student Derek
+        List<Course> derek_courses = new ArrayList<>();
+
+        derek_courses.add(new Course("2022", "Winter", "COGS", "10", "huge"));
+
+        Student derek = new Student("derek", "derek.png", derek_courses);
+
+        // Student Huaner
+        List<Course> huaner_courses = new ArrayList<>();
+
+        huaner_courses.add(new Course("2019", "Fall", "CSE", "110", "large"));
+        huaner_courses.add(new Course("2022", "Winter", "CSE", "141", "large"));
+
+        Student huaner = new Student("huaner", "huaner.png", huaner_courses);
+
+        // Student Ivy
+        List<Course> ivy_courses = new ArrayList<>();
+
+        ivy_courses.add(new Course("2022", "Winter", "CSE", "151B", "medium"));
+        ivy_courses.add(new Course("2022", "Winter", "PHIL", "141", "small"));
+
+        Student ivy = new Student("ivy", "ivy.png", ivy_courses);
+
+        // Add all Students into allStudents
+        allStudents.add(zehua);
+        allStudents.add(vishvesh);
+        allStudents.add(derek);
+        allStudents.add(huaner);
+        allStudents.add(ivy);
+
+        return allStudents;
     }
 }
