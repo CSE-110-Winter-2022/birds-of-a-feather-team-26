@@ -6,6 +6,7 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.birdsofafeather.databinding.ActivityMainBinding;
 import com.example.birdsofafeather.model.db.AppDatabase;
 
 /**
@@ -35,6 +36,7 @@ import com.example.birdsofafeather.model.db.AppDatabase;
  **/
 
 public class MainActivity extends AppCompatActivity {
+
 
     /**
      * This method creates the Main Activity
