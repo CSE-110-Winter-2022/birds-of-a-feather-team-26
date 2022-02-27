@@ -11,13 +11,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.birdsofafeather.model.IPerson;
+import com.example.birdsofafeather.model.db.Person;
 
 import java.util.List;
 
 public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.ViewHolder> {
-    private final List<? extends IPerson> persons;
+    private final List<Person> persons;
 
-    public PersonsViewAdapter(List<? extends IPerson> persons) {
+    public PersonsViewAdapter(List<Person> persons) {
         super();
         this.persons = persons;
     }
@@ -46,7 +47,7 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
             extends RecyclerView.ViewHolder
             implements View.OnClickListener {
         private final TextView personNameView;
-        private IPerson person;
+        private Person person;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -54,18 +55,18 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
             itemView.setOnClickListener(this);
         }
 
-        public void setPerson(IPerson person) {
+        public void setPerson(Person person) {
             this.person = person;
-            this.personNameView.setText(person.getName());
+            this.personNameView.setText(person.personName);
         }
 
         @Override
         public void onClick(View view) {
             Context context = view.getContext();
             Intent intent = new Intent(context, CourseActivity.class);
-            intent.putExtra("person_name", this.person.getName());
-            intent.putExtra("person_id", this.person.getId());
-            intent.putExtra("photo_url", this.person.getUrl());
+            intent.putExtra("person_name", this.person.personName);
+            intent.putExtra("person_id", this.person.personId);
+            //intent.putExtra("photo_url", this.person.getUrl());
 
             context.startActivity(intent);
         }

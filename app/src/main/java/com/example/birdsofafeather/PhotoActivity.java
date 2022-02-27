@@ -58,7 +58,7 @@ public class PhotoActivity extends AppCompatActivity {
         String name = intent1.getStringExtra("person_name");
 
         // Create Person object of user
-        Person p = new Person(i, name, url);
+        Person p = new Person(i, name, url, true);
         p.personId = i;
         p.personName = name;
         p.url = url;

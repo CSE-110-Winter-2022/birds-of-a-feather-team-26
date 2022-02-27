@@ -19,10 +19,14 @@ public class Person{
     @ColumnInfo(name="photo_url")
     public String url;
 
-    public Person(int personId, String personName, String url){
+    @ColumnInfo(name="Favorite")
+    public boolean fav = false;
+
+    public Person(int personId, String personName, String url, boolean fav){
         this.personId = personId;
         this.personName = personName;
         this.url = url;
+        this.fav = fav;
     }
 
 }

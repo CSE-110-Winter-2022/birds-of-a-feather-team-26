@@ -3,16 +3,21 @@ package com.example.birdsofafeather;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.widget.ImageViewCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.se.omapi.Session;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +27,7 @@ import com.example.birdsofafeather.model.Course;
 import com.example.birdsofafeather.model.IPerson;
 import com.example.birdsofafeather.model.Student;
 import com.example.birdsofafeather.model.db.AppDatabase;
+import com.example.birdsofafeather.model.db.CourseDao;
 import com.example.birdsofafeather.model.db.Person;
 
 
@@ -30,6 +36,7 @@ import java.util.List;
 
 import com.example.birdsofafeather.model.Course;
 import com.example.birdsofafeather.model.Student;
+import com.example.birdsofafeather.model.db.PersonDao;
 
 /**
  * DESCRIPTION
@@ -108,40 +115,40 @@ public class HomeActivity extends AppCompatActivity {
         // Student Zehua
         List<Course> zehua_courses = new ArrayList<>();
 
-        zehua_courses.add(new Course("2022", "Winter", "CSE", "110"));
-        zehua_courses.add(new Course("2022", "Winter", "CSE", "141"));
-        zehua_courses.add(new Course("2022", "Winter", "CSE", "152A"));
+        zehua_courses.add(new Course("2022", "Winter", "CSE", "110", "Large"));
+        zehua_courses.add(new Course("2022", "Winter", "CSE", "141", "Huge"));
+        zehua_courses.add(new Course("2022", "Winter", "CSE", "152A", "Large"));
 
-        Student zehua = new Student("zehua", "zehua.png", zehua_courses);
+        Student zehua = new Student("zehua", "zehua.png", zehua_courses, false);
 
         // Student Vishvesh
         List<Course> vishvesh_courses = new ArrayList<>();
 
-        vishvesh_courses.add(new Course("2022", "Winter", "CSE", "110"));
+        vishvesh_courses.add(new Course("2022", "Winter", "CSE", "110", "Large"));
 
-        Student vishvesh = new Student("vishvesh", "vishesh.png", vishvesh_courses);
+        Student vishvesh = new Student("vishvesh", "vishesh.png", vishvesh_courses, false);
 
         // Student Derek
         List<Course> derek_courses = new ArrayList<>();
 
-        derek_courses.add(new Course("2022", "Winter", "COGS", "10"));
+        derek_courses.add(new Course("2022", "Winter", "COGS", "10", "Large"));
 
-        Student derek = new Student("derek", "derek.png", derek_courses);
+        Student derek = new Student("derek", "derek.png", derek_courses, false);
 
         // Student Huaner
         List<Course> huaner_courses = new ArrayList<>();
 
-        huaner_courses.add(new Course("2019", "Fall", "CSE", "110"));
-        huaner_courses.add(new Course("2022", "Winter", "CSE", "141"));
+        huaner_courses.add(new Course("2019", "Fall", "CSE", "110", "Large"));
+        huaner_courses.add(new Course("2022", "Winter", "CSE", "141", "Large"));
 
-        Student huaner = new Student("huaner", "huaner.png", huaner_courses);
+        Student huaner = new Student("huaner", "huaner.png", huaner_courses, false);
 
         // Student Ivy
         List<Course> ivy_courses = new ArrayList<>();
 
-        ivy_courses.add(new Course("2022", "Winter", "CSE", "151B"));
+        ivy_courses.add(new Course("2022", "Winter", "CSE", "151B", "Large"));
 
-        Student ivy = new Student("ivy", "ivy.png", ivy_courses);
+        Student ivy = new Student("ivy", "ivy.png", ivy_courses, false);
 
         // Add all Students into allStudents
         allStudents.add(zehua);
@@ -229,11 +236,11 @@ public class HomeActivity extends AppCompatActivity {
         // Convert List<db.Course> to List<Course>
         List<Course> myCourses = new ArrayList<>();
         for (com.example.birdsofafeather.model.db.Course course : myCoursesRaw) {
-            Course c = new Course(course.year, course.quarter, course.courseName, course.courseNum);
+            Course c = new Course(course.year, course.quarter, course.courseName, course.courseNum, course.courseSize);
             myCourses.add(c);
         }
 
-        return new Student(myPerson.getName(), myPerson.getUrl(), myCourses);
+        return new Student(myPerson.getName(), myPerson.getUrl(), myCourses, false);
     }
 
     /**
@@ -257,6 +264,11 @@ public class HomeActivity extends AppCompatActivity {
     public void listenAndFetchOtherStudentsData() {}
 
     public void stopListenAndFetchOtherStudentsData() {}
+
+    public void goToSessionClick(View view) {
+        Intent intent = new Intent(this, SessionActivity.class);
+        startActivity(intent);
+    }
 
     class StudentItemAdapter extends RecyclerView.Adapter<StudentItemAdapter.ItemViewHolder> {
         private List<Student> mList;
@@ -284,6 +296,7 @@ public class HomeActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NonNull StudentItemAdapter.ItemViewHolder holder, int position) {
+
             Student student = mList.get(position);
             holder.name.setText(student.getFirstName());
             holder.findName.setOnClickListener(new View.OnClickListener() {
@@ -292,6 +305,21 @@ public class HomeActivity extends AppCompatActivity {
                     Intent intent = new Intent(view.getContext(), ProfileActivity.class);
                     intent.putExtra("Student", student);
                     startActivity(intent);
+                }
+            });
+            holder.star.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // set star icon to yellow once clicked
+                    ((ImageButton)(view.findViewById(R.id.starButton))).setColorFilter(Color.YELLOW);
+
+                    holder.star.setOnClickListener(new View.OnClickListener(){
+                        @Override
+                        public void onClick(View view){
+                            // set star icon to gray if click again to cancel "favorite"
+                            ((ImageButton)(view.findViewById(R.id.starButton))).setColorFilter(Color.GRAY);
+                        }
+                    });
                 }
             });
             //holder.pid.setText(mList.get(position).getPid());
@@ -305,12 +333,15 @@ public class HomeActivity extends AppCompatActivity {
         class ItemViewHolder extends RecyclerView.ViewHolder {
             public TextView name;
             public LinearLayout findName;
+            public ImageButton star;
             //public TextView pid;
             public ItemViewHolder(@NonNull View itemView) {
                 super(itemView);
                 name = itemView.findViewById(R.id.student_name);
                 findName = itemView.findViewById(R.id.find_student);
+                star = itemView.findViewById(R.id.starButton);
             }
         }
+
     }
 }

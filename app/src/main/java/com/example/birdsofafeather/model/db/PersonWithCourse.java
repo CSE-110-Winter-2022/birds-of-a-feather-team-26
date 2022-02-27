@@ -35,6 +35,9 @@ public class PersonWithCourse implements IPerson {
     @Override
     public String getName() { return this.person.personName;}
 
+//    @Override
+//    public Boolean isFavOrNot(){ return this.person.fav;}
+
     @Override
     public String getCourseInfo() {
         String result = "";

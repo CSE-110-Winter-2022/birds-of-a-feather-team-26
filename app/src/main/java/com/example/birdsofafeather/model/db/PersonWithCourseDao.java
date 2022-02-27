@@ -23,5 +23,9 @@ public interface PersonWithCourseDao {
 
     @Query("SELECT courseSize FROM course WHERE person_id=:personId")
     String getCourseSize(int personId);
+//
+//    @Query("SELECT favorite FROM persons WHERE person_name=:name")
+//    Boolean checkFav(String name);
+
 
 }

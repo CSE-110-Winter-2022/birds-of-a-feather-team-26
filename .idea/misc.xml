@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/CSE110/Milestone1/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.10208333333333333" />
+        <entry key="..\:/CSE110/Milestone1/app/src/main/res/drawable/ic_launcher_background.xml" value="0.10208333333333333" />
         <entry key="..\:/CSE110/Milestone1/app/src/main/res/layout/activity_add_course.xml" value="0.1" />
         <entry key="..\:/CSE110/Milestone1/app/src/main/res/layout/activity_bluetooth.xml" value="0.17916666666666667" />
         <entry key="..\:/CSE110/Milestone1/app/src/main/res/layout/activity_course.xml" value="0.22" />
@@ -13,8 +15,11 @@
         <entry key="..\:/CSE110/Milestone1/app/src/main/res/layout/activity_photo.xml" value="0.17916666666666667" />
         <entry key="..\:/CSE110/Milestone1/app/src/main/res/layout/activity_picture.xml" value="0.17916666666666667" />
         <entry key="..\:/CSE110/Milestone1/app/src/main/res/layout/activity_profile.xml" value="0.17916666666666667" />
+        <entry key="..\:/CSE110/Milestone1/app/src/main/res/layout/activity_session.xml" value="0.1" />
+        <entry key="..\:/CSE110/Milestone1/app/src/main/res/layout/activity_student_view_adapter.xml" value="0.17916666666666667" />
         <entry key="..\:/CSE110/Milestone1/app/src/main/res/layout/course_row.xml" value="0.1" />
         <entry key="..\:/CSE110/Milestone1/app/src/main/res/layout/person_row.xml" value="0.1" />
+        <entry key="..\:/CSE110/Milestone1/app/src/main/res/layout/student_item.xml" value="0.17916666666666667" />
         <entry key="..\:/Users/Zehua Zhang/OneDrive/Desktop/birds-of-a-feather-team-26/app/src/main/res/layout/activity_course.xml" value="0.25" />
         <entry key="..\:/Users/Zehua Zhang/OneDrive/Desktop/birds-of-a-feather-team-26/app/src/main/res/layout/activity_profile.xml" value="0.264" />
         <entry key="..\:/Users/Zehua Zhang/OneDrive/Desktop/birds-of-a-feather-team-26/app/src/main/res/layout/course_item.xml" value="0.25" />
