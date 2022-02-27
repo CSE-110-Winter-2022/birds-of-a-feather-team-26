@@ -32,28 +32,6 @@ import java.util.Random;
  * After click the CONFIRM button, the user will be directed to the adding course page.
  */
 
-//public class PhotoActivity extends AppCompatActivity {
-//
-//    ImageView imageView;
-//    ActivityMainBinding binding;
-
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        binding = ActivityMainBinding.inflate(getLayoutInflater());
-//        setContentView(R.layout.activity_photo);
-//
-//
-//        Button confirm = findViewById(R.id.confirmbtn);
-//        //Button show = findViewById(R.id.fetchbtn);
-//
-//        imageView = findViewById(R.id.urlphoto);
-//
-//        Glide.with(this).load("https://i.imgur.com/6qH8Wu7.jpg").into(imageView);
-//
-//        //Intent intent = new Intent(this, CourseActivity.class);
-//        //Intent intent1 = getIntent();
-//    }
 public class PhotoActivity extends AppCompatActivity {
 
     ActivityPhotoBinding binding;
