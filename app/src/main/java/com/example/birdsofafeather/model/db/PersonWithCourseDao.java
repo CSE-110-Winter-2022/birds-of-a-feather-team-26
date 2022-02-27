@@ -27,5 +27,4 @@ public interface PersonWithCourseDao {
 //    @Query("SELECT favorite FROM persons WHERE person_name=:name")
 //    Boolean checkFav(String name);
 
-
 }
