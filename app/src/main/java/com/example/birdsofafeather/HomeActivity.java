@@ -21,14 +21,9 @@ import com.example.birdsofafeather.model.Course;
 import com.example.birdsofafeather.model.IPerson;
 import com.example.birdsofafeather.model.Student;
 import com.example.birdsofafeather.model.db.AppDatabase;
-import com.example.birdsofafeather.model.db.Person;
-
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.example.birdsofafeather.model.Course;
-import com.example.birdsofafeather.model.Student;
 
 /**
  * DESCRIPTION
