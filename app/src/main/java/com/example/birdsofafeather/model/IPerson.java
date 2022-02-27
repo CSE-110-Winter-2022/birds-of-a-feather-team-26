@@ -9,5 +9,4 @@ public interface IPerson {
     //public abstract Boolean isFavOrNot();
     public abstract String getCourseInfo();
 
-
 }
