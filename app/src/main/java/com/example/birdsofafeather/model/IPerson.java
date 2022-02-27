@@ -8,5 +8,4 @@ public interface IPerson {
     public abstract String getUrl();
     public abstract String getCourseInfo();
 
-
 }

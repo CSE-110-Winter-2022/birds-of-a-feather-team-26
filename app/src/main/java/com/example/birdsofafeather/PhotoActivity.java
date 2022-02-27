@@ -27,6 +27,8 @@ import java.util.InputMismatchException;
 import java.util.Random;
 
 /**
+ * DESCRIPTION
+ *
  * The photo activity needs the user to input his/her url of the photo they want to upload. If the
  * user prefer not to upload, the app we design will automatically upload a default image for them.
  * After click the CONFIRM button, the user will be directed to the adding course page.

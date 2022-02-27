@@ -82,10 +82,9 @@ public class ProfileActivity extends AppCompatActivity {
 
     /**
      * Finish Profile Activity and return to home when BACK button is clicked
-     * @param view
      */
     public void onBackClicked(View view) {
-        finish();   // Finish Profile Activity and return to home
+        finish();
     }
 
     /**
@@ -96,18 +95,14 @@ public class ProfileActivity extends AppCompatActivity {
         private RecyclerView.ViewHolder holder;
 
         /**
-         * StudentItemAdapter constructor
-         * @param list
+         * Course Item Adapter constructor
          */
         public CourseItemAdapter(ArrayList<Course> list) {
             mList = list;
         }
 
         /**
-         *
-         * @param parent
-         * @param viewType
-         * @return
+         * Creates Course Item View Holder
          */
         public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             LayoutInflater inflater = LayoutInflater.from(parent.getContext());
@@ -118,7 +113,6 @@ public class ProfileActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
             holder.course.setText(mList.get(position).getCourse());
-            //holder.pid.setText(mList.get(position).getPid());
         }
 
         @Override
@@ -128,11 +122,10 @@ public class ProfileActivity extends AppCompatActivity {
 
         class ItemViewHolder extends RecyclerView.ViewHolder {
             public TextView course;
-            //public TextView pid;
+
             public ItemViewHolder(@NonNull View itemView) {
                 super(itemView);
                 course = itemView.findViewById(R.id.course_name);
-                //findViewById()
             }
         }
     }
