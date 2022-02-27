@@ -19,9 +19,9 @@ public class Course implements Serializable {
         this.courseSize = courseSize;
     }
 
-//    /**
-//     * getter methods
-//     */
+    /**
+     * getter methods
+     */
     public String getCourse() {
         return quarter + " " + year + " " + subject + " " + courseNumber + " " + courseSize;
     }
