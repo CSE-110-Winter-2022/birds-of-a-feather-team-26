@@ -6,6 +6,11 @@ import androidx.appcompat.app.AlertDialog;
 
 import java.util.Optional;
 
+/**
+ * DESCRIPTION
+ * The Utilities module holds utility functions for showing alerts and parsing count
+ **/
+
 public class Utilities {
     public static void showAlert(Context context, String message) {
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);

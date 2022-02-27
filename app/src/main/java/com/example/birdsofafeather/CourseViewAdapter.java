@@ -17,6 +17,10 @@ import com.example.birdsofafeather.model.db.Course;
 import java.util.List;
 import java.util.function.Consumer;
 
+/**
+ * DESCRIPTION
+ * The CourseViewAdapter module sets up an Adapter interface for displaying Course information in CourseActivity
+ **/
 
 public class CourseViewAdapter extends RecyclerView.Adapter<CourseViewAdapter.ViewHolder> {
     private final List<Course> course;
@@ -27,13 +31,6 @@ public class CourseViewAdapter extends RecyclerView.Adapter<CourseViewAdapter.Vi
         this.course = course;
         this.onNoteRemoved = onNoteRemoved;
     }
-
-//    @NonNull
-//    @Override
-//    public NotesViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-//        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.notes_row, parent, false);
-//        return null;
-//    }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

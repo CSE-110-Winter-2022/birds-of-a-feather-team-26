@@ -15,6 +15,7 @@ public class Student implements Serializable {
         pictureURL = s.getPictureURL();
         courses = s.getCourses();
     }
+
     public Student(String firstName, String pictureURL, List<Course> courses, Boolean fav) {
         this.firstName = firstName;
         this.pictureURL = pictureURL;
@@ -31,5 +32,5 @@ public class Student implements Serializable {
     public List<Course> getCourses() {
         return courses;
     }
-    public boolean fav() { return fav = true; }
+    public boolean fav() { return fav; }
 }
