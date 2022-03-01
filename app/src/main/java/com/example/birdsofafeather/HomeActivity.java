@@ -1,4 +1,3 @@
-
 package com.example.birdsofafeather;
 
 import android.content.Intent;
@@ -36,6 +35,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * DESCRIPTION
@@ -199,7 +199,7 @@ public class HomeActivity extends AppCompatActivity {
         db = AppDatabase.singleton(this);
 
         // Retrieve my user's information from BOF database
-        IPerson myPerson = db.personWithCourseDao().get(id);
+        IPerson myPerson = db.PersonDao().get(id);
         List<com.example.birdsofafeather.model.db.Course> myCoursesRaw = db.CourseDao().getForPerson(id);
 
         // Convert List<db.Course> to List<Course>
@@ -252,7 +252,7 @@ public class HomeActivity extends AppCompatActivity {
     /**
      * A.3. Filter Students with Common Courses (main Home Activity algorithm)
      * @param allStudents
-     * @return
+     * @return List<Student> of students who've taken a course in common with myUser
      */
     public List<Student> filterStudentsWithCommonCourses(List<Student> allStudents) {
         // Map which records number of common courses each student takes with myUser

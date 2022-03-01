@@ -7,10 +7,6 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.birdsofafeather.model.db.AppDatabase;
-import com.example.birdsofafeather.model.db.Person;
-import com.example.birdsofafeather.model.db.PersonWithCourseDao;
-
 /**
  * DESCRIPTION
  *
@@ -23,7 +19,6 @@ public class NameActivity extends AppCompatActivity {
 
     /**
      * This method creates the Name Activity
-     * @param savedInstanceState
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +28,6 @@ public class NameActivity extends AppCompatActivity {
 
     /**
      * Start Photo Activity when CONFIRM button is clicked
-     * @param view
      */
     public void onClickToPhoto(View view) {
         // Intent to start Photo Activity

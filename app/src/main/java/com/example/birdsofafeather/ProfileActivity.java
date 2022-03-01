@@ -40,7 +40,6 @@ public class ProfileActivity extends AppCompatActivity {
 
     /**
      * This method creates the Profile Activity
-     * @param savedInstanceState
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {

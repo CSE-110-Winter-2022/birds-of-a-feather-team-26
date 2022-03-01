@@ -35,7 +35,6 @@ public class CourseActivity extends AppCompatActivity {
 
     /**
      * This method creates the Course Activity
-     * @param savedInstanceState
      */
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -44,14 +43,14 @@ public class CourseActivity extends AppCompatActivity {
 
         // Pull previous Intent data
         Intent intent = getIntent();
-        //String name = intent.getStringExtra("person_name");
+        // String name = intent.getStringExtra("person_name");
         int personId = intent.getIntExtra("person_id", 0);
 
         // Connect to BOF database
         db = AppDatabase.singleton(this);
 
         // Retrieve person object and course information of user from BOF database
-        person = db.personWithCourseDao().get(personId);
+        person = db.PersonDao().get(personId);
         List<Course> course = db.CourseDao().getForPerson(personId);
 
         // Set up Recycler View for courses
@@ -69,7 +68,6 @@ public class CourseActivity extends AppCompatActivity {
 
     /**
      * Finish User Information Workflow and return back to home when FINISH button is clicked
-     * @param view
      */
     public void onExitClicked(View view){
          Intent intent = new Intent(this, HomeActivity.class);
@@ -78,7 +76,6 @@ public class CourseActivity extends AppCompatActivity {
 
     /**
      * Adds typed-in course information to user profile and stores in BOF database
-     * @param view
      */
     public void onEnterCourseClicked(View view) {
         // Index new course_id

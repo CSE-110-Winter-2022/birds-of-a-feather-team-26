@@ -6,6 +6,7 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.birdsofafeather.databinding.ActivityMainBinding;
 import com.example.birdsofafeather.model.db.AppDatabase;
 
 /**
@@ -36,9 +37,9 @@ import com.example.birdsofafeather.model.db.AppDatabase;
 
 public class MainActivity extends AppCompatActivity {
 
+
     /**
      * This method creates the Main Activity
-     * @param savedInstanceState
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * TEMPORARY BUTTON TO START HOME ACTIVITY WORKFLOW
-     * @param view
      */
     public void onHomeActivityClicked(View view) {
         Intent intentHomeActivityWorkflow = new Intent(this, HomeActivity.class);
