@@ -32,6 +32,32 @@
         app:layout_constraintHorizontal_bias="0.571"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <ToggleButton
+        android:id="@+id/start_search_btn_bySmallClass"
+        android:layout_width="125dp"
+        android:layout_height="72dp"
+        android:textOff="START SEARCH BY SMALL CLASSES"
+        android:textOn="STOP SEARCH BY SMALL CLASSES"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.01"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.974" />
+
+    <ToggleButton
+        android:id="@+id/start_search_btn_byQuarter"
+        android:layout_width="117dp"
+        android:layout_height="73dp"
+        android:textOff="START SEARCH BY QUARTER"
+        android:textOn="STOP SEARCH BY SMALL QUARTER"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.944"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.974" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/student_list"
         android:layout_width="352dp"
@@ -65,4 +91,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
