@@ -31,7 +31,7 @@ public class SessionActivity extends AppCompatActivity {
         List<Person> persons = db.PersonDao().getAllPersons();
         List<Person> favPersons = null;
         for(Person person: persons){
-            if (personDao.checkFav(person.personName) == true){
+            if (personDao.isFav(person.personId) == true){
                 favPersons.add(person);
             }
 

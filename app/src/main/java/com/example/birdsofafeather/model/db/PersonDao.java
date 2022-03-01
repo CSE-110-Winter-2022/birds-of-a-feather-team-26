@@ -27,7 +27,10 @@ public interface PersonDao {
     @Query("SELECT COUNT(*) FROM persons")
     int count();
 
-    @Query("SELECT favorite FROM persons where person_name=:name")
-    boolean checkFav(String name);
+    @Query("SELECT favorite FROM persons where id=:personId")
+    boolean isFav(int personId);
+
+    @Query("SELECT * FROM persons where Favorite")
+    List<Person> getFavs();
 
 }

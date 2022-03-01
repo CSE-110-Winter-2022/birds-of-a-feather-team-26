@@ -5,6 +5,8 @@ import androidx.room.Relation;
 
 import com.example.birdsofafeather.model.IPerson;
 
+import java.util.List;
+
 
 public class PersonWithCourse implements IPerson {
 
@@ -44,4 +46,5 @@ public class PersonWithCourse implements IPerson {
         result = this.year+this.quarter+this.courseName+this.courseNum+" "+this.courseSize;
         return result;
     }
+
 }

@@ -84,10 +84,8 @@ public class CourseActivity extends AppCompatActivity {
         // Index new course_id
         int newCourseId = db.CourseDao().count() + 1;
 
-        // Retrieve user's id, name, and photo URL
+        // Retrieve user's id
         int personId = person.getId();
-        String name = person.getName();
-        String url = person.getUrl();
 
         // Fetches year of course typed in by user
         TextView yearView = findViewById(R.id.year_view);
@@ -116,7 +114,7 @@ public class CourseActivity extends AppCompatActivity {
         }
 
         // Create course object from course information
-        Course newCourse = new Course(newCourseId, personId, name, url, newYearText, newQuarterText, newCourseNameText, newCourseNumText, newCourseSizeText);
+        Course newCourse = new Course(newCourseId, personId, newYearText, newQuarterText, newCourseNameText, newCourseNumText, newCourseSizeText);
 
         // Store course information into BOF database
         db.CourseDao().insert(newCourse);

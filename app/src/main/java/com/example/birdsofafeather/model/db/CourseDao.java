@@ -31,5 +31,5 @@ public interface CourseDao {
     void delete(Course course);
 
     @Query("SELECT * FROM course")
-    LiveData<List<Course>> getAllCourses();
+    List<Course> getAllCourses();
 }
