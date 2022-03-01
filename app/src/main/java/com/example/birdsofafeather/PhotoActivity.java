@@ -42,7 +42,6 @@ public class PhotoActivity extends AppCompatActivity {
 
     /**
      * This method creates the Photo Activity
-     * @param savedInstanceState
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +106,6 @@ public class PhotoActivity extends AppCompatActivity {
 
     /**
      * Start Course Activity when CONFIRM button is clicked
-     * @param view
      */
     public void onClickToCourse(View view) {
         // Intent to start Course Activity

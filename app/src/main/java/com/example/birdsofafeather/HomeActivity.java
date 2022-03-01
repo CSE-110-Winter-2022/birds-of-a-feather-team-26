@@ -252,7 +252,7 @@ public class HomeActivity extends AppCompatActivity {
     /**
      * A.3. Filter Students with Common Courses (main Home Activity algorithm)
      * @param allStudents
-     * @return
+     * @return List<Student> of students who've taken a course in common with myUser
      */
     public List<Student> filterStudentsWithCommonCourses(List<Student> allStudents) {
         // Map which records number of common courses each student takes with myUser

@@ -23,8 +23,6 @@ public class BluetoothActivity extends AppCompatActivity {
 
     /**
      * This method creates the Bluetooth Activity
-     *
-     * @param savedInstanceState
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +32,6 @@ public class BluetoothActivity extends AppCompatActivity {
 
     /**
      * This method starts Name Activity when start_name_activity_btn is clicked
-     *
-     * @param view
      */
     public void onStartNameActivityClicked(View view) {
         Intent intentNameActivity = new Intent(this, NameActivity.class);
@@ -44,8 +40,6 @@ public class BluetoothActivity extends AppCompatActivity {
 
     /**
      * This method starts Name Activity when the no button is clicked.
-     *
-     * @param view
      */
     public void onStillStartNameActivityClicked(View view) {
         Intent intentNameActivity = new Intent(this, NameActivity.class);
