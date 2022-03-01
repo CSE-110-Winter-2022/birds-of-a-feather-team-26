@@ -19,7 +19,6 @@ public class SessionActivity extends AppCompatActivity {
     protected RecyclerView personsRecyclerView;
     protected RecyclerView.LayoutManager personsLayoutManager;
     protected PersonsViewAdapter personsViewAdapter;
-    public PersonDao personDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,17 +26,11 @@ public class SessionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_session);
 
         AppDatabase db = AppDatabase.singleton(getApplicationContext());
+
         // get all favorite people
-        List<Person> persons = db.PersonDao().getAllPersons();
-        List<Person> favPersons = null;
-        for(Person person: persons){
-            if (personDao.checkFav(person.personName) == true){
-                favPersons.add(person);
-            }
+        List<Person> favPersons = db.PersonDao().getAllFav();
 
-        }
         personsRecyclerView = findViewById(R.id.favorite_view);
-
         personsLayoutManager = new LinearLayoutManager(this);
         personsRecyclerView.setLayoutManager(personsLayoutManager);
 

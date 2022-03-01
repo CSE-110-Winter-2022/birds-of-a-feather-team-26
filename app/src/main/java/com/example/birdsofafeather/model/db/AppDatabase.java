@@ -26,7 +26,6 @@ public abstract class AppDatabase extends RoomDatabase {
                 .build();
     }
 
-    public abstract PersonWithCourseDao personWithCourseDao();
-
+    // public abstract PersonWithCourseDao personWithCourseDao();
     public abstract CourseDao CourseDao();
 }

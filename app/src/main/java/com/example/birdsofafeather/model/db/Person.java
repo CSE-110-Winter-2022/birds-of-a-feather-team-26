@@ -6,8 +6,10 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import com.example.birdsofafeather.model.IPerson;
+
 @Entity(tableName = "persons")
-public class Person{
+public class Person implements IPerson {
 
     @PrimaryKey
     @ColumnInfo(name="id")
@@ -29,4 +31,18 @@ public class Person{
         this.fav = fav;
     }
 
+    @Override
+    public int getId() {
+        return personId;
+    }
+
+    @Override
+    public String getName() {
+        return personName;
+    }
+
+    @Override
+    public String getUrl() {
+        return url;
+    }
 }

@@ -3,19 +3,16 @@ package com.example.birdsofafeather;
 import org.junit.After;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static com.example.birdsofafeather.model.db.AppDatabase.useTestSingleton;
 
 import android.content.Context;
 
-import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.junit.Before;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.example.birdsofafeather.model.db.AppDatabase;
@@ -23,12 +20,9 @@ import com.example.birdsofafeather.model.db.Course;
 import com.example.birdsofafeather.model.db.CourseDao;
 import com.example.birdsofafeather.model.db.Person;
 import com.example.birdsofafeather.model.db.PersonDao;
-import com.example.birdsofafeather.model.db.PersonWithCourse;
-import com.example.birdsofafeather.model.db.PersonWithCourseDao;
 
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @RunWith(AndroidJUnit4.class)

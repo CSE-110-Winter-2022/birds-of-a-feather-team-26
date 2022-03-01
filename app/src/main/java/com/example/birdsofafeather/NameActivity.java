@@ -7,10 +7,6 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.birdsofafeather.model.db.AppDatabase;
-import com.example.birdsofafeather.model.db.Person;
-import com.example.birdsofafeather.model.db.PersonWithCourseDao;
-
 /**
  * DESCRIPTION
  *

@@ -66,9 +66,15 @@ public class PhotoActivity extends AppCompatActivity {
             }
         });
     }
+
+    /**
+     * DESCRIPTION
+     * The FetchImage class fetches image data from a photo URL
+     */
     class FetchImage extends Thread {
         String URL;
         Bitmap bitmap;
+
         FetchImage(String URL) {
             this.URL = URL;
         }
@@ -117,7 +123,6 @@ public class PhotoActivity extends AppCompatActivity {
         AppDatabase db = AppDatabase.singleton(this.getApplicationContext());
 
         // Index new person_id
-        // int i = new Random().nextInt(1000);
         int i = db.PersonDao().count();
 
         // Retrieve user's photo URL

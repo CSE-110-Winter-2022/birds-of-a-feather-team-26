@@ -199,7 +199,7 @@ public class HomeActivity extends AppCompatActivity {
         db = AppDatabase.singleton(this);
 
         // Retrieve my user's information from BOF database
-        IPerson myPerson = db.personWithCourseDao().get(id);
+        IPerson myPerson = db.PersonDao().get(id);
         List<com.example.birdsofafeather.model.db.Course> myCoursesRaw = db.CourseDao().getForPerson(id);
 
         // Convert List<db.Course> to List<Course>
