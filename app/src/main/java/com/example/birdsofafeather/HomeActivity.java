@@ -302,6 +302,63 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        ToggleButton startSearchByRecent = findViewById(R.id.start_search_btn_byRecent);
+        startSearchByRecent.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            /**
+             * This method will execute the bluetooth search functionality when toggled on.
+             * @param buttonView
+             * @param isChecked boolean which represents state of startSearch ToggleButton
+             */
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                /**
+                 * A. When SEARCH button is toggled ON:
+                 *      1. Ask user if they want to resume a previous session or start a new session (MS 2)
+                 *      2. Start bluetooth search (MS 1)
+                 *      3. Filter students by common courses (MS 1)
+                 *      4. Display list of students with common courses (MS 1)
+                 */
+                if (isChecked) {
+                    /**
+                     * 1. Ask user if they want to resume a previous session or start a new session
+                     */
+                    createNewContactDialog();
+                    /**
+                     * 2. Start bluetooth search
+                     */
+                    /**
+                     * 3. Filter Students with Common Courses (main Home Activity algorithm)
+                     *
+                     */
+                    filteredStudents = filterStudentsWithRecent(allStudents);
+                    /**
+                     * 4. Display list of Students with Common Courses
+                     */
+                    // fill Student Item Adapter with list of students with common courses
+                    fillStudentItemAdapter(filteredStudents);
+                }
+                /**
+                 * B. When SEARCH button is toggled OFF:
+                 *      1. Stop bluetooth search (MS 1)
+                 *      2. Ask user to save session with <session_name> (MS 2)
+                 *      3. Stop displaying list of students with common courses (MS 1)
+                 */
+                else {
+                    /**
+                     * 1. Stop bluetooth search
+                     */
+                    /**
+                     * 2. Ask user to save session with <session_name>
+                     */
+                    /**
+                     * 3. Stop displaying list of students with common courses
+                     */
+                    // Clear Student Item Adapter
+                    fillStudentItemAdapter(new ArrayList<>());
+                }
+            }
+        });
+
     }
 
     /**
@@ -468,6 +525,62 @@ public class HomeActivity extends AppCompatActivity {
                     if(course.equals(c)) {
                         if(course.getYear().equals(year) && course.getQuarter().equals(quarter)) {
                             freq++;
+                        }
+                    }
+                }
+            }
+
+            // Add to frequency map if there is a course in common with student and myUser
+            if (freq > 0)
+                frequencyStudents.put(student, freq);
+        }
+
+        // Sort frequency map by value
+        Map<Student, Integer> frequencyStudents_sorted = sortByValue(frequencyStudents);
+
+        // Log frequency map student name and common course frequency
+        for (Map.Entry<Student, Integer> entry : frequencyStudents_sorted.entrySet())
+            Log.i("HashMap", "key=" + entry.getKey().getFirstName() + ", value=" + entry.getValue());
+
+        return new ArrayList<>(frequencyStudents_sorted.keySet());
+    }
+
+
+    public List<Student> filterStudentsWithRecent(List<Student> allStudents) {
+        // Map which records number of common courses each student takes with myUser
+        Map<Student, Integer> frequencyStudents = new HashMap<>();
+        String year1 = "2022", year2 = "2021", year3 = "2020", year4 = "2019";
+        // String courseSize = "small";
+        //traverse all student object
+        for (Student student : allStudents) {
+            int freq = 0; // set frequency level
+            for (Course course : student.getCourses()) {
+                //Traverse all the courses of the current student and judge the repetition rate of
+                // your own courses
+                /** I think this part can be written in this way
+                 if(myUser.getCourses().contains(course)) {
+                 if(course.getCourseSize().equals(courseSize))
+                 freq++;
+                 } **/
+                for (Course c : myUser.getCourses()) {
+                    if(course.equals(c)) {
+                        if(course.getYear().equals(year1)) {
+                            freq++;
+                        }
+                        else {
+                            if(course.getYear().equals(year2)) {
+                                freq++;
+                            }
+                            else {
+                                if(course.getYear().equals(year3)) {
+                                    freq++;
+                                }
+                                else {
+                                    if(course.getYear().equals(year4)) {
+                                        freq++;
+                                    }
+                                }
+                            }
                         }
                     }
                 }
