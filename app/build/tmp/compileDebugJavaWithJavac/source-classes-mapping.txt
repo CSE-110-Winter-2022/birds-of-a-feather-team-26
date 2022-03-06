@@ -1,0 +1,10 @@
+com/google/location/nearby/apps/rockpaperscissors/BuildConfig.java
+ com.google.location.nearby.apps.rockpaperscissors.BuildConfig
+com/google/location/nearby/apps/rockpaperscissors/CodenameGenerator.java
+ com.google.location.nearby.apps.rockpaperscissors.CodenameGenerator
+com/google/location/nearby/apps/rockpaperscissors/MainActivity.java
+ com.google.location.nearby.apps.rockpaperscissors.MainActivity
+ com.google.location.nearby.apps.rockpaperscissors.MainActivity$1
+ com.google.location.nearby.apps.rockpaperscissors.MainActivity$2
+ com.google.location.nearby.apps.rockpaperscissors.MainActivity$3
+ com.google.location.nearby.apps.rockpaperscissors.MainActivity$GameChoice
