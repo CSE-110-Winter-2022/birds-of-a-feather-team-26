@@ -32,6 +32,47 @@
         app:layout_constraintHorizontal_bias="0.571"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <ToggleButton
+        android:id="@+id/start_search_btn_bySmallClass"
+        android:layout_width="125dp"
+        android:layout_height="72dp"
+        android:textOff="START SEARCH BY SMALL CLASSES"
+        android:textOn="STOP SEARCH BY SMALL CLASSES"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.01"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.974" />
+
+    <ToggleButton
+        android:id="@+id/start_search_btn_byQuarter"
+        android:layout_width="117dp"
+        android:layout_height="73dp"
+        android:textOff="START SEARCH BY QUARTER"
+        android:textOn="STOP SEARCH BY SMALL QUARTER"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.944"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.974" />
+
+    <ToggleButton
+        android:id="@+id/start_search_btn_byRecent"
+        android:layout_width="139dp"
+        android:layout_height="61dp"
+        android:layout_marginStart="148dp"
+        android:layout_marginEnd="147dp"
+        android:layout_marginBottom="64dp"
+        android:textOff="START SEARCH BY RECENT"
+        android:textOn="STOP SEARCH BY RECENT"
+        android:textSize="14dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.625"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/student_list"
         android:layout_width="352dp"
@@ -54,13 +95,16 @@
 
     <Button
         android:id="@+id/my_session"
-        android:layout_width="85dp"
-        android:layout_height="64dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="320dp"
-        android:text="MY Session"
+        android:layout_width="102dp"
+        android:layout_height="61dp"
         android:onClick="goToSessionClick"
+        android:text="MY Session"
         android:textSize="13sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintHorizontal_bias="0.009"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

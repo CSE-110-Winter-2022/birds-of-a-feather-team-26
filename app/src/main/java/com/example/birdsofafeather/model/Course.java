@@ -26,6 +26,17 @@ public class Course implements Serializable {
         return quarter + " " + year + " " + subject + " " + courseNumber + " " + courseSize;
     }
 
+    public String getYear() {
+        return year;
+    }
+
+    public String getQuarter() {
+        return quarter;
+    }
+
+    public String getCourseSize() {
+        return courseSize;
+    }
     @Override
     public boolean equals(@Nullable Object obj) {
         Course course = (Course) obj;
