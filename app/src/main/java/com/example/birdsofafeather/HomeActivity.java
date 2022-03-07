@@ -190,7 +190,7 @@ public class HomeActivity extends AppCompatActivity {
         ToggleButton startSearchBySmallClass = findViewById(R.id.start_search_btn_bySmallClass);
         startSearchBySmallClass.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             /**
-             * This method will execute the bluetooth search functionality when toggled on.
+             * This method will execute the bluetooth search functionality for small classes when toggled on.
              * @param buttonView
              * @param isChecked boolean which represents state of startSearch ToggleButton
              */
@@ -215,7 +215,7 @@ public class HomeActivity extends AppCompatActivity {
                      * 3. Filter Students with Common Courses (main Home Activity algorithm)
                      *
                      */
-                    filteredStudents = filterStudentsWithSmallClasses(allStudents);
+                    filteredStudents = filterSmallCourse(allStudents);
                     /**
                      * 4. Display list of Students with Common Courses
                      */
@@ -429,11 +429,11 @@ public class HomeActivity extends AppCompatActivity {
      */
     public List<Student> filterStudentsWithCommonCourses(List<Student> allStudents) {
         // Map which records number of common courses each student takes with myUser
-        Map<Student, Integer> frequencyStudents = new HashMap<>();
+        Map<Student, Double> frequencyStudents = new HashMap<>();
         // Count number of common courses each student takes with myUser
         //traverse all student object
         for (Student student : allStudents) {
-            int freq = 0; //set frequency level
+            double freq = 0; //set frequency level
             for (Course course : student.getCourses()) {
                 for (Course c : myUser.getCourses()) {
                     if (course.equals(c))
@@ -446,10 +446,10 @@ public class HomeActivity extends AppCompatActivity {
         }
 
         // Sort frequency map by value
-        Map<Student, Integer> frequencyStudents_sorted = sortByValue(frequencyStudents);
+        Map<Student, Double> frequencyStudents_sorted = sortByValue(frequencyStudents);
 
         // Log frequency map student name and common course frequency
-        for (Map.Entry<Student, Integer> entry : frequencyStudents_sorted.entrySet())
+        for (Map.Entry<Student, Double> entry : frequencyStudents_sorted.entrySet())
             Log.i("HashMap", "key=" + entry.getKey().getFirstName() + ", value=" + entry.getValue());
 
         return new ArrayList<>(frequencyStudents_sorted.keySet());
@@ -457,47 +457,40 @@ public class HomeActivity extends AppCompatActivity {
 
     /**
      * Filter Students with Common Courses with "prioritize small classes" priority
-     * @param allStudents
+     * @param students
      * @return
      */
-    public List<Student> filterStudentsWithSmallClasses(List<Student> allStudents) {
-        // Map which records number of common courses each student takes with myUser
-        Map<Student, Integer> frequencyStudents = new HashMap<>();
-        // String year = "2022", quarter = "Winter";
-        String courseSize = "small";
-        //traverse all student object
-        for (Student student : allStudents) {
-            int freq = 0; // set frequency level
-            for (Course course : student.getCourses()) {
-                //Traverse all the courses of the current student and judge the repetition rate of
-                // your own courses
-                /** I think this part can be written in this way
-                if(myUser.getCourses().contains(course)) {
-                    if(course.getCourseSize().equals(courseSize))
-                    freq++;
-                } **/
-                for (Course c : myUser.getCourses()) {
-                    if(course.equals(c)) {
-                        if(course.getCourseSize().equals(courseSize)) {
-                            freq++;
-                        }
+    public List<Student> filterSmallCourse(List<Student> students){
+
+        Map<String, Double> courseSizeWeights = new HashMap<>();
+        courseSizeWeights.put("tiny", 1.00);
+        courseSizeWeights.put("small", 0.33);
+        courseSizeWeights.put("medium", 0.18);
+        courseSizeWeights.put("large", 0.10);
+        courseSizeWeights.put("huge", 0.06);
+        courseSizeWeights.put("gigantic", 0.03);
+
+        Map<Student,Double> map=new HashMap<Student,Double>();
+
+        for(Student stu:students){
+            double score=0.0;
+            for(Course course: stu.getCourses()){
+                for (Course c: myUser.getCourses()) {
+                    if (course.equals(c)) {
+                        score += courseSizeWeights.get(course.getCourseSize());
                     }
                 }
             }
-
-            // Add to frequency map if there is a course in common with student and myUser
-            if (freq > 0)
-                frequencyStudents.put(student, freq);
+            if(score>0) {
+                map.put(stu, score);
+            }
         }
-
-        // Sort frequency map by value
-        Map<Student, Integer> frequencyStudents_sorted = sortByValue(frequencyStudents);
-
-        // Log frequency map student name and common course frequency
-        for (Map.Entry<Student, Integer> entry : frequencyStudents_sorted.entrySet())
-            Log.i("HashMap", "key=" + entry.getKey().getFirstName() + ", value=" + entry.getValue());
-
-        return new ArrayList<>(frequencyStudents_sorted.keySet());
+        Map<Student,Double> rtmap=sortByValue(map);
+        List<Student> rtlist=new ArrayList<>();
+        for(Student student: rtmap.keySet()){
+            rtlist.add(student);
+        }
+        return rtlist;
     }
 
     /**
@@ -507,12 +500,12 @@ public class HomeActivity extends AppCompatActivity {
      */
     public List<Student> filterStudentsWithThisQuarter(List<Student> allStudents) {
         // Map which records number of common courses each student takes with myUser
-        Map<Student, Integer> frequencyStudents = new HashMap<>();
+        Map<Student, Double> frequencyStudents = new HashMap<>();
         String year = "2022", quarter = "Winter";
         // String courseSize = "small";
         //traverse all student object
         for (Student student : allStudents) {
-            int freq = 0; // set frequency level
+            double freq = 0; // set frequency level
             for (Course course : student.getCourses()) {
                 //Traverse all the courses of the current student and judge the repetition rate of
                 // your own courses
@@ -536,10 +529,10 @@ public class HomeActivity extends AppCompatActivity {
         }
 
         // Sort frequency map by value
-        Map<Student, Integer> frequencyStudents_sorted = sortByValue(frequencyStudents);
+        Map<Student, Double> frequencyStudents_sorted = sortByValue(frequencyStudents);
 
         // Log frequency map student name and common course frequency
-        for (Map.Entry<Student, Integer> entry : frequencyStudents_sorted.entrySet())
+        for (Map.Entry<Student, Double> entry : frequencyStudents_sorted.entrySet())
             Log.i("HashMap", "key=" + entry.getKey().getFirstName() + ", value=" + entry.getValue());
 
         return new ArrayList<>(frequencyStudents_sorted.keySet());
@@ -548,12 +541,12 @@ public class HomeActivity extends AppCompatActivity {
 
     public List<Student> filterStudentsWithRecent(List<Student> allStudents) {
         // Map which records number of common courses each student takes with myUser
-        Map<Student, Integer> frequencyStudents = new HashMap<>();
+        Map<Student, Double> frequencyStudents = new HashMap<>();
         String year1 = "2022", year2 = "2021", year3 = "2020", year4 = "2019";
         // String courseSize = "small";
         //traverse all student object
         for (Student student : allStudents) {
-            int freq = 0; // set frequency level
+            double freq = 0; // set frequency level
             for (Course course : student.getCourses()) {
                 //Traverse all the courses of the current student and judge the repetition rate of
                 // your own courses
@@ -592,10 +585,10 @@ public class HomeActivity extends AppCompatActivity {
         }
 
         // Sort frequency map by value
-        Map<Student, Integer> frequencyStudents_sorted = sortByValue(frequencyStudents);
+        Map<Student, Double> frequencyStudents_sorted = sortByValue(frequencyStudents);
 
         // Log frequency map student name and common course frequency
-        for (Map.Entry<Student, Integer> entry : frequencyStudents_sorted.entrySet())
+        for (Map.Entry<Student, Double> entry : frequencyStudents_sorted.entrySet())
             Log.i("HashMap", "key=" + entry.getKey().getFirstName() + ", value=" + entry.getValue());
 
         return new ArrayList<>(frequencyStudents_sorted.keySet());
@@ -614,21 +607,21 @@ public class HomeActivity extends AppCompatActivity {
      * @param freq
      * @return Map sorted by values
      */
-    public Map<Student, Integer> sortByValue(Map<Student, Integer> freq) {
+    public Map<Student, Double> sortByValue(Map<Student, Double> freq) {
         // Create a linked list from elements of HashMap
-        List<Map.Entry<Student, Integer>> linkedFreq = new LinkedList<>(freq.entrySet());
+        List<Map.Entry<Student, Double>> linkedFreq = new LinkedList<>(freq.entrySet());
 
         // Sort the linked list
-        Collections.sort(linkedFreq, new Comparator<Map.Entry<Student, Integer>>() {
+        Collections.sort(linkedFreq, new Comparator<Map.Entry<Student, Double>>() {
             @Override
-            public int compare(Map.Entry<Student, Integer> freq1, Map.Entry<Student, Integer> freq2) {
+            public int compare(Map.Entry<Student, Double> freq1, Map.Entry<Student, Double> freq2) {
                 return freq2.getValue().compareTo(freq1.getValue());
             }
         });
 
         // Convert sorted linked list to HashMap
-        Map<Student, Integer> freq_sorted = new LinkedHashMap<>();
-        for (Map.Entry<Student, Integer> entry : linkedFreq)
+        Map<Student, Double> freq_sorted = new LinkedHashMap<>();
+        for (Map.Entry<Student, Double> entry : linkedFreq)
             freq_sorted.put(entry.getKey(), entry.getValue());
 
         return freq_sorted;
@@ -822,7 +815,7 @@ class Data {
         // Student Derek
         List<Course> derek_courses = new ArrayList<>();
 
-        derek_courses.add(new Course("2022", "Winter", "COGS", "10", "huge"));
+        derek_courses.add(new Course("2022", "Winter", "COGS", "10", "tiny"));
 
         Student derek = new Student("derek", "derek.png", derek_courses, false);
 
@@ -877,7 +870,7 @@ class Data {
         // Student Derek
         List<Course> derek_courses = new ArrayList<>();
 
-        derek_courses.add(new Course("2022", "Winter", "COGS", "10", "huge"));
+        derek_courses.add(new Course("2022", "Winter", "COGS", "10", "tiny"));
 
         Student derek = new Student("derek", "derek.png", derek_courses, false);
 
