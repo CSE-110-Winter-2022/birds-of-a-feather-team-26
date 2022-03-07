@@ -1,4 +1,4 @@
-package com.example.birdsofafeather;
+package com.example.birdsofafeather.model;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,7 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.birdsofafeather.model.IPerson;
+import com.example.birdsofafeather.CourseActivity;
+import com.example.birdsofafeather.R;
 import com.example.birdsofafeather.model.db.Person;
 
 import java.util.List;

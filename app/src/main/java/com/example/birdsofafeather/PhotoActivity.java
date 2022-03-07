@@ -137,10 +137,11 @@ public class PhotoActivity extends AppCompatActivity {
         String name = intent1.getStringExtra("person_name");
 
         // Create Person object of user
-        Person p = new Person(i, name, url, true);
+        Person p = new Person(i, name, url, db.CourseDao().getAllCourses(i), true);
         p.personId = i;
         p.personName = name;
         p.url = url;
+
 
         // Store user's data (their profile) into BOF database
         db.PersonDao().insertPerson(p);

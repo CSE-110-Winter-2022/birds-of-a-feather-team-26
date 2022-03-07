@@ -51,7 +51,7 @@ public class CourseActivity extends AppCompatActivity {
 
         // Retrieve person object and course information of user from BOF database
         person = db.PersonDao().get(personId);
-        List<Course> course = db.CourseDao().getForPerson(personId);
+        List<Course> course = db.CourseDao().getAllCourses(personId);
 
         // Set up Recycler View for courses
         courseRecyclerView = findViewById(R.id.courses_view);
@@ -111,7 +111,7 @@ public class CourseActivity extends AppCompatActivity {
         }
 
         // Create course object from course information
-        Course newCourse = new Course(newCourseId, personId, newYearText, newQuarterText, newCourseNameText, newCourseNumText, newCourseSizeText);
+        Course newCourse = new Course(personId, newYearText, newQuarterText, newCourseNameText, newCourseNumText, newCourseSizeText);
 
         // Store course information into BOF database
         db.CourseDao().insert(newCourse);

@@ -3,12 +3,13 @@ import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName ="course")
 public class Course {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name="id")
     public int courseId;
 
@@ -30,8 +31,7 @@ public class Course {
     @ColumnInfo(name="courseSize")
     public String courseSize;
 
-    public Course(int courseId, int personId, String year, String quarter, String courseName, String courseNum, String courseSize){
-        this.courseId = courseId;
+    public Course(int personId, String year, String quarter, String courseName, String courseNum, String courseSize){
         this.personId = personId;
         this.year = year;
         this.quarter = quarter;
@@ -44,5 +44,9 @@ public class Course {
     public boolean equals(@Nullable Object obj) {
         com.example.birdsofafeather.model.db.Course course = (com.example.birdsofafeather.model.db.Course) obj;
         return this.year.equals(course.year) && this.quarter.equals(course.quarter) && this.courseName.equals(course.courseName) && this.courseNum.equals(course.courseNum) && this.courseSize.equals(course.courseSize);
+    }
+
+    public String getCourse(){
+       return year + " " + quarter + " " + courseName + " " + courseNum + " " + courseSize;
     }
 }

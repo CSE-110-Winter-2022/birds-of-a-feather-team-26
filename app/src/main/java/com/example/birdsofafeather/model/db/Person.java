@@ -1,19 +1,24 @@
 package com.example.birdsofafeather.model.db;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
+import androidx.room.Embedded;
 import androidx.room.Entity;
-import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
 
 import com.example.birdsofafeather.model.IPerson;
 
-@Entity(tableName = "persons")
-public class Person implements IPerson {
+import java.util.List;
 
-    @PrimaryKey
+@Entity(tableName = "persons")
+public class Person implements IPerson{
+
+
+    @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name="id")
     public int personId;
+
+    @ColumnInfo(name="session_id")
+    public int sessionId;
 
     @ColumnInfo(name="person_name")
     public String personName;
@@ -21,14 +26,19 @@ public class Person implements IPerson {
     @ColumnInfo(name="photo_url")
     public String url;
 
+    @TypeConverters(Convertor.class)
+    public final List<Course> courseList;
+
     @ColumnInfo(name="Favorite")
     public boolean fav = false;
 
-    public Person(int personId, String personName, String url, boolean fav){
+    public Person(int personId, String personName, String url, List<Course> courseList, boolean fav){
         this.personId = personId;
+      //  this.sessionId = sessionId;
         this.personName = personName;
         this.url = url;
         this.fav = fav;
+        this.courseList = courseList;
     }
 
     @Override
@@ -45,4 +55,15 @@ public class Person implements IPerson {
     public String getUrl() {
         return url;
     }
+
+    @Override
+    public List<Course> getCourseList() {
+        return courseList;
+    }
+
+//    @Override
+//    public List<com.example.birdsofafeather.model.Course> getCourseInfo() {
+//
+//    }
+
 }

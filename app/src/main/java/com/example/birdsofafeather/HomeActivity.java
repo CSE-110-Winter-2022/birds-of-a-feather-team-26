@@ -3,6 +3,7 @@ package com.example.birdsofafeather;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,11 +22,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.birdsofafeather.model.Course;
-import com.example.birdsofafeather.model.IPerson;
-import com.example.birdsofafeather.model.Student;
 import com.example.birdsofafeather.model.db.AppDatabase;
-import com.example.birdsofafeather.model.Session;
+import com.example.birdsofafeather.model.db.Course;
+import com.example.birdsofafeather.model.db.Person;
+import com.example.birdsofafeather.model.db.Session;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,7 +35,6 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * DESCRIPTION
@@ -72,18 +71,18 @@ import java.util.TreeMap;
 
 public class HomeActivity extends AppCompatActivity {
 
+    private Person user;
+    private AppDatabase db;
+
     private AlertDialog.Builder dialogBuilder;
     private AlertDialog dialog;
-
-    private AppDatabase db;
-    private Student myUser;
 
     Button myProfile;
     LinearLayoutManager lManager = new LinearLayoutManager(this);
     RecyclerView studentList;
 
-    private List<Student> allStudents;
-    private List<Student> filteredStudents;
+    private List<Person> allStudents;
+    private List<Person> filteredStudents;
 
     private Session currSession;
 
@@ -96,7 +95,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         // myUser Student object
-        myUser = getPersonFromDBAndReturnStudent(0);
+        user = getPersonFromDB(0);
 
         /**
          * My Profile button to display myUser data
@@ -107,7 +106,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), ProfileActivity.class);
                 // Insert myUser data
-                intent.putExtra("Student", myUser);
+                intent.putExtra("Student", (Parcelable) user);
                 startActivity(intent);
             }
         });
@@ -186,6 +185,122 @@ public class HomeActivity extends AppCompatActivity {
                 }
             }
         });
+
+        ToggleButton startSearchBySmallClass = findViewById(R.id.start_search_btn_bySmallClass);
+        startSearchBySmallClass.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            /**
+             * This method will execute the bluetooth search functionality when toggled on.
+             * @param buttonView
+             * @param isChecked boolean which represents state of startSearch ToggleButton
+             */
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                /**
+                 * A. When SEARCH button is toggled ON:
+                 *      1. Ask user if they want to resume a previous session or start a new session (MS 2)
+                 *      2. Start bluetooth search (MS 1)
+                 *      3. Filter students by common courses (MS 1)
+                 *      4. Display list of students with common courses (MS 1)
+                 */
+                if (isChecked) {
+                    /**
+                     * 1. Ask user if they want to resume a previous session or start a new session
+                     */
+                    createNewContactDialog();
+                    /**
+                     * 2. Start bluetooth search
+                     */
+                    /**
+                     * 3. Filter Students with Common Courses (main Home Activity algorithm)
+                     *
+                     */
+                    filteredStudents = filterStudentsWithSmallClasses(allStudents);
+                    /**
+                     * 4. Display list of Students with Common Courses
+                     */
+                    // fill Student Item Adapter with list of students with common courses
+                    fillStudentItemAdapter(filteredStudents);
+                }
+                /**
+                 * B. When SEARCH button is toggled OFF:
+                 *      1. Stop bluetooth search (MS 1)
+                 *      2. Ask user to save session with <session_name> (MS 2)
+                 *      3. Stop displaying list of students with common courses (MS 1)
+                 */
+                else {
+                    /**
+                     * 1. Stop bluetooth search
+                     */
+                    /**
+                     * 2. Ask user to save session with <session_name>
+                     */
+                    /**
+                     * 3. Stop displaying list of students with common courses
+                     */
+                    // Clear Student Item Adapter
+                    fillStudentItemAdapter(new ArrayList<>());
+                }
+            }
+        });
+
+
+        ToggleButton startSearchByQuarter = findViewById(R.id.start_search_btn_byQuarter);
+        startSearchByQuarter.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            /**
+             * This method will execute the bluetooth search functionality when toggled on.
+             * @param buttonView
+             * @param isChecked boolean which represents state of startSearch ToggleButton
+             */
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                /**
+                 * A. When SEARCH button is toggled ON:
+                 *      1. Ask user if they want to resume a previous session or start a new session (MS 2)
+                 *      2. Start bluetooth search (MS 1)
+                 *      3. Filter students by common courses (MS 1)
+                 *      4. Display list of students with common courses (MS 1)
+                 */
+                if (isChecked) {
+                    /**
+                     * 1. Ask user if they want to resume a previous session or start a new session
+                     */
+                    createNewContactDialog();
+                    /**
+                     * 2. Start bluetooth search
+                     */
+                    /**
+                     * 3. Filter Students with Common Courses (main Home Activity algorithm)
+                     *
+                     */
+                    filteredStudents = filterStudentsWithThisQuarter(allStudents);
+                    /**
+                     * 4. Display list of Students with Common Courses
+                     */
+                    // fill Student Item Adapter with list of students with common courses
+                    fillStudentItemAdapter(filteredStudents);
+                }
+                /**
+                 * B. When SEARCH button is toggled OFF:
+                 *      1. Stop bluetooth search (MS 1)
+                 *      2. Ask user to save session with <session_name> (MS 2)
+                 *      3. Stop displaying list of students with common courses (MS 1)
+                 */
+                else {
+                    /**
+                     * 1. Stop bluetooth search
+                     */
+                    /**
+                     * 2. Ask user to save session with <session_name>
+                     */
+                    /**
+                     * 3. Stop displaying list of students with common courses
+                     */
+                    // Clear Student Item Adapter
+                    fillStudentItemAdapter(new ArrayList<>());
+                }
+            }
+        });
+
     }
 
     /**
@@ -193,23 +308,16 @@ public class HomeActivity extends AppCompatActivity {
      * @param id of Student we want to get from database
      * @return queried Student
      */
-    public Student getPersonFromDBAndReturnStudent(int id) {
+    public Person getPersonFromDB(int id) {
 
         // Connect to BOF database
         db = AppDatabase.singleton(this);
 
         // Retrieve my user's information from BOF database
-        IPerson myPerson = db.PersonDao().get(id);
-        List<com.example.birdsofafeather.model.db.Course> myCoursesRaw = db.CourseDao().getForPerson(id);
+        Person myPerson = db.PersonDao().get(id);
+        List<Course> myCoursesRaw = db.CourseDao().getAllCourses(id);
 
-        // Convert List<db.Course> to List<Course>
-        List<Course> myCourses = new ArrayList<>();
-        for (com.example.birdsofafeather.model.db.Course course : myCoursesRaw) {
-            Course c = new Course(course.year, course.quarter, course.courseName, course.courseNum, course.courseSize);
-            myCourses.add(c);
-        }
-
-        return new Student(myPerson.getName(), myPerson.getUrl(), myCourses, false);
+        return new Person(myPerson.getId(), myPerson.getName(), myPerson.getUrl(), myCoursesRaw, false);
     }
 
     /**
@@ -252,57 +360,154 @@ public class HomeActivity extends AppCompatActivity {
     /**
      * A.3. Filter Students with Common Courses (main Home Activity algorithm)
      * @param allStudents
-     * @return List<Student> of students who've taken a course in common with myUser
+     * @return
      */
-    public List<Student> filterStudentsWithCommonCourses(List<Student> allStudents) {
+    public List<Person> filterStudentsWithCommonCourses(List<Person> allStudents) {
         // Map which records number of common courses each student takes with myUser
-        Map<Student, Integer> frequencyStudents = new HashMap<>();
-
+        Map<Person, Integer> frequencyStudents = new HashMap<>();
         // Count number of common courses each student takes with myUser
-        for (Student student : allStudents) {
-            int freq = 0;
-            for (Course course : student.getCourses()) {
-                for (Course c : myUser.getCourses()) {
+        //traverse all student object
+        for (Person person : allStudents) {
+            int freq = 0; //set frequency level
+            for (com.example.birdsofafeather.model.db.Course course : person.getCourseList()) {
+                for (com.example.birdsofafeather.model.db.Course c : user.getCourseList()) {
                     if (course.equals(c))
                         freq++;
+                }
+            }
+            // Add to frequency map if there is a course in common with student and myUser
+            if (freq > 0)
+                frequencyStudents.put(person, freq);
+        }
+
+        // Sort frequency map by value
+        Map<Person, Integer> frequencyStudents_sorted = sortByValue(frequencyStudents);
+
+        // Log frequency map student name and common course frequency
+        for (Map.Entry<Person, Integer> entry : frequencyStudents_sorted.entrySet())
+            Log.i("HashMap", "key=" + entry.getKey().getName() + ", value=" + entry.getValue());
+
+        return new ArrayList<>(frequencyStudents_sorted.keySet());
+    }
+
+    /**
+     * Filter Students with Common Courses with "prioritize small classes" priority
+     * @param allStudents
+     * @return
+     */
+    public List<Person> filterStudentsWithSmallClasses(List<Person> allStudents) {
+        // Map which records number of common courses each student takes with myUser
+        Map<Person, Integer> frequencyStudents = new HashMap<>();
+        // String year = "2022", quarter = "Winter";
+        String courseSize = "small";
+        //traverse all student object
+        for (Person person : allStudents) {
+            int freq = 0; // set frequency level
+            for (com.example.birdsofafeather.model.db.Course course : person.getCourseList()) {
+                //Traverse all the courses of the current student and judge the repetition rate of
+                // your own courses
+                /** I think this part can be written in this way
+                 if(myUser.getCourses().contains(course)) {
+                 if(course.getCourseSize().equals(courseSize))
+                 freq++;
+                 } **/
+                for (com.example.birdsofafeather.model.db.Course c :user.getCourseList()) {
+                    if(course.equals(c)) {
+                        if(course.courseSize.equals(courseSize)) {
+                            freq++;
+                        }
+                    }
                 }
             }
 
             // Add to frequency map if there is a course in common with student and myUser
             if (freq > 0)
-                frequencyStudents.put(student, freq);
+                frequencyStudents.put(person, freq);
         }
 
         // Sort frequency map by value
-        Map<Student, Integer> frequencyStudents_sorted = sortByValue(frequencyStudents);
+        Map<Person, Integer> frequencyStudents_sorted = sortByValue(frequencyStudents);
 
         // Log frequency map student name and common course frequency
-        for (Map.Entry<Student, Integer> entry : frequencyStudents_sorted.entrySet())
-            Log.i("HashMap", "key=" + entry.getKey().getFirstName() + ", value=" + entry.getValue());
+        for (Map.Entry<Person, Integer> entry : frequencyStudents_sorted.entrySet())
+            Log.i("HashMap", "key=" + entry.getKey().getName() + ", value=" + entry.getValue());
 
         return new ArrayList<>(frequencyStudents_sorted.keySet());
     }
+
+    /**
+     * Filter Students with Common Courses with "this quarter only" priority
+     * @param allStudents
+     * @return
+     */
+    public List<Person> filterStudentsWithThisQuarter(List<Person> allStudents) {
+        // Map which records number of common courses each student takes with myUser
+        Map<Person, Integer> frequencyStudents = new HashMap<>();
+        String year = "2022", quarter = "Winter";
+        // String courseSize = "small";
+        //traverse all student object
+        for (Person person : allStudents) {
+            int freq = 0; // set frequency level
+            for (com.example.birdsofafeather.model.db.Course course : person.getCourseList()) {
+                //Traverse all the courses of the current student and judge the repetition rate of
+                // your own courses
+                /** I think this part can be written in this way
+                 if(myUser.getCourses().contains(course)) {
+                 if(course.getCourseSize().equals(courseSize))
+                 freq++;
+                 } **/
+                for (com.example.birdsofafeather.model.db.Course c : user.getCourseList()) {
+                    if(course.equals(c)) {
+                        if(course.year.equals(year) && course.quarter.equals(quarter)) {
+                            freq++;
+                        }
+                    }
+                }
+            }
+
+            // Add to frequency map if there is a course in common with student and myUser
+            if (freq > 0)
+                frequencyStudents.put(person, freq);
+        }
+
+        // Sort frequency map by value
+        Map<Person, Integer> frequencyStudents_sorted = sortByValue(frequencyStudents);
+
+        // Log frequency map student name and common course frequency
+        for (Map.Entry<Person, Integer> entry : frequencyStudents_sorted.entrySet())
+            Log.i("HashMap", "key=" + entry.getKey().getName() + ", value=" + entry.getValue());
+
+        return new ArrayList<>(frequencyStudents_sorted.keySet());
+    }
+
+
+
+
+
+
+
+
 
     /**
      * Helper function to sort HashMap by values
      * @param freq
      * @return Map sorted by values
      */
-    public Map<Student, Integer> sortByValue(Map<Student, Integer> freq) {
+    public Map<Person, Integer> sortByValue(Map<Person, Integer> freq) {
         // Create a linked list from elements of HashMap
-        List<Map.Entry<Student, Integer>> linkedFreq = new LinkedList<>(freq.entrySet());
+        List<Map.Entry<Person, Integer>> linkedFreq = new LinkedList<>(freq.entrySet());
 
         // Sort the linked list
-        Collections.sort(linkedFreq, new Comparator<Map.Entry<Student, Integer>>() {
+        Collections.sort(linkedFreq, new Comparator<Map.Entry<Person, Integer>>() {
             @Override
-            public int compare(Map.Entry<Student, Integer> freq1, Map.Entry<Student, Integer> freq2) {
+            public int compare(Map.Entry<Person, Integer> freq1, Map.Entry<Person, Integer> freq2) {
                 return freq2.getValue().compareTo(freq1.getValue());
             }
         });
 
         // Convert sorted linked list to HashMap
-        Map<Student, Integer> freq_sorted = new LinkedHashMap<>();
-        for (Map.Entry<Student, Integer> entry : linkedFreq)
+        Map<Person, Integer> freq_sorted = new LinkedHashMap<>();
+        for (Map.Entry<Person, Integer> entry : linkedFreq)
             freq_sorted.put(entry.getKey(), entry.getValue());
 
         return freq_sorted;
@@ -311,8 +516,8 @@ public class HomeActivity extends AppCompatActivity {
     /**
      * A.4. Method to fill Student Item Adapter
      */
-    public void fillStudentItemAdapter(List<Student> student_data) {
-        StudentItemAdapter students = new StudentItemAdapter(student_data);     // create Student Item Adapter
+    public void fillStudentItemAdapter(List<Person> student_data) {
+        PersonsViewAdapter students = new PersonsViewAdapter(student_data);     // create Student Item Adapter
         studentList = findViewById(R.id.student_list);
         studentList.setAdapter(students);                                       // set Student Item Adapter to hold student_data
         studentList.setLayoutManager(lManager);                                 // display LayoutManager with student list
@@ -323,33 +528,34 @@ public class HomeActivity extends AppCompatActivity {
      * DESCRIPTION
      * The StudentItemAdapter class sets up an Adapter interface for displaying Student information in Home Activity
      */
-    class StudentItemAdapter extends RecyclerView.Adapter<StudentItemAdapter.ItemViewHolder> {
-        private List<Student> mList;
+    class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.ItemViewHolder> {
+        private final List<Person> mList;
         private RecyclerView.ViewHolder holder;
 
-        public StudentItemAdapter(List<Student> list) {
-            mList = list;
+        public PersonsViewAdapter(List<Person> list) {
+            super();
+            this.mList = list;
         }
 
-        /**
-         * Creates Student Item View Holder
-         */
-        public StudentItemAdapter.ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-            View view = inflater.inflate(R.layout.student_item, parent,false);
-            return new StudentItemAdapter.ItemViewHolder(view);
+        @NonNull
+        @Override
+        public PersonsViewAdapter.ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = LayoutInflater
+                    .from(parent.getContext())
+                    .inflate(R.layout.student_item, parent, false);
+
+            return new PersonsViewAdapter.ItemViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(@NonNull StudentItemAdapter.ItemViewHolder holder, int position) {
-
-            Student student = mList.get(position);
-            holder.name.setText(student.getFirstName());
+        public void onBindViewHolder(@NonNull PersonsViewAdapter.ItemViewHolder holder, int position) {
+            Person person = mList.get(position);
+            holder.name.setText(person.getName());
             holder.findName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(view.getContext(), ProfileActivity.class);
-                    intent.putExtra("Student", student);
+                    intent.putExtra("Person", (Parcelable) person);
                     startActivity(intent);
                 }
             });
@@ -357,18 +563,19 @@ public class HomeActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     // set star icon to yellow once clicked
-                    ((ImageButton)(view.findViewById(R.id.starButton))).setColorFilter(Color.YELLOW);
+                    ((ImageButton) (view.findViewById(R.id.starButton))).setColorFilter(Color.YELLOW);
 
-                    holder.star.setOnClickListener(new View.OnClickListener(){
+                    holder.star.setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void onClick(View view){
+                        public void onClick(View view) {
                             // set star icon to gray if click again to cancel "favorite"
-                            ((ImageButton)(view.findViewById(R.id.starButton))).setColorFilter(Color.GRAY);
+                            ((ImageButton) (view.findViewById(R.id.starButton))).setColorFilter(Color.GRAY);
                         }
                     });
                 }
             });
         }
+
 
         @Override
         public int getItemCount() {
@@ -414,13 +621,13 @@ public class HomeActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(@NonNull SessionItemAdapter.ItemViewHolder holder, int position) {
             Session session = sessionList.get(position);
-            holder.name.setText(session.getName());
+            holder.name.setText(session.getSessionName());
 
             // When click on Session ViewHolder, load clicked Session
             holder.findName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(HomeActivity.this, session.getName(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(HomeActivity.this, session.getSessionName(), Toast.LENGTH_LONG).show();
 
                     /**
                      * When a Session ViewHolder is clicked, BoF will load the respective session
@@ -472,49 +679,54 @@ class Data {
      *
      * @return ArrayList of fake Students
      */
-    public static List<Student> fab_students() {
+    public static List<Person> fab_students() {
         // All students is our fabricated list of students
-        List<Student> allStudents = new ArrayList<>();
+        List<Person> allStudents = new ArrayList<>();
 
         // Student Zehua
         List<Course> zehua_courses = new ArrayList<>();
+        int zehuaId = 1;
 
-        zehua_courses.add(new Course("2022", "Winter", "CSE", "110", "large"));
-        zehua_courses.add(new Course("2022", "Winter", "CSE", "151B", "medium"));
-        zehua_courses.add(new Course("2022", "Winter", "PHIL", "141", "small"));
-        zehua_courses.add(new Course("2022", "Winter", "CSE", "152A", "small"));
+        zehua_courses.add(new Course(zehuaId,"2022", "Winter", "CSE", "110", "large"));
+        zehua_courses.add(new Course(zehuaId,"2022", "Winter", "CSE", "151B", "medium"));
+        zehua_courses.add(new Course(zehuaId,"2022", "Winter", "PHIL", "141", "small"));
+        zehua_courses.add(new Course(zehuaId,"2022", "Winter", "CSE", "152A", "small"));
 
-        Student zehua = new Student("zehua", "zehua.png", zehua_courses, false);
+        Person zehua = new Person(zehuaId, "zehua", "zehua.png", zehua_courses, false);
 
         // Student Vishvesh
         List<Course> vishvesh_courses = new ArrayList<>();
+        int vishveshId = 2;
 
-        vishvesh_courses.add(new Course("2022", "Winter", "CSE", "110", "large"));
+        vishvesh_courses.add(new Course(vishveshId,"2022", "Winter", "CSE", "110", "large"));
 
-        Student vishvesh = new Student("vishvesh", "vishesh.png", vishvesh_courses, false);
+        Person vishvesh = new Person(vishveshId, "vishvesh", "vishesh.png", vishvesh_courses, false);
 
         // Student Derek
         List<Course> derek_courses = new ArrayList<>();
+        int derekId = 3;
 
-        derek_courses.add(new Course("2022", "Winter", "COGS", "10", "huge"));
+        derek_courses.add(new Course(vishveshId,"2022", "Winter", "COGS", "10", "huge"));
 
-        Student derek = new Student("derek", "derek.png", derek_courses, false);
+        Person derek = new Person(derekId,"derek", "derek.png", derek_courses, false);
 
         // Student Huaner
         List<Course> huaner_courses = new ArrayList<>();
+        int huanerId = 4;
 
-        huaner_courses.add(new Course("2019", "Fall", "CSE", "110", "large"));
-        huaner_courses.add(new Course("2022", "Winter", "CSE", "141", "large"));
+        huaner_courses.add(new Course(huanerId,"2019", "Fall", "CSE", "110", "large"));
+        huaner_courses.add(new Course(huanerId,"2022", "Winter", "CSE", "141", "large"));
 
-        Student huaner = new Student("huaner", "huaner.png", huaner_courses, false);
+        Person huaner = new Person(huanerId,"huaner", "huaner.png", huaner_courses, false);
 
         // Student Ivy
         List<Course> ivy_courses = new ArrayList<>();
+        int ivyId = 5;
 
-        ivy_courses.add(new Course("2022", "Winter", "CSE", "151B", "medium"));
-        ivy_courses.add(new Course("2022", "Winter", "PHIL", "141", "small"));
+        ivy_courses.add(new Course(ivyId,"2022", "Winter", "CSE", "151B", "medium"));
+        ivy_courses.add(new Course(ivyId,"2022", "Winter", "PHIL", "141", "small"));
 
-        Student ivy = new Student("ivy", "ivy.png", ivy_courses, false);
+        Person ivy = new Person(ivyId,"ivy", "ivy.png", ivy_courses, false);
 
         // Add all Students into allStudents
         allStudents.add(zehua);
@@ -536,24 +748,26 @@ class Data {
         List<Session> allSessions = new ArrayList<>();
 
         // All students is our fabricated list of students
-        List<Student> students1 = new ArrayList<>();
+        List<Person> students1 = new ArrayList<>();
 
         // Student Zehua
         List<Course> zehua_courses = new ArrayList<>();
+        int zehuaId = 1;
 
-        zehua_courses.add(new Course("2022", "Winter", "CSE", "110", "large"));
-        zehua_courses.add(new Course("2022", "Winter", "CSE", "151B", "medium"));
-        zehua_courses.add(new Course("2022", "Winter", "PHIL", "141", "small"));
-        zehua_courses.add(new Course("2022", "Winter", "CSE", "152A", "small"));
+        zehua_courses.add(new Course(zehuaId,"2022", "Winter", "CSE", "110", "large"));
+        zehua_courses.add(new Course(zehuaId,"2022", "Winter", "CSE", "151B", "medium"));
+        zehua_courses.add(new Course(zehuaId,"2022", "Winter", "PHIL", "141", "small"));
+        zehua_courses.add(new Course(zehuaId,"2022", "Winter", "CSE", "152A", "small"));
 
-        Student zehua = new Student("zehua", "zehua.png", zehua_courses, false);
+        Person zehua = new Person(zehuaId,"zehua", "zehua.png", zehua_courses, false);
 
         // Student Derek
         List<Course> derek_courses = new ArrayList<>();
+        int derekId = 2;
 
-        derek_courses.add(new Course("2022", "Winter", "COGS", "10", "huge"));
+        derek_courses.add(new Course(derekId,"2022", "Winter", "COGS", "10", "huge"));
 
-        Student derek = new Student("derek", "derek.png", derek_courses, false);
+        Person derek = new Person(derekId,"derek", "derek.png", derek_courses, false);
 
         // Add session1 Students into students1
         students1.add(zehua);
@@ -563,22 +777,24 @@ class Data {
         Session session1 = new Session("session 1", students1);
 
         // All students is our fabricated list of students
-        List<Student> students2 = new ArrayList<>();
+        List<Person> students2 = new ArrayList<>();
 
         // Student Vishvesh
         List<Course> vishvesh_courses = new ArrayList<>();
+        int vishveshId = 3;
 
-        vishvesh_courses.add(new Course("2022", "Winter", "CSE", "110", "large"));
+        vishvesh_courses.add(new Course(vishveshId,"2022", "Winter", "CSE", "110", "large"));
 
-        Student vishvesh = new Student("vishvesh", "vishesh.png", vishvesh_courses, false);
+        Person vishvesh = new Person(vishveshId,"vishvesh", "vishesh.png", vishvesh_courses, false);
 
         // Student Huaner
         List<Course> huaner_courses = new ArrayList<>();
+        int huanerId = 4;
 
-        huaner_courses.add(new Course("2019", "Fall", "CSE", "110", "large"));
-        huaner_courses.add(new Course("2022", "Winter", "CSE", "141", "large"));
+        huaner_courses.add(new Course(huanerId,"2019", "Fall", "CSE", "110", "large"));
+        huaner_courses.add(new Course(huanerId,"2022", "Winter", "CSE", "141", "large"));
 
-        Student huaner = new Student("huaner", "huaner.png", huaner_courses, false);
+        Person huaner = new Person(huanerId,"huaner", "huaner.png", huaner_courses, false);
 
         // Add session2 Students into students2
         students2.add(vishvesh);

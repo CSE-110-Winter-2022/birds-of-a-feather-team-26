@@ -11,9 +11,6 @@ import java.util.List;
 
 @Dao
 public interface CourseDao {
-    @Transaction
-    @Query("SELECT * FROM course where person_id=:personId")
-    List<Course> getForPerson(int personId);
 
     @Query("SELECT * FROM course WHERE id=:courseId")
     Course get(int courseId);
@@ -30,6 +27,6 @@ public interface CourseDao {
     @Delete
     void delete(Course course);
 
-    @Query("SELECT * FROM course")
-    List<Course> getAllCourses();
+    @Query("SELECT * FROM course WHERE person_id=:personId")
+    List<Course> getAllCourses(int personId);
 }

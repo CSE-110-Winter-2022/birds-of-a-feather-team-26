@@ -14,8 +14,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.birdsofafeather.model.Course;
-import com.example.birdsofafeather.model.Student;
+import com.example.birdsofafeather.model.db.Course;
+import com.example.birdsofafeather.model.db.Person;
 
 import java.util.ArrayList;
 
@@ -59,21 +59,21 @@ public class ProfileActivity extends AppCompatActivity {
 
         // Intent
         Intent i = getIntent();
-        Student user = (Student) i.getSerializableExtra("Student");
+        Person user = (Person) i.getSerializableExtra("Student");
 
         // Set user profile name
-        String name = user.getFirstName();
+        String name = user.personName;
         studentName = findViewById(R.id.profile_name);
         studentName.setText(name);
 
         // Set user picture
-        String pictureURL = user.getPictureURL();
+        String pictureURL = user.url;
         avatar = findViewById(R.id.avatar);
 
         // Course Item Adapter to display courses of user
         courseList = findViewById(R.id.profile_course_list);
-        Log.wtf("course", user.getCourses().get(0).getCourse());
-        CourseItemAdapter courseItemAdapter = new CourseItemAdapter((ArrayList<Course>) user.getCourses());
+        Log.wtf("course", user.getCourseList().get(0).getCourse());
+        CourseItemAdapter courseItemAdapter = new CourseItemAdapter((ArrayList<Course>) user.getCourseList());
         courseList.setAdapter(courseItemAdapter);
         LinearLayoutManager lManager = new LinearLayoutManager(this);
         courseList.setLayoutManager(lManager);
