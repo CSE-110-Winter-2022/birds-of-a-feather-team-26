@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -35,7 +36,6 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * DESCRIPTION
@@ -82,10 +82,11 @@ public class HomeActivity extends AppCompatActivity {
     LinearLayoutManager lManager = new LinearLayoutManager(this);
     RecyclerView studentList;
 
-    private List<Student> allStudents;
+    private List<Student> fakeBluetoothStudents;
     private List<Student> filteredStudents;
 
     private Session currSession;
+    private boolean new_sess = false;
 
     /**
      * Home Activity onCreate
@@ -112,8 +113,8 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        // All students is our fabricated list of students
-        allStudents = Data.fab_students();
+        // fabricated list of bluetooth-searched students
+        fakeBluetoothStudents = Data.fab_students();
 
         /**
          * I. TOGGLE BUTTON WHICH TRIGGERS BLUETOOTH FUNCTIONALITY
@@ -140,7 +141,7 @@ public class HomeActivity extends AppCompatActivity {
                     /**
                      * 1. Ask user if they want to resume a previous session or start a new session
                      */
-                    createNewContactDialog();
+                    startSession();
 
                     /**
                      * 2. Start bluetooth search
@@ -151,7 +152,7 @@ public class HomeActivity extends AppCompatActivity {
                      * 3. Filter Students with Common Courses (main Home Activity algorithm)
                      *
                      */
-                    filteredStudents = filterStudentsWithCommonCourses(allStudents);
+                    filteredStudents = filterStudentsWithCommonCourses(fakeBluetoothStudents);
 
 
                     /**
@@ -164,19 +165,21 @@ public class HomeActivity extends AppCompatActivity {
                 /**
                  * B. When SEARCH button is toggled OFF:
                  *      1. Stop bluetooth search (MS 1)
-                 *      2. Ask user to save session with <session_name> (MS 2)
+                 *      2. Ask user to save session with <session_name> (MS 2) if new session is created
                  *      3. Stop displaying list of students with common courses (MS 1)
                  */
                 else {
                     /**
-                     * 1. Stop bluetooth search
+                     * 1. Stop bluetooth search (this is automatic with our bluetooth search functionality, I believe)
                      */
-
 
                     /**
-                     * 2. Ask user to save session with <session_name>
+                     * 2. Ask user to save session with <session_name> if new session is created
                      */
-
+                    if (new_sess) {
+                        saveNewSession();
+                        new_sess = false;       // reset new_sess flag
+                    }
 
                     /**
                      * 3. Stop displaying list of students with common courses
@@ -196,18 +199,12 @@ public class HomeActivity extends AppCompatActivity {
              */
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                /**
-                 * A. When SEARCH button is toggled ON:
-                 *      1. Ask user if they want to resume a previous session or start a new session (MS 2)
-                 *      2. Start bluetooth search (MS 1)
-                 *      3. Filter students by common courses (MS 1)
-                 *      4. Display list of students with common courses (MS 1)
-                 */
+
                 if (isChecked) {
                     /**
                      * 1. Ask user if they want to resume a previous session or start a new session
                      */
-                    createNewContactDialog();
+                    startSession();
                     /**
                      * 2. Start bluetooth search
                      */
@@ -215,19 +212,14 @@ public class HomeActivity extends AppCompatActivity {
                      * 3. Filter Students with Common Courses (main Home Activity algorithm)
                      *
                      */
-                    filteredStudents = filterSmallCourse(allStudents);
+                    filteredStudents = filterSmallCourse(fakeBluetoothStudents);
                     /**
                      * 4. Display list of Students with Common Courses
                      */
                     // fill Student Item Adapter with list of students with common courses
                     fillStudentItemAdapter(filteredStudents);
                 }
-                /**
-                 * B. When SEARCH button is toggled OFF:
-                 *      1. Stop bluetooth search (MS 1)
-                 *      2. Ask user to save session with <session_name> (MS 2)
-                 *      3. Stop displaying list of students with common courses (MS 1)
-                 */
+
                 else {
                     /**
                      * 1. Stop bluetooth search
@@ -241,6 +233,7 @@ public class HomeActivity extends AppCompatActivity {
                     // Clear Student Item Adapter
                     fillStudentItemAdapter(new ArrayList<>());
                 }
+
             }
         });
 
@@ -248,24 +241,18 @@ public class HomeActivity extends AppCompatActivity {
         ToggleButton startSearchByQuarter = findViewById(R.id.start_search_btn_byQuarter);
         startSearchByQuarter.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             /**
-             * This method will execute the bluetooth search functionality when toggled on.
+             * This method will execute the bluetooth search functionality for this quarter only when toggled on.
              * @param buttonView
              * @param isChecked boolean which represents state of startSearch ToggleButton
              */
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                /**
-                 * A. When SEARCH button is toggled ON:
-                 *      1. Ask user if they want to resume a previous session or start a new session (MS 2)
-                 *      2. Start bluetooth search (MS 1)
-                 *      3. Filter students by common courses (MS 1)
-                 *      4. Display list of students with common courses (MS 1)
-                 */
+
                 if (isChecked) {
                     /**
                      * 1. Ask user if they want to resume a previous session or start a new session
                      */
-                    createNewContactDialog();
+                    startSession();
                     /**
                      * 2. Start bluetooth search
                      */
@@ -273,19 +260,14 @@ public class HomeActivity extends AppCompatActivity {
                      * 3. Filter Students with Common Courses (main Home Activity algorithm)
                      *
                      */
-                    filteredStudents = filterStudentsWithThisQuarter(allStudents);
+                    filteredStudents = filterStudentsWithThisQuarter(fakeBluetoothStudents);
                     /**
                      * 4. Display list of Students with Common Courses
                      */
                     // fill Student Item Adapter with list of students with common courses
                     fillStudentItemAdapter(filteredStudents);
                 }
-                /**
-                 * B. When SEARCH button is toggled OFF:
-                 *      1. Stop bluetooth search (MS 1)
-                 *      2. Ask user to save session with <session_name> (MS 2)
-                 *      3. Stop displaying list of students with common courses (MS 1)
-                 */
+
                 else {
                     /**
                      * 1. Stop bluetooth search
@@ -299,30 +281,25 @@ public class HomeActivity extends AppCompatActivity {
                     // Clear Student Item Adapter
                     fillStudentItemAdapter(new ArrayList<>());
                 }
+
             }
         });
 
         ToggleButton startSearchByRecent = findViewById(R.id.start_search_btn_byRecent);
         startSearchByRecent.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             /**
-             * This method will execute the bluetooth search functionality when toggled on.
+             * This method will execute the bluetooth search functionality for most recent courses when toggled on.
              * @param buttonView
              * @param isChecked boolean which represents state of startSearch ToggleButton
              */
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                /**
-                 * A. When SEARCH button is toggled ON:
-                 *      1. Ask user if they want to resume a previous session or start a new session (MS 2)
-                 *      2. Start bluetooth search (MS 1)
-                 *      3. Filter students by common courses (MS 1)
-                 *      4. Display list of students with common courses (MS 1)
-                 */
+
                 if (isChecked) {
                     /**
                      * 1. Ask user if they want to resume a previous session or start a new session
                      */
-                    createNewContactDialog();
+                    startSession();
                     /**
                      * 2. Start bluetooth search
                      */
@@ -330,19 +307,14 @@ public class HomeActivity extends AppCompatActivity {
                      * 3. Filter Students with Common Courses (main Home Activity algorithm)
                      *
                      */
-                    filteredStudents = filterStudentsWithRecent(allStudents);
+                    filteredStudents = filterStudentsWithRecent(fakeBluetoothStudents);
                     /**
                      * 4. Display list of Students with Common Courses
                      */
                     // fill Student Item Adapter with list of students with common courses
                     fillStudentItemAdapter(filteredStudents);
                 }
-                /**
-                 * B. When SEARCH button is toggled OFF:
-                 *      1. Stop bluetooth search (MS 1)
-                 *      2. Ask user to save session with <session_name> (MS 2)
-                 *      3. Stop displaying list of students with common courses (MS 1)
-                 */
+
                 else {
                     /**
                      * 1. Stop bluetooth search
@@ -356,6 +328,7 @@ public class HomeActivity extends AppCompatActivity {
                     // Clear Student Item Adapter
                     fillStudentItemAdapter(new ArrayList<>());
                 }
+
             }
         });
 
@@ -388,7 +361,7 @@ public class HomeActivity extends AppCompatActivity {
     /**
      * A.1. Ask user if they want to resume a previous session or start a new session
      */
-    public void createNewContactDialog() {
+    public void startSession() {
         dialogBuilder = new AlertDialog.Builder(this);
         final View start_session = getLayoutInflater().inflate(R.layout.start_session, null);
 
@@ -416,6 +389,7 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 currSession = new Session(new ArrayList<>());   // start new blank Session
+                new_sess = true;
 
                 dialog.dismiss();                               // close start_session dialog
             }
@@ -423,16 +397,43 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     /**
+     * B.1. Ask user if they want to resume a previous session or start a new session
+     */
+    public void saveNewSession() {
+        dialogBuilder = new AlertDialog.Builder(this);
+        final View stop_session = getLayoutInflater().inflate(R.layout.stop_session, null);
+
+        // Create and show start_session contact dialog
+        dialogBuilder.setView(stop_session);
+        dialog = dialogBuilder.create();
+        dialog.show();
+
+        /**
+         * When new_session Button is clicked, BoF will start a new blank session
+         */
+        Button name_session = (Button) stop_session.findViewById(R.id.name_session_btn);
+        name_session.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText name = stop_session.findViewById(R.id.name_session_edittext);
+                currSession.setName(name.getText().toString());                         // name session
+
+                dialog.dismiss();                                                       // close start_session dialog
+            }
+        });
+    }
+
+    /**
      * A.3. Filter Students with Common Courses (main Home Activity algorithm)
-     * @param allStudents
+     * @param bluetoothStudents
      * @return List<Student> of students who've taken a course in common with myUser
      */
-    public List<Student> filterStudentsWithCommonCourses(List<Student> allStudents) {
+    public List<Student> filterStudentsWithCommonCourses(List<Student> bluetoothStudents) {
         // Map which records number of common courses each student takes with myUser
         Map<Student, Double> frequencyStudents = new HashMap<>();
         // Count number of common courses each student takes with myUser
         //traverse all student object
-        for (Student student : allStudents) {
+        for (Student student : bluetoothStudents) {
             double freq = 0; //set frequency level
             for (Course course : student.getCourses()) {
                 for (Course c : myUser.getCourses()) {
@@ -495,16 +496,16 @@ public class HomeActivity extends AppCompatActivity {
 
     /**
      * Filter Students with Common Courses with "this quarter only" priority
-     * @param allStudents
+     * @param bluetoothStudents
      * @return
      */
-    public List<Student> filterStudentsWithThisQuarter(List<Student> allStudents) {
+    public List<Student> filterStudentsWithThisQuarter(List<Student> bluetoothStudents) {
         // Map which records number of common courses each student takes with myUser
         Map<Student, Double> frequencyStudents = new HashMap<>();
         String year = "2022", quarter = "Winter";
         // String courseSize = "small";
         //traverse all student object
-        for (Student student : allStudents) {
+        for (Student student : bluetoothStudents) {
             double freq = 0; // set frequency level
             for (Course course : student.getCourses()) {
                 //Traverse all the courses of the current student and judge the repetition rate of
@@ -539,13 +540,13 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
-    public List<Student> filterStudentsWithRecent(List<Student> allStudents) {
+    public List<Student> filterStudentsWithRecent(List<Student> bluetoothStudents) {
         // Map which records number of common courses each student takes with myUser
         Map<Student, Double> frequencyStudents = new HashMap<>();
         String year1 = "2022", year2 = "2021", year3 = "2020", year4 = "2019";
         // String courseSize = "small";
         //traverse all student object
-        for (Student student : allStudents) {
+        for (Student student : bluetoothStudents) {
             double freq = 0; // set frequency level
             for (Course course : student.getCourses()) {
                 //Traverse all the courses of the current student and judge the repetition rate of
@@ -779,6 +780,8 @@ public class HomeActivity extends AppCompatActivity {
 }
 
 
+
+
 /**
  * FABRICATE DATA HELPER CLASS
  *
@@ -793,7 +796,7 @@ class Data {
      */
     public static List<Student> fab_students() {
         // All students is our fabricated list of students
-        List<Student> allStudents = new ArrayList<>();
+        List<Student> fakeBluetoothStudents = new ArrayList<>();
 
         // Student Zehua
         List<Course> zehua_courses = new ArrayList<>();
@@ -835,14 +838,14 @@ class Data {
 
         Student ivy = new Student("ivy", "ivy.png", ivy_courses, false);
 
-        // Add all Students into allStudents
-        allStudents.add(zehua);
-        allStudents.add(vishvesh);
-        allStudents.add(derek);
-        allStudents.add(huaner);
-        allStudents.add(ivy);
+        // Add all Students into fakeBluetoothStudents
+        fakeBluetoothStudents.add(zehua);
+        fakeBluetoothStudents.add(vishvesh);
+        fakeBluetoothStudents.add(derek);
+        fakeBluetoothStudents.add(huaner);
+        fakeBluetoothStudents.add(ivy);
 
-        return allStudents;
+        return fakeBluetoothStudents;
     }
 
     /**
@@ -852,7 +855,7 @@ class Data {
      */
     public static List<Session> fab_sessions() {
         // All sessions is our fabricated list of students
-        List<Session> allSessions = new ArrayList<>();
+        List<Session> fakeSessions = new ArrayList<>();
 
         // All students is our fabricated list of students
         List<Student> students1 = new ArrayList<>();
@@ -907,9 +910,9 @@ class Data {
         Session session2 = new Session("session 2", students2);
 
         // Add sessions to allSessions
-        allSessions.add(session1);
-        allSessions.add(session2);
+        fakeSessions.add(session1);
+        fakeSessions.add(session2);
 
-        return allSessions;
+        return fakeSessions;
     }
 }
