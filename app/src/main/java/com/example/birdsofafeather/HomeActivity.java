@@ -227,6 +227,10 @@ public class HomeActivity extends AppCompatActivity {
                     /**
                      * 2. Ask user to save session with <session_name>
                      */
+                    if (new_sess) {
+                        saveNewSession();
+                        new_sess = false;       // reset new_sess flag
+                    }
                     /**
                      * 3. Stop displaying list of students with common courses
                      */
@@ -275,6 +279,10 @@ public class HomeActivity extends AppCompatActivity {
                     /**
                      * 2. Ask user to save session with <session_name>
                      */
+                    if (new_sess) {
+                        saveNewSession();
+                        new_sess = false;       // reset new_sess flag
+                    }
                     /**
                      * 3. Stop displaying list of students with common courses
                      */
@@ -322,6 +330,10 @@ public class HomeActivity extends AppCompatActivity {
                     /**
                      * 2. Ask user to save session with <session_name>
                      */
+                    if (new_sess) {
+                        saveNewSession();
+                        new_sess = false;       // reset new_sess flag
+                    }
                     /**
                      * 3. Stop displaying list of students with common courses
                      */
