@@ -555,38 +555,38 @@ public class HomeActivity extends AppCompatActivity {
     public List<Student> filterStudentsWithRecent(List<Student> bluetoothStudents) {
         // Map which records number of common courses each student takes with myUser
         Map<Student, Double> frequencyStudents = new HashMap<>();
-        String year1 = "2022", year2 = "2021", year3 = "2020", year4 = "2019";
-        // String courseSize = "small";
+        String year2022 = "2022";
+        String winterQuarter = "Winter";
+        String year2021 = "2021", year2020 = "2020";
+        String springQuarter = "Spring", summerQuarter = "Summer", fallQuarter = "Fall";
         //traverse all student object
         for (Student student : bluetoothStudents) {
             double freq = 0; // set frequency level
             for (Course course : student.getCourses()) {
                 //Traverse all the courses of the current student and judge the repetition rate of
                 // your own courses
-                /** I think this part can be written in this way
-                 if(myUser.getCourses().contains(course)) {
-                 if(course.getCourseSize().equals(courseSize))
-                 freq++;
-                 } **/
                 for (Course c : myUser.getCourses()) {
-                    if(course.equals(c)) {
-                        if(course.getYear().equals(year1)) {
-                            freq++;
+                    if (course.equals(c)) {
+                        if (course.getYear().equals(year2022) && course.getQuarter().equals(winterQuarter)) {
+                            continue;
+                        }
+                        else if (course.getYear().equals(year2021) && course.getQuarter().equals(fallQuarter)) {
+                            freq = freq + 5;
+                        }
+                        else if (course.getYear().equals(year2021) && course.getQuarter().equals(summerQuarter)) {
+                            freq = freq + 4;
+                        }
+                        else if (course.getYear().equals(year2021) && course.getQuarter().equals(springQuarter)) {
+                            freq = freq + 3;
+                        }
+                        else if (course.getYear().equals(year2020) && course.getQuarter().equals(winterQuarter)) {
+                            freq = freq + 2;
+                        }
+                        else if (course.getYear().equals(year2020) && course.getQuarter().equals(fallQuarter)) {
+                            freq = freq + 1;
                         }
                         else {
-                            if(course.getYear().equals(year2)) {
-                                freq++;
-                            }
-                            else {
-                                if(course.getYear().equals(year3)) {
-                                    freq++;
-                                }
-                                else {
-                                    if(course.getYear().equals(year4)) {
-                                        freq++;
-                                    }
-                                }
-                            }
+                            freq = freq + 0;
                         }
                     }
                 }
