@@ -443,19 +443,20 @@ public class HomeActivity extends AppCompatActivity {
     public List<Student> filterStudentsWithCommonCourses(List<Student> bluetoothStudents) {
         // Map which records number of common courses each student takes with myUser
         Map<Student, Double> frequencyStudents = new HashMap<>();
+
         // Count number of common courses each student takes with myUser
-        //traverse all student object
         for (Student student : bluetoothStudents) {
-            double freq = 0; //set frequency level
-            for (Course course : student.getCourses()) {
-                for (Course c : myUser.getCourses()) {
+
+            double freq = 0;        // Initialize frequency level
+            for (Course course : student.getCourses())
+                for (Course c : myUser.getCourses())
                     if (course.equals(c))
                         freq++;
-                }
-            }
+
             // Add to frequency map if there is a course in common with student and myUser
             if (freq > 0)
                 frequencyStudents.put(student, freq);
+
         }
 
         // Sort frequency map by value
@@ -475,6 +476,7 @@ public class HomeActivity extends AppCompatActivity {
      */
     public List<Student> filterSmallCourse(List<Student> students){
 
+        // Map of course size with weights in filter Small Course algorithm
         Map<String, Double> courseSizeWeights = new HashMap<>();
         courseSizeWeights.put("tiny", 1.00);
         courseSizeWeights.put("small", 0.33);
@@ -483,27 +485,31 @@ public class HomeActivity extends AppCompatActivity {
         courseSizeWeights.put("huge", 0.06);
         courseSizeWeights.put("gigantic", 0.03);
 
-        Map<Student,Double> map=new HashMap<Student,Double>();
+        // Map which records Small Course algorithm score each student has in comparison with myUser
+        Map<Student,Double> map = new HashMap<>();
 
-        for(Student stu:students){
-            double score=0.0;
-            for(Course course: stu.getCourses()){
-                for (Course c: myUser.getCourses()) {
-                    if (course.equals(c)) {
+        for(Student stu:students) {
+
+            double score = 0.0;     // Initialize frequency level
+            for (Course course: stu.getCourses())
+                for (Course c: myUser.getCourses())
+                    if (course.equals(c))
                         score += courseSizeWeights.get(course.getCourseSize());
-                    }
-                }
-            }
-            if(score>0) {
+
+            // Add score to map if there is a course in common with student and myUser
+            if (score > 0)
                 map.put(stu, score);
-            }
+
         }
-        Map<Student,Double> rtmap=sortByValue(map);
-        List<Student> rtlist=new ArrayList<>();
-        for(Student student: rtmap.keySet()){
-            rtlist.add(student);
-        }
-        return rtlist;
+
+        // Sort score map by value
+        Map<Student,Double> rtmap = sortByValue(map);
+
+        // Log each key-value pair in map of student name and Small Course score
+        for (Map.Entry<Student, Double> entry : rtmap.entrySet())
+            Log.i("HashMap", "key=" + entry.getKey().getFirstName() + ", value=" + entry.getValue());
+
+        return new ArrayList<>(rtmap.keySet());         // Return ArrayList of students sorted in Small Course algorithm order
     }
 
     /**
@@ -512,12 +518,14 @@ public class HomeActivity extends AppCompatActivity {
      * @return
      */
     public List<Student> filterStudentsWithThisQuarter(List<Student> bluetoothStudents) {
-        // Map which records number of common courses each student takes with myUser
+        // Map which records number of common courses each student takes with myUser in this quarter
         Map<Student, Double> frequencyStudents = new HashMap<>();
-        String year = "2022", quarter = "Winter";
-        // String courseSize = "small";
-        //traverse all student object
+
+        String year = "2022", quarter = "Winter";   // This quarter
+
+        // Traverse all Student objects
         for (Student student : bluetoothStudents) {
+
             double freq = 0; // set frequency level
             for (Course course : student.getCourses()) {
                 //Traverse all the courses of the current student and judge the repetition rate of
@@ -544,7 +552,7 @@ public class HomeActivity extends AppCompatActivity {
         // Sort frequency map by value
         Map<Student, Double> frequencyStudents_sorted = sortByValue(frequencyStudents);
 
-        // Log frequency map student name and common course frequency
+        // Log frequency map student name and common course frequency for this quarter
         for (Map.Entry<Student, Double> entry : frequencyStudents_sorted.entrySet())
             Log.i("HashMap", "key=" + entry.getKey().getFirstName() + ", value=" + entry.getValue());
 
@@ -553,41 +561,36 @@ public class HomeActivity extends AppCompatActivity {
 
 
     public List<Student> filterStudentsWithRecent(List<Student> bluetoothStudents) {
-        // Map which records number of common courses each student takes with myUser
+        // Map which records recency algorithm score each student has in comparison with myUser
         Map<Student, Double> frequencyStudents = new HashMap<>();
-        String year2022 = "2022";
-        String winterQuarter = "Winter";
-        String year2021 = "2021", year2020 = "2020";
-        String springQuarter = "Spring", summerQuarter = "Summer", fallQuarter = "Fall";
-        //traverse all student object
+
+        String year2022 = "2022", year2021 = "2021", year2020 = "2020";
+        String winterQuarter = "Winter", fallQuarter = "Fall", summerQuarter = "Summer", springQuarter = "Spring";
+
+        // Map which records recency algorithm score of each quarter and year
+        Map<String, Double> recencyMap = new HashMap<>();
+        recencyMap.put(winterQuarter+year2022, 0.0);      // This quarter
+        recencyMap.put(fallQuarter+year2021, 5.0);        // A quarter ago (Fall '21)
+        recencyMap.put(summerQuarter+year2021, 4.0);      // 2 quarters ago (Summer '21)
+        recencyMap.put(springQuarter+year2021, 3.0);      // 3 quarters ago (Spring '21)
+        recencyMap.put(winterQuarter+year2021, 2.0);      // 4 quarters ago (Winter '21)
+        recencyMap.put(fallQuarter+year2020, 1.0);        // 5 quarters ago (Fall '20)
+                                                                // Else too old, no added score
+
+        // Traverse all Student objects
         for (Student student : bluetoothStudents) {
+
             double freq = 0; // set frequency level
             for (Course course : student.getCourses()) {
-                //Traverse all the courses of the current student and judge the repetition rate of
+                // Traverse all the courses of the current student and judge the repetition rate of
                 // your own courses
                 for (Course c : myUser.getCourses()) {
                     if (course.equals(c)) {
-                        if (course.getYear().equals(year2022) && course.getQuarter().equals(winterQuarter)) {
-                            continue;
-                        }
-                        else if (course.getYear().equals(year2021) && course.getQuarter().equals(fallQuarter)) {
-                            freq = freq + 5;
-                        }
-                        else if (course.getYear().equals(year2021) && course.getQuarter().equals(summerQuarter)) {
-                            freq = freq + 4;
-                        }
-                        else if (course.getYear().equals(year2021) && course.getQuarter().equals(springQuarter)) {
-                            freq = freq + 3;
-                        }
-                        else if (course.getYear().equals(year2020) && course.getQuarter().equals(winterQuarter)) {
-                            freq = freq + 2;
-                        }
-                        else if (course.getYear().equals(year2020) && course.getQuarter().equals(fallQuarter)) {
-                            freq = freq + 1;
-                        }
-                        else {
-                            freq = freq + 0;
-                        }
+                        String quarter_year = course.getQuarter()+course.getYear();     // Quarter and year of current course
+
+                        // If course has a quarter and year within recencyMap, add recency score to current Student
+                        if (recencyMap.containsKey(quarter_year))
+                            freq += recencyMap.get(quarter_year);
                     }
                 }
             }
@@ -824,6 +827,8 @@ class Data {
         List<Course> vishvesh_courses = new ArrayList<>();
 
         vishvesh_courses.add(new Course("2022", "Winter", "CSE", "110", "large"));
+        vishvesh_courses.add(new Course("2020", "Fall", "CSE", "12", "large"));
+
 
         Student vishvesh = new Student("vishvesh", "vishesh.png", vishvesh_courses, false);
 
@@ -831,6 +836,7 @@ class Data {
         List<Course> derek_courses = new ArrayList<>();
 
         derek_courses.add(new Course("2022", "Winter", "COGS", "10", "tiny"));
+        derek_courses.add(new Course("2021", "Fall", "CSE", "100", "large"));
 
         Student derek = new Student("derek", "derek.png", derek_courses, false);
 
