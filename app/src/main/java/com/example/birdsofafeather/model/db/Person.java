@@ -12,13 +12,10 @@ import java.util.List;
 @Entity(tableName = "persons")
 public class Person implements IPerson {
 
-
+    // Person instance variables
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name="id")
     public int personId;
-
-    @ColumnInfo(name="session_id")
-    public int sessionId;
 
     @ColumnInfo(name="person_name")
     public String personName;
@@ -26,19 +23,16 @@ public class Person implements IPerson {
     @ColumnInfo(name="photo_url")
     public String url;
 
-    @TypeConverters(Convertor.class)
-    public final List<Course> courseList;
-
     @ColumnInfo(name="Favorite")
     public boolean fav = false;
 
-    public Person(int personId, String personName, String url, List<Course> courseList, boolean fav){
-        this.personId = personId;
-        //  this.sessionId = sessionId;
+    // Session pointer
+    @ColumnInfo(name="session_id")
+    public int sessionId;
+
+    public Person(String personName, String url){
         this.personName = personName;
         this.url = url;
-        this.fav = fav;
-        this.courseList = courseList;
     }
 
     @Override
