@@ -123,7 +123,7 @@ public class PhotoActivity extends AppCompatActivity {
         AppDatabase db = AppDatabase.singleton(this.getApplicationContext());
 
         // Index new person_id
-        int i = db.PersonDao().count();
+        // int i = db.PersonDao().count();
 
         // Retrieve user's photo URL
         TextView urlView = findViewById(R.id.etURL);
@@ -131,16 +131,13 @@ public class PhotoActivity extends AppCompatActivity {
 
         // Pass user's photo URL and person_id to Course Activity
         intent.putExtra("photo_url",url);
-        intent.putExtra("person_id", i);
+        // intent.putExtra("person_id", i);
 
         // Retrieve user's name
         String name = intent1.getStringExtra("person_name");
 
         // Create Person object of user
-        Person p = new Person(i, name, url, true);
-        p.personId = i;
-        p.personName = name;
-        p.url = url;
+        Person p = new Person(0, name, url);
 
         // Store user's data (their profile) into BOF database
         db.PersonDao().insertPerson(p);
@@ -152,8 +149,6 @@ public class PhotoActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-        //startActivity(intent);  // Start Course Activity
 
     }
 }

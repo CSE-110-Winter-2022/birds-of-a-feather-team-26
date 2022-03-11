@@ -5,16 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Student implements Serializable {
-    String firstName;
-    String pictureURL;
-    List<Course> courses;
-    Boolean fav;
-
-    public Student(Student s) {
-        firstName = s.getFirstName();
-        pictureURL = s.getPictureURL();
-        courses = s.getCourses();
-    }
+    public String firstName;
+    public String pictureURL;
+    public List<Course> courses;
+    public Boolean fav;
 
     public Student(String firstName, String pictureURL, List<Course> courses, Boolean fav) {
         this.firstName = firstName;
@@ -32,5 +26,4 @@ public class Student implements Serializable {
     public List<Course> getCourses() {
         return courses;
     }
-    public boolean fav() { return fav; }
 }

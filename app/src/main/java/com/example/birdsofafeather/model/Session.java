@@ -5,17 +5,11 @@ import java.util.List;
 import java.util.Calendar;
 
 public class Session implements Serializable {
-    String name;
-    List<Student> students;
+    public String name;
+    public List<Student> students;
 
-    public Session(List<Student> students) {
+    public Session() {
         this.name = Calendar.getInstance().getTime().toString();    // session name default
-        this.students = students;
-    }
-
-    public Session(String name, List<Student> students) {
-        this.name = name;
-        this.students = students;
     }
 
     public String getName() { return this.name; }

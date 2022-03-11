@@ -23,10 +23,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.birdsofafeather.model.Course;
-import com.example.birdsofafeather.model.IPerson;
 import com.example.birdsofafeather.model.Student;
 import com.example.birdsofafeather.model.db.AppDatabase;
 import com.example.birdsofafeather.model.Session;
+import com.example.birdsofafeather.model.db.CourseDao;
+import com.example.birdsofafeather.model.db.Person;
+import com.example.birdsofafeather.model.db.PersonDao;
+import com.example.birdsofafeather.model.db.SessionDao;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -76,16 +79,21 @@ public class HomeActivity extends AppCompatActivity {
     private AlertDialog dialog;
 
     private AppDatabase db;
+    private SessionDao sessionDao;
+    private PersonDao personDao;
+    private CourseDao courseDao;
+
     private Student myUser;
 
     Button myProfile;
     LinearLayoutManager lManager = new LinearLayoutManager(this);
     RecyclerView studentList;
 
-    private List<Student> fakeBluetoothStudents;
-    private List<Student> filteredStudents;
+//    private List<Student> fakeBluetoothStudents;
+//    private List<Student> filteredStudents;
 
     private Session currSession;
+    private int currSessionID;
     private boolean new_sess = false;
 
     /**
@@ -95,6 +103,14 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        // Connect to BOF database
+        db = AppDatabase.singleton(this);
+
+        // DAO for storing current Session, all Student data, and Course data into BOF database
+        sessionDao = db.SessionDao();
+        personDao = db.PersonDao();
+        courseDao = db.CourseDao();
 
         // myUser Student object
         myUser = getPersonFromDBAndReturnStudent(0);
@@ -112,9 +128,6 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-        // fabricated list of bluetooth-searched students
-        fakeBluetoothStudents = Data.fab_students();
 
         /**
          * I. TOGGLE BUTTON WHICH TRIGGERS BLUETOOTH FUNCTIONALITY
@@ -142,24 +155,7 @@ public class HomeActivity extends AppCompatActivity {
                      * 1. Ask user if they want to resume a previous session or start a new session
                      */
                     startSession();
-
-                    /**
-                     * 2. Start bluetooth search
-                     */
-
-
-                    /**
-                     * 3. Filter Students with Common Courses (main Home Activity algorithm)
-                     *
-                     */
-                    filteredStudents = filterStudentsWithCommonCourses(fakeBluetoothStudents);
-
-
-                    /**
-                     * 4. Display list of Students with Common Courses
-                     */
-                    // fill Student Item Adapter with list of students with common courses
-                    fillStudentItemAdapter(filteredStudents);
+                    search("default");
                 }
 
                 /**
@@ -178,14 +174,16 @@ public class HomeActivity extends AppCompatActivity {
                      */
                     if (new_sess) {
                         saveNewSession();
-                        new_sess = false;       // reset new_sess flag
+                        new_sess = false;                               // reset new_sess flag
                     }
+                    else
+                        uploadPersonsAndCoursesCurrentSessionIntoDB(currSessionID);  // Upload all newly searched Persons and Courses into BOF db, under currSession
 
                     /**
                      * 3. Stop displaying list of students with common courses
                      */
-                    // Clear Student Item Adapter
-                    fillStudentItemAdapter(new ArrayList<>());
+                    fillStudentItemAdapter(new ArrayList<>());          // Clear Student Item Adapter
+
                 }
             }
         });
@@ -201,41 +199,19 @@ public class HomeActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
                 if (isChecked) {
-                    /**
-                     * 1. Ask user if they want to resume a previous session or start a new session
-                     */
                     startSession();
-                    /**
-                     * 2. Start bluetooth search
-                     */
-                    /**
-                     * 3. Filter Students with Common Courses (main Home Activity algorithm)
-                     *
-                     */
-                    filteredStudents = filterSmallCourse(fakeBluetoothStudents);
-                    /**
-                     * 4. Display list of Students with Common Courses
-                     */
-                    // fill Student Item Adapter with list of students with common courses
-                    fillStudentItemAdapter(filteredStudents);
+                    search("small_course");
                 }
 
                 else {
-                    /**
-                     * 1. Stop bluetooth search
-                     */
-                    /**
-                     * 2. Ask user to save session with <session_name>
-                     */
                     if (new_sess) {
                         saveNewSession();
-                        new_sess = false;       // reset new_sess flag
+                        new_sess = false;                               // reset new_sess flag
                     }
-                    /**
-                     * 3. Stop displaying list of students with common courses
-                     */
-                    // Clear Student Item Adapter
-                    fillStudentItemAdapter(new ArrayList<>());
+                    else
+                        uploadPersonsAndCoursesCurrentSessionIntoDB(currSessionID);  // Upload all newly searched Persons and Courses into BOF db, under currSession
+
+                    fillStudentItemAdapter(new ArrayList<>());          // Clear Student Item Adapter
                 }
 
             }
@@ -253,41 +229,19 @@ public class HomeActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
                 if (isChecked) {
-                    /**
-                     * 1. Ask user if they want to resume a previous session or start a new session
-                     */
                     startSession();
-                    /**
-                     * 2. Start bluetooth search
-                     */
-                    /**
-                     * 3. Filter Students with Common Courses (main Home Activity algorithm)
-                     *
-                     */
-                    filteredStudents = filterStudentsWithThisQuarter(fakeBluetoothStudents);
-                    /**
-                     * 4. Display list of Students with Common Courses
-                     */
-                    // fill Student Item Adapter with list of students with common courses
-                    fillStudentItemAdapter(filteredStudents);
+                    search("this_quarter");
                 }
 
                 else {
-                    /**
-                     * 1. Stop bluetooth search
-                     */
-                    /**
-                     * 2. Ask user to save session with <session_name>
-                     */
                     if (new_sess) {
                         saveNewSession();
-                        new_sess = false;       // reset new_sess flag
+                        new_sess = false;                               // reset new_sess flag
                     }
-                    /**
-                     * 3. Stop displaying list of students with common courses
-                     */
-                    // Clear Student Item Adapter
-                    fillStudentItemAdapter(new ArrayList<>());
+                    else
+                        uploadPersonsAndCoursesCurrentSessionIntoDB(currSessionID);  // Upload all newly searched Persons and Courses into BOF db, under currSession
+
+                    fillStudentItemAdapter(new ArrayList<>());          // Clear Student Item Adapter
                 }
 
             }
@@ -304,41 +258,19 @@ public class HomeActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
                 if (isChecked) {
-                    /**
-                     * 1. Ask user if they want to resume a previous session or start a new session
-                     */
                     startSession();
-                    /**
-                     * 2. Start bluetooth search
-                     */
-                    /**
-                     * 3. Filter Students with Common Courses (main Home Activity algorithm)
-                     *
-                     */
-                    filteredStudents = filterStudentsWithRecent(fakeBluetoothStudents);
-                    /**
-                     * 4. Display list of Students with Common Courses
-                     */
-                    // fill Student Item Adapter with list of students with common courses
-                    fillStudentItemAdapter(filteredStudents);
+                    search("recent");
                 }
 
                 else {
-                    /**
-                     * 1. Stop bluetooth search
-                     */
-                    /**
-                     * 2. Ask user to save session with <session_name>
-                     */
                     if (new_sess) {
                         saveNewSession();
-                        new_sess = false;       // reset new_sess flag
+                        new_sess = false;                               // reset new_sess flag
                     }
-                    /**
-                     * 3. Stop displaying list of students with common courses
-                     */
-                    // Clear Student Item Adapter
-                    fillStudentItemAdapter(new ArrayList<>());
+                    else
+                        uploadPersonsAndCoursesCurrentSessionIntoDB(currSessionID);  // Upload all newly searched Persons and Courses into BOF db, under currSession
+
+                    fillStudentItemAdapter(new ArrayList<>());          // Clear Student Item Adapter
                 }
 
             }
@@ -347,18 +279,63 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     /**
+     * A.2 NEARBY API BLUETOOTH SEARCH
+     * @return
+     */
+    public List<Student> bluetoothSearch() { return Data.fab_students(); }
+
+    /**
+     * HOME ACTIVITY MAIN FUNCTIONALITY FUNCTION
+     * @param filter specifies what filtering to display
+     */
+    public void search(String filter) {
+        /**
+         * 2. Start bluetooth search for new Session
+         */
+        List<Student> fakeBluetoothStudents = bluetoothSearch();
+
+        /**
+         * 3. Filter Students with Common Courses (main Home Activity algorithm)
+         *
+         */
+        List<Student> filteredStudents = new ArrayList<>();
+
+        // Default filtering
+        if (filter.equals("default"))
+            filteredStudents = filterStudentsWithCommonCourses(fakeBluetoothStudents);
+
+        // Small course filtering
+        else if (filter.equals("small_course"))
+            filteredStudents = filterSmallCourse(fakeBluetoothStudents);
+
+        // This quarter only filtering
+        else if (filter.equals("this_quarter"))
+            filteredStudents = filterStudentsWithThisQuarter(fakeBluetoothStudents);
+
+        // Recent classes filtering
+        else if (filter.equals("recent"))
+            filteredStudents = filterStudentsWithRecent(fakeBluetoothStudents);
+
+        // THIS WILL ADD ALL SEARCHED & FILTERED STUDENTS TO CURRENT SESSION
+        currSession.students.addAll(filteredStudents);
+
+        /**
+         * 4. Display list of Students with Common Courses
+         */
+        fillStudentItemAdapter(filteredStudents);
+    }
+
+
+    /**
      * Helper method for getting a person from BOF database with id and transforming Person data to Student object
      * @param id of Student we want to get from database
      * @return queried Student
      */
     public Student getPersonFromDBAndReturnStudent(int id) {
 
-        // Connect to BOF database
-        db = AppDatabase.singleton(this);
-
         // Retrieve my user's information from BOF database
-        IPerson myPerson = db.PersonDao().get(id);
-        List<com.example.birdsofafeather.model.db.Course> myCoursesRaw = db.CourseDao().getForPerson(id);
+        Person myPerson = personDao.getPerson(id);
+        List<com.example.birdsofafeather.model.db.Course> myCoursesRaw = courseDao.getCoursesForPerson(id);
 
         // Convert List<db.Course> to List<Course>
         List<Course> myCourses = new ArrayList<>();
@@ -367,8 +344,27 @@ public class HomeActivity extends AppCompatActivity {
             myCourses.add(c);
         }
 
-        return new Student(myPerson.getName(), myPerson.getUrl(), myCourses, false);
+        return new Student(myPerson.personName, myPerson.url, myCourses, false);
     }
+
+
+    /**
+     * Helper method for uploading all newly searched Persons and Courses into BOF db, under currSession
+     */
+    public void uploadPersonsAndCoursesCurrentSessionIntoDB(int sess_id) {
+        // Upload all Students and Courses within current session
+        for (Student s : currSession.getStudents()) {
+            com.example.birdsofafeather.model.db.Person person = new com.example.birdsofafeather.model.db.Person(sess_id, s.firstName, s.pictureURL);
+            personDao.insertPerson(person);         // Insert Person who was seen in this session into Person db
+
+            for (Course c : s.getCourses()) {
+                com.example.birdsofafeather.model.db.Course course = new com.example.birdsofafeather.model.db.Course(person.personId, c.year, c.quarter, c.subject, c.courseNumber, c.courseSize);
+                courseDao.insertCourse(course);     // Insert Course of a Person who was seen in this session into Course db
+            }
+        }
+    }
+
+
 
     /**
      * A.1. Ask user if they want to resume a previous session or start a new session
@@ -400,16 +396,16 @@ public class HomeActivity extends AppCompatActivity {
         new_session.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                currSession = new Session(new ArrayList<>());   // start new blank Session
+                currSession = new Session();            // start new blank Session
                 new_sess = true;
 
-                dialog.dismiss();                               // close start_session dialog
+                dialog.dismiss();                       // close start_session dialog
             }
         });
     }
 
     /**
-     * B.1. Ask user if they want to resume a previous session or start a new session
+     * B.1. Name a new Session and store session into database
      */
     public void saveNewSession() {
         dialogBuilder = new AlertDialog.Builder(this);
@@ -421,7 +417,7 @@ public class HomeActivity extends AppCompatActivity {
         dialog.show();
 
         /**
-         * When new_session Button is clicked, BoF will start a new blank session
+         * When name_session Button is clicked, the current new Session will be named and all Session data, Person data, and Course data will be uploaded to BOF db
          */
         Button name_session = (Button) stop_session.findViewById(R.id.name_session_btn);
         name_session.setOnClickListener(new View.OnClickListener() {
@@ -429,6 +425,17 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 EditText name = stop_session.findViewById(R.id.name_session_edittext);
                 currSession.setName(name.getText().toString());                         // name session
+
+                /**
+                 * Upload new Session data, Person data, and Course data into BOF database
+                 */
+                // Create db Session object from new Session. Upload new db Session object to BOF database.
+                com.example.birdsofafeather.model.db.Session newSession = new com.example.birdsofafeather.model.db.Session(currSession);
+                sessionDao.insertSession(newSession);
+
+                currSessionID = newSession.getSessionId();                              // current Session ID of new Session
+
+                uploadPersonsAndCoursesCurrentSessionIntoDB(currSessionID);             // Upload all newly searched Persons and Courses into BOF db, under newSession
 
                 dialog.dismiss();                                                       // close start_session dialog
             }
@@ -615,9 +622,6 @@ public class HomeActivity extends AppCompatActivity {
 
 
 
-
-
-
     /**
      * Helper function to sort HashMap by values
      * @param freq
@@ -761,6 +765,8 @@ public class HomeActivity extends AppCompatActivity {
                      * When a Session ViewHolder is clicked, BoF will load the respective session
                      */
                     currSession = session;              // return and load clicked Session
+
+                    currSessionID = sessionDao.getSessionIDFromName(currSession.name);  // Set currrent Session ID to clicked session
 
                     dialog.dismiss();                   // close start_session dialog
                 }

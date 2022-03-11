@@ -12,11 +12,17 @@ import java.util.List;
 @Dao
 public interface PersonDao {
 
+    @Query("SELECT * FROM persons WHERE id=:id")
+    Person getPerson(int id);
+
+    @Query("SELECT * FROM persons WHERE session_id=:sessionId")
+    List<Person> getPersonsForSession(int sessionId);
+
     @Query("SELECT * FROM persons")
     List<Person> getAllPersons();
 
-    @Query("SELECT * FROM persons WHERE id=:id")
-    Person get(int id);
+    @Query("SELECT * FROM persons where Favorite")
+    List<Person> getAllFav();
 
     @Insert
     void insertPerson(Person person);
@@ -26,15 +32,5 @@ public interface PersonDao {
 
     @Query("SELECT COUNT(*) FROM persons")
     int count();
-
-    @Query("SELECT favorite FROM persons where id=:personId")
-    boolean isFav(int personId);
-
-    @Query("SELECT * FROM persons where Favorite")
-    List<Person> getFavs();
-
-
-    @Query("SELECT * FROM persons where Favorite")
-    List<Person> getAllFav();
 
 }

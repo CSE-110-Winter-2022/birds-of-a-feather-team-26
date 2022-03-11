@@ -10,9 +10,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.birdsofafeather.model.db.AppDatabase;
-import com.example.birdsofafeather.model.IPerson;
-import com.example.birdsofafeather.model.db.AppDatabase;
 import com.example.birdsofafeather.model.db.Course;
+import com.example.birdsofafeather.model.db.Person;
 
 import java.util.List;
 
@@ -27,7 +26,7 @@ import java.util.List;
 
 public class CourseActivity extends AppCompatActivity {
     private AppDatabase db;
-    private IPerson person;
+    private Person person;
 
     private RecyclerView courseRecyclerView;
     private RecyclerView.LayoutManager courseLayoutManager;
@@ -50,8 +49,8 @@ public class CourseActivity extends AppCompatActivity {
         db = AppDatabase.singleton(this);
 
         // Retrieve person object and course information of user from BOF database
-        person = db.PersonDao().get(personId);
-        List<Course> course = db.CourseDao().getForPerson(personId);
+        person = db.PersonDao().getPerson(personId);
+        List<Course> course = db.CourseDao().getCoursesForPerson(personId);
 
         // Set up Recycler View for courses
         courseRecyclerView = findViewById(R.id.courses_view);
@@ -60,7 +59,7 @@ public class CourseActivity extends AppCompatActivity {
 
         // Delete course functionality
         courseViewAdapter = new CourseViewAdapter(course, (Course) -> {
-            db.CourseDao().delete(Course);
+            db.CourseDao().deleteCourse(Course);
         });
         courseRecyclerView.setAdapter(courseViewAdapter);
 
@@ -79,12 +78,10 @@ public class CourseActivity extends AppCompatActivity {
      */
     public void onEnterCourseClicked(View view) {
         // Index new course_id
-        int newCourseId = db.CourseDao().count() + 1;
+        int newCourseId = db.CourseDao().count();
 
-        // Retrieve user's id, name, and photo URL
-        int personId = person.getId();
-        String name = person.getName();
-        String url = person.getUrl();
+        // Retrieve user's id
+        int personId = person.personId;
 
         // Fetches year of course typed in by user
         TextView yearView = findViewById(R.id.year_view);
@@ -107,16 +104,16 @@ public class CourseActivity extends AppCompatActivity {
         String newCourseSizeText = courseSizeView.getText().toString();
 
         // Raise alerts if the information is incomplete
-        if(newYearText.equals("")||newQuarterText.equals("")||newCourseNameText.equals("")||newCourseNumText.equals("")||newCourseSizeText.equals("")){
+        if(newYearText.equals("") || newQuarterText.equals("") || newCourseNameText.equals("") || newCourseNumText.equals("") || newCourseSizeText.equals("")) {
             Utilities.showAlert(CourseActivity.this,"Please enter the full course information please");
             return;
         }
 
         // Create course object from course information
-        Course newCourse = new Course(newCourseId, personId, name, url, newYearText, newQuarterText, newCourseNameText, newCourseNumText, newCourseSizeText);
+        Course newCourse = new Course(personId, newYearText, newQuarterText, newCourseNameText, newCourseNumText, newCourseSizeText);
 
         // Store course information into BOF database
-        db.CourseDao().insert(newCourse);
+        db.CourseDao().insertCourse(newCourse);
 
         courseViewAdapter.addCourse(newCourse); // Add course for display on Course Activity screen
     }

@@ -5,11 +5,11 @@ import androidx.annotation.Nullable;
 import java.io.Serializable;
 
 public class Course implements Serializable {
-    String year;
-    String quarter;
-    String subject;
-    String courseNumber;
-    String courseSize;
+    public String year;
+    public String quarter;
+    public String subject;
+    public String courseNumber;
+    public String courseSize;
 
     public Course(String year, String quarter, String subject, String courseNumber, String courseSize) {
         this.year = year;
@@ -34,9 +34,18 @@ public class Course implements Serializable {
         return quarter;
     }
 
+    public String getSubject() {
+        return subject;
+    }
+
+    public String getCourseNumber() {
+        return courseNumber;
+    }
+
     public String getCourseSize() {
         return courseSize;
     }
+
     @Override
     public boolean equals(@Nullable Object obj) {
         Course course = (Course) obj;

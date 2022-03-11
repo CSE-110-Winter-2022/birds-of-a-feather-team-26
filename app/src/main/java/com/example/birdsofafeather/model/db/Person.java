@@ -1,16 +1,10 @@
 package com.example.birdsofafeather.model.db;
 import androidx.room.ColumnInfo;
-import androidx.room.Embedded;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
-import androidx.room.TypeConverters;
-
-import com.example.birdsofafeather.model.IPerson;
-
-import java.util.List;
 
 @Entity(tableName = "persons")
-public class Person implements IPerson {
+public class Person {
 
     // Person instance variables
     @PrimaryKey(autoGenerate = true)
@@ -30,29 +24,31 @@ public class Person implements IPerson {
     @ColumnInfo(name="session_id")
     public int sessionId;
 
-    public Person(String personName, String url){
+    public Person(int sessionId, String personName, String url){
+        this.sessionId = sessionId;
         this.personName = personName;
         this.url = url;
     }
 
-    @Override
-    public int getId() {
+    // Person getter methods
+    public int getPersonId() {
         return personId;
     }
 
-    @Override
-    public String getName() {
+    public String getPersonName() {
         return personName;
     }
 
-    @Override
     public String getUrl() {
         return url;
     }
 
-    @Override
-    public List<Course> getCourseList() {
-        return courseList;
+    public boolean isFav() {
+        return fav;
     }
 
+    // Session getter methods
+    public int getSessionId() {
+        return sessionId;
+    }
 }

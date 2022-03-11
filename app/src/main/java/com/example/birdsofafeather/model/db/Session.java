@@ -1,21 +1,13 @@
 package com.example.birdsofafeather.model.db;
 
 import androidx.room.ColumnInfo;
-import androidx.room.Embedded;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
-
-import java.util.List;
 
 @Entity(tableName = "sessions")
 public class Session {
 
-    @Embedded
-    Person person;
-
-    @Embedded
-    PersonDao personDao;
-
+    // Session instance variables
     @PrimaryKey
     @ColumnInfo(name="session_id")
     public int sessionId;
@@ -23,21 +15,20 @@ public class Session {
     @ColumnInfo(name="session_name")
     public String sessionName;
 
-
-    public Session(List<Person> persons){
-        List<Person> list = personDao.getAllPersons();
-        list = persons;
-    }
-    public Session(String sessionName, List<Person> persons){
-        this.sessionName = sessionName;
-        List<Person> list = personDao.getAllPersons();
-        list = persons;
+    /**
+     * Session (db) constructor
+     * @param s Session object (model)
+     */
+    public Session(com.example.birdsofafeather.model.Session s) {
+        this.sessionName = s.getName();
     }
 
-    public String getSessionName() { return this.sessionName; }
+    public int getSessionId() {
+        return sessionId;
+    }
 
-    public List<Person> getStudents() { return this.personDao.getAllPersons(); }
+    public String getSessionName() { return sessionName; }
 
-    public void setName(String name) { this.sessionName = name; }
+    public void setName(String name) { sessionName = name; }
 
 }

@@ -11,25 +11,23 @@ import java.util.List;
 
 @Dao
 public interface CourseDao {
-    @Transaction
-    @Query("SELECT * FROM course where person_id=:personId")
-    List<Course> getForPerson(int personId);
 
     @Query("SELECT * FROM course WHERE id=:courseId")
-    Course get(int courseId);
+    Course getCourse(int courseId);
 
-    @Query("SELECT COUNT(*) from course")
-    int count();
-
-    @Query("SELECT courseSize FROM course WHERE person_id=:personId")
-    String getCourseSize(int personId);
+    @Transaction
+    @Query("SELECT * FROM course WHERE person_id=:personId")
+    List<Course> getCoursesForPerson(int personId);
 
     @Insert
-    void insert(Course course);
+    void insertCourse(Course course);
 
     @Delete
-    void delete(Course course);
+    void deleteCourse(Course course);
 
     @Query("SELECT * FROM course")
     LiveData<List<Course>> getAllCourses();
+
+    @Query("SELECT COUNT(*) from course")
+    int count();
 }

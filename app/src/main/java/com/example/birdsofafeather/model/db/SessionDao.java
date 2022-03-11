@@ -4,6 +4,7 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Transaction;
 
 import java.util.List;
 
@@ -13,8 +14,11 @@ public interface SessionDao {
     @Query("SELECT * FROM sessions")
     List<Session> getAllSessions();
 
-    @Query("SELECT session_name FROM sessions WHERE person_id=:sessionId")
+    @Query("SELECT session_name FROM sessions WHERE session_id=:sessionId")
     String getSessionName(int sessionId);
+
+    @Query("SELECT session_id FROM sessions WHERE session_name=:sessionName")
+    int getSessionIDFromName(String sessionName);
 
     @Insert
     void insertSession(Session session);
@@ -22,7 +26,7 @@ public interface SessionDao {
     @Delete
     void deleteSession(Session session);
 
-    @Query("SELECT favorite FROM persons WHERE id=:personId")
-    boolean isFav(int personId);
-
+    @Transaction
+    @Query("UPDATE sessions SET session_name=:newSessionName WHERE session_id=:sessionId")
+    String setSessionName(int sessionId, String newSessionName);
 }

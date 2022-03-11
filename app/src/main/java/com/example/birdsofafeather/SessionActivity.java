@@ -6,10 +6,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 
-import com.example.birdsofafeather.model.IPerson;
 import com.example.birdsofafeather.model.db.AppDatabase;
 import com.example.birdsofafeather.model.db.Person;
-import com.example.birdsofafeather.model.db.PersonDao;
 
 import java.util.List;
 

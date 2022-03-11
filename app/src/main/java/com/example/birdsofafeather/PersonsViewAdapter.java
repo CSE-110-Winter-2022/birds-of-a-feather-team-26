@@ -10,7 +10,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.birdsofafeather.model.IPerson;
 import com.example.birdsofafeather.model.db.Person;
 
 import java.util.List;
