@@ -24,6 +24,10 @@ public interface PersonDao {
     @Query("SELECT * FROM persons where Favorite")
     List<Person> getAllFav();
 
+    @Transaction
+    @Query("UPDATE persons SET favorite=:favorite WHERE person_name=:personName")
+    void toggleFavoriteForPerson(String personName, boolean favorite);
+
     @Insert
     void insertPerson(Person person);
 

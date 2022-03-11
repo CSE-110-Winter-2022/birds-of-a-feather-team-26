@@ -724,11 +724,15 @@ public class HomeActivity extends AppCompatActivity {
                     // set star icon to yellow once clicked
                     ((ImageButton)(view.findViewById(R.id.starButton))).setColorFilter(Color.YELLOW);
 
+                    personDao.toggleFavoriteForPerson(student.firstName, true);         // Update Person favorite field to favorited in BOF database
+
                     holder.star.setOnClickListener(new View.OnClickListener(){
                         @Override
                         public void onClick(View view){
                             // set star icon to gray if click again to cancel "favorite"
                             ((ImageButton)(view.findViewById(R.id.starButton))).setColorFilter(Color.GRAY);
+
+                            personDao.toggleFavoriteForPerson(student.firstName, false);        // Update Person favorite field to unfavorited in BOF database
                         }
                     });
                 }

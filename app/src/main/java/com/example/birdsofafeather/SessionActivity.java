@@ -36,7 +36,4 @@ public class SessionActivity extends AppCompatActivity {
         personsRecyclerView.setAdapter(personsViewAdapter);
     }
 
-
-
-
 }
