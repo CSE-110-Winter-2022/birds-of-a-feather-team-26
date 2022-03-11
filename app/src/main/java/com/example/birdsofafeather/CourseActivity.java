@@ -40,11 +40,6 @@ public class CourseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course);
 
-        // Pull previous Intent data
-//        Intent intent = getIntent();
-        // String name = intent.getStringExtra("person_name");
-//        int personId = intent.getIntExtra("person_id", 0);
-
         // Connect to BOF database
         db = AppDatabase.singleton(this);
 
@@ -77,11 +72,6 @@ public class CourseActivity extends AppCompatActivity {
      * Adds typed-in course information to user profile and stores in BOF database
      */
     public void onEnterCourseClicked(View view) {
-        // Index new course_id
-        int newCourseId = db.CourseDao().count();
-
-        // Retrieve user's id
-        int personId = person.personId;
 
         // Fetches year of course typed in by user
         TextView yearView = findViewById(R.id.year_view);
@@ -110,7 +100,7 @@ public class CourseActivity extends AppCompatActivity {
         }
 
         // Create course object from course information
-        Course newCourse = new Course(personId, newYearText, newQuarterText, newCourseNameText, newCourseNumText, newCourseSizeText);
+        Course newCourse = new Course(person.personId, newYearText, newQuarterText, newCourseNameText, newCourseNumText, newCourseSizeText);
 
         // Store course information into BOF database
         db.CourseDao().insertCourse(newCourse);
