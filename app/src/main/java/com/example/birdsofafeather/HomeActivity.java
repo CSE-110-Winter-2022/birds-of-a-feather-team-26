@@ -89,12 +89,11 @@ public class HomeActivity extends AppCompatActivity {
     LinearLayoutManager lManager = new LinearLayoutManager(this);
     RecyclerView studentList;
 
-//    private List<Student> fakeBluetoothStudents;
-//    private List<Student> filteredStudents;
-
     private Session currSession;
     private int currSessionID;
     private boolean new_sess = false;
+
+    private String search_filter;
 
     /**
      * Home Activity onCreate
@@ -113,7 +112,7 @@ public class HomeActivity extends AppCompatActivity {
         courseDao = db.CourseDao();
 
         // myUser Student object
-        myUser = getPersonFromDBAndReturnStudent(0);
+        myUser = getPersonFromDBAndReturnStudent(1);
 
         /**
          * My Profile button to display myUser data
@@ -152,10 +151,14 @@ public class HomeActivity extends AppCompatActivity {
                  */
                 if (isChecked) {
                     /**
+                     * Set searching filter
+                     */
+                    search_filter = "default";
+
+                    /**
                      * 1. Ask user if they want to resume a previous session or start a new session
                      */
                     startSession();
-                    search("default");
                 }
 
                 /**
@@ -199,8 +202,8 @@ public class HomeActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
                 if (isChecked) {
+                    search_filter = "small_course";
                     startSession();
-                    search("small_course");
                 }
 
                 else {
@@ -229,8 +232,8 @@ public class HomeActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
                 if (isChecked) {
+                    search_filter = "this_quarter";
                     startSession();
-                    search("this_quarter");
                 }
 
                 else {
@@ -258,8 +261,8 @@ public class HomeActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
                 if (isChecked) {
+                    search_filter = "recent";
                     startSession();
-                    search("recent");
                 }
 
                 else {
@@ -347,6 +350,30 @@ public class HomeActivity extends AppCompatActivity {
         return new Student(myPerson.personName, myPerson.url, myCourses, false);
     }
 
+    public List<Session> getAllSessionsConversion() {
+
+        List<Session> sessions = new ArrayList<>();
+
+        // Retrieve all database Sessions
+        for (com.example.birdsofafeather.model.db.Session s : sessionDao.getAllSessions()) {
+
+            // Retrieve all Persons for each Session
+            List<Student> students = new ArrayList<>();
+            for (Person p : personDao.getPersonsForSession(s.sessionId)) {
+
+                // Retrieve all Courses for each Person
+                List<Course> courses = new ArrayList<>();
+                for (com.example.birdsofafeather.model.db.Course c : courseDao.getCoursesForPerson(p.personId))
+                    courses.add(new Course(c.year, c.quarter, c.courseName, c.courseNum, c.courseSize));
+
+                students.add(new Student(p.personName, p.url, courses, false));
+            }
+
+            sessions.add(new Session(s.sessionName, students));
+        }
+
+        return sessions;
+    }
 
     /**
      * Helper method for uploading all newly searched Persons and Courses into BOF db, under currSession
@@ -365,7 +392,6 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
-
     /**
      * A.1. Ask user if they want to resume a previous session or start a new session
      */
@@ -377,7 +403,7 @@ public class HomeActivity extends AppCompatActivity {
         LinearLayoutManager sessionManager = new LinearLayoutManager(this); //
         RecyclerView sessionList;
 
-        List<Session> session_data = Data.fab_sessions();                           // fabricated session data
+        List<Session> session_data = getAllSessionsConversion();                    // Loading all Session data from DB into app
 
         SessionItemAdapter sessions = new SessionItemAdapter(session_data);         // create Session Item Adapter
         sessionList = start_session.findViewById(R.id.session_list);
@@ -400,6 +426,8 @@ public class HomeActivity extends AppCompatActivity {
                 new_sess = true;
 
                 dialog.dismiss();                       // close start_session dialog
+
+                search(search_filter);                  // begin bluetooth search
             }
         });
     }
@@ -430,7 +458,7 @@ public class HomeActivity extends AppCompatActivity {
                  * Upload new Session data, Person data, and Course data into BOF database
                  */
                 // Create db Session object from new Session. Upload new db Session object to BOF database.
-                com.example.birdsofafeather.model.db.Session newSession = new com.example.birdsofafeather.model.db.Session(currSession);
+                com.example.birdsofafeather.model.db.Session newSession = new com.example.birdsofafeather.model.db.Session(currSession.name);
                 sessionDao.insertSession(newSession);
 
                 currSessionID = newSession.getSessionId();                              // current Session ID of new Session
@@ -620,8 +648,6 @@ public class HomeActivity extends AppCompatActivity {
 
 
 
-
-
     /**
      * Helper function to sort HashMap by values
      * @param freq
@@ -766,9 +792,11 @@ public class HomeActivity extends AppCompatActivity {
                      */
                     currSession = session;              // return and load clicked Session
 
-                    currSessionID = sessionDao.getSessionIDFromName(currSession.name);  // Set currrent Session ID to clicked session
+                    currSessionID = sessionDao.getSessionIDFromName(currSession.name);  // Set current Session ID to clicked session
 
                     dialog.dismiss();                   // close start_session dialog
+
+                    search(search_filter);                  // begin bluetooth search
                 }
             });
         }

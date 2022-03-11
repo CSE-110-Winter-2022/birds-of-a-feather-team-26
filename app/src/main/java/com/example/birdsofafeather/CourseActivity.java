@@ -41,16 +41,16 @@ public class CourseActivity extends AppCompatActivity {
         setContentView(R.layout.activity_course);
 
         // Pull previous Intent data
-        Intent intent = getIntent();
+//        Intent intent = getIntent();
         // String name = intent.getStringExtra("person_name");
-        int personId = intent.getIntExtra("person_id", 0);
+//        int personId = intent.getIntExtra("person_id", 0);
 
         // Connect to BOF database
         db = AppDatabase.singleton(this);
 
         // Retrieve person object and course information of user from BOF database
-        person = db.PersonDao().getPerson(personId);
-        List<Course> course = db.CourseDao().getCoursesForPerson(personId);
+        person = db.PersonDao().getPerson(1);
+        List<Course> course = db.CourseDao().getCoursesForPerson(1);
 
         // Set up Recycler View for courses
         courseRecyclerView = findViewById(R.id.courses_view);

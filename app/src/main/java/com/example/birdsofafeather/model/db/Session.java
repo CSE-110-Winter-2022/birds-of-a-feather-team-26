@@ -8,19 +8,15 @@ import androidx.room.PrimaryKey;
 public class Session {
 
     // Session instance variables
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name="session_id")
     public int sessionId;
 
     @ColumnInfo(name="session_name")
     public String sessionName;
 
-    /**
-     * Session (db) constructor
-     * @param s Session object (model)
-     */
-    public Session(com.example.birdsofafeather.model.Session s) {
-        this.sessionName = s.getName();
+    public Session(String sessionName) {
+        this.sessionName = sessionName;
     }
 
     public int getSessionId() {

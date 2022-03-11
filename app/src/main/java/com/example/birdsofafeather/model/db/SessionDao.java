@@ -28,5 +28,5 @@ public interface SessionDao {
 
     @Transaction
     @Query("UPDATE sessions SET session_name=:newSessionName WHERE session_id=:sessionId")
-    String setSessionName(int sessionId, String newSessionName);
+    void setSessionName(int sessionId, String newSessionName);
 }

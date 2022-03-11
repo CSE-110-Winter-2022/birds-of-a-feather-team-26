@@ -61,8 +61,10 @@ public class MainActivity extends AppCompatActivity {
         /**
          * B. HOME ACTIVITY WORKFLOW
          * */
-        Intent intentHomeActivityWorkflow = new Intent(this, HomeActivity.class);
-        startActivity(intentHomeActivityWorkflow);
+        else {
+            Intent intentHomeActivityWorkflow = new Intent(this, HomeActivity.class);
+            startActivity(intentHomeActivityWorkflow);
+        }
     }
 
     /**
