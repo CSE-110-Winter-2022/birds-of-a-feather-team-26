@@ -19,18 +19,16 @@
         <entry key="..\:/CSE110/Milestone1/app/src/main/res/layout/activity_session.xml" value="0.1" />
         <entry key="..\:/CSE110/Milestone1/app/src/main/res/layout/activity_student_view_adapter.xml" value="0.17916666666666667" />
         <entry key="..\:/CSE110/Milestone1/app/src/main/res/layout/course_row.xml" value="0.1" />
+        <entry key="..\:/CSE110/Milestone1/app/src/main/res/layout/fav_row.xml" value="0.17916666666666667" />
         <entry key="..\:/CSE110/Milestone1/app/src/main/res/layout/person_row.xml" value="0.1" />
+        <entry key="..\:/CSE110/Milestone1/app/src/main/res/layout/session_item.xml" value="0.17916666666666667" />
         <entry key="..\:/CSE110/Milestone1/app/src/main/res/layout/student_item.xml" value="0.17916666666666667" />
         <entry key="..\:/Users/Zehua Zhang/OneDrive/Desktop/birds-of-a-feather-team-26/app/src/main/res/layout/activity_bluetooth.xml" value="0.264" />
         <entry key="..\:/Users/Zehua Zhang/OneDrive/Desktop/birds-of-a-feather-team-26/app/src/main/res/layout/activity_course.xml" value="0.25" />
         <entry key="..\:/Users/Zehua Zhang/OneDrive/Desktop/birds-of-a-feather-team-26/app/src/main/res/layout/activity_home.xml" value="0.25" />
         <entry key="..\:/Users/Zehua Zhang/OneDrive/Desktop/birds-of-a-feather-team-26/app/src/main/res/layout/activity_name.xml" value="0.24320652173913043" />
         <entry key="..\:/Users/Zehua Zhang/OneDrive/Desktop/birds-of-a-feather-team-26/app/src/main/res/layout/activity_profile.xml" value="0.264" />
-        <entry key="..\:/Users/Zehua Zhang/OneDrive/Desktop/birds-of-a-feather-team-26/app/src/main/res/layout/activity_session.xml" value="0.25" />
         <entry key="..\:/Users/Zehua Zhang/OneDrive/Desktop/birds-of-a-feather-team-26/app/src/main/res/layout/course_item.xml" value="0.25" />
-        <entry key="..\:/Users/Zehua Zhang/OneDrive/Desktop/birds-of-a-feather-team-26/app/src/main/res/layout/person_row.xml" value="0.25" />
-        <entry key="..\:/Users/Zehua Zhang/OneDrive/Desktop/birds-of-a-feather-team-26/app/src/main/res/layout/session_item.xml" value="0.25" />
-        <entry key="..\:/Users/Zehua Zhang/OneDrive/Desktop/birds-of-a-feather-team-26/app/src/main/res/layout/start_session.xml" value="0.264" />
         <entry key="..\:/Users/Zehua Zhang/OneDrive/Desktop/birds-of-a-feather-team-26/app/src/main/res/layout/student_item.xml" value="0.18704710144927536" />
         <entry key="app/src/main/res/layout/activity_bluetooth.xml" value="0.37083333333333335" />
         <entry key="app/src/main/res/layout/activity_course.xml" value="0.25271739130434784" />
@@ -42,7 +40,6 @@
         <entry key="app/src/main/res/layout/activity_profile.xml" value="0.3567708333333333" />
         <entry key="app/src/main/res/layout/session_item.xml" value="0.3432971014492754" />
         <entry key="app/src/main/res/layout/start_session.xml" value="0.18034447821681865" />
-        <entry key="app/src/main/res/layout/stop_session.xml" value="0.25" />
         <entry key="app/src/main/res/layout/student_item.xml" value="0.3432971014492754" />
       </map>
     </option>

@@ -45,18 +45,18 @@ public class FavViewAdapter extends RecyclerView.Adapter<FavViewAdapter.ViewHold
     public static class ViewHolder
             extends RecyclerView.ViewHolder
             implements View.OnClickListener {
-        private final TextView personNameView;
+        private final TextView favNameView;
         private Person person;
 
         ViewHolder(View itemView) {
             super(itemView);
-            this.personNameView = itemView.findViewById(R.id.enterName);
+            this.favNameView = itemView.findViewById(R.id.favName);
             itemView.setOnClickListener(this);
         }
 
         public void setPerson(Person person) {
             this.person = person;
-            this.personNameView.setText(person.personName);
+            this.favNameView.setText(person.personName);
         }
 
         @Override

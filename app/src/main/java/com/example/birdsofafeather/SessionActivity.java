@@ -14,9 +14,9 @@ import java.util.List;
 public class SessionActivity extends AppCompatActivity {
 
 
-    protected RecyclerView personsRecyclerView;
-    protected RecyclerView.LayoutManager personsLayoutManager;
-    protected PersonsViewAdapter personsViewAdapter;
+    protected RecyclerView favRecyclerView;
+    protected RecyclerView.LayoutManager favLayoutManager;
+    protected FavViewAdapter favViewAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,12 +28,12 @@ public class SessionActivity extends AppCompatActivity {
         // get all favorite people
         List<Person> favPersons = db.PersonDao().getAllFav();
 
-        personsRecyclerView = findViewById(R.id.favorite_view);
-        personsLayoutManager = new LinearLayoutManager(this);
-        personsRecyclerView.setLayoutManager(personsLayoutManager);
+        favRecyclerView = findViewById(R.id.favorite_view);
+        favLayoutManager = new LinearLayoutManager(this);
+        favRecyclerView.setLayoutManager(favLayoutManager);
 
-        personsViewAdapter = new PersonsViewAdapter(favPersons);
-        personsRecyclerView.setAdapter(personsViewAdapter);
+        favViewAdapter = new FavViewAdapter(favPersons);
+        favRecyclerView.setAdapter(favViewAdapter);
     }
 
 }

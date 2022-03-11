@@ -98,7 +98,7 @@
         android:layout_width="102dp"
         android:layout_height="61dp"
         android:onClick="goToSessionClick"
-        android:text="MY Session"
+        android:text="MY Favorites"
         android:textSize="13sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
