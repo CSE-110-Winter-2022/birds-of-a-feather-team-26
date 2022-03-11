@@ -14,10 +14,10 @@ import com.example.birdsofafeather.model.db.Person;
 
 import java.util.List;
 
-public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.ViewHolder> {
+public class FavViewAdapter extends RecyclerView.Adapter<FavViewAdapter.ViewHolder> {
     private final List<Person> persons;
 
-    public PersonsViewAdapter(List<Person> persons) {
+    public FavViewAdapter(List<Person> persons) {
         super();
         this.persons = persons;
     }
@@ -27,7 +27,7 @@ public class PersonsViewAdapter extends RecyclerView.Adapter<PersonsViewAdapter.
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater
                 .from(parent.getContext())
-                .inflate(R.layout.person_row, parent, false);
+                .inflate(R.layout.fav_row, parent, false);
 
         return new ViewHolder(view);
     }
