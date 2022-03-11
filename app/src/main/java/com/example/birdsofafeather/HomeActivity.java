@@ -1,5 +1,7 @@
 package com.example.birdsofafeather;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -9,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -36,6 +37,25 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
+
+import com.google.android.gms.nearby.Nearby;
+import com.google.android.gms.nearby.connection.AdvertisingOptions;
+import com.google.android.gms.nearby.connection.ConnectionInfo;
+import com.google.android.gms.nearby.connection.ConnectionLifecycleCallback;
+import com.google.android.gms.nearby.connection.ConnectionResolution;
+import com.google.android.gms.nearby.connection.ConnectionsClient;
+import com.google.android.gms.nearby.connection.DiscoveredEndpointInfo;
+import com.google.android.gms.nearby.connection.DiscoveryOptions;
+import com.google.android.gms.nearby.connection.EndpointDiscoveryCallback;
+import com.google.android.gms.nearby.connection.Payload;
+import com.google.android.gms.nearby.connection.PayloadCallback;
+import com.google.android.gms.nearby.connection.PayloadTransferUpdate;
+import com.google.android.gms.nearby.connection.PayloadTransferUpdate.Status;
+import com.google.android.gms.nearby.connection.Strategy;
+
+
+
 
 /**
  * DESCRIPTION
@@ -82,12 +102,21 @@ public class HomeActivity extends AppCompatActivity {
     LinearLayoutManager lManager = new LinearLayoutManager(this);
     RecyclerView studentList;
 
-    private List<Student> fakeBluetoothStudents;
+    private List<Student> allStudents;
     private List<Student> filteredStudents;
 
     private Session currSession;
-    private boolean new_sess = false;
 
+    // Our handle to Nearby Connections
+    private ConnectionsClient connectionsClient;
+    // The text received using Nearby
+    private String received_text;
+    private String profileName;
+    private String classmateName;
+    private String classmateEndpointId;
+    private static final Strategy STRATEGY = Strategy.P2P_STAR;
+    
+    
     /**
      * Home Activity onCreate
      */
@@ -95,6 +124,11 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        // nearby connections client setup
+        connectionsClient = Nearby.getConnectionsClient(this);
+        resetGame();
+
 
         // myUser Student object
         myUser = getPersonFromDBAndReturnStudent(0);
@@ -113,8 +147,8 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        // fabricated list of bluetooth-searched students
-        fakeBluetoothStudents = Data.fab_students();
+        // All students is our fabricated list of students
+        allStudents = Data.fab_students();
 
         /**
          * I. TOGGLE BUTTON WHICH TRIGGERS BLUETOOTH FUNCTIONALITY
@@ -141,7 +175,7 @@ public class HomeActivity extends AppCompatActivity {
                     /**
                      * 1. Ask user if they want to resume a previous session or start a new session
                      */
-                    startSession();
+                    createNewContactDialog();
 
                     /**
                      * 2. Start bluetooth search
@@ -152,7 +186,7 @@ public class HomeActivity extends AppCompatActivity {
                      * 3. Filter Students with Common Courses (main Home Activity algorithm)
                      *
                      */
-                    filteredStudents = filterStudentsWithCommonCourses(fakeBluetoothStudents);
+                    filteredStudents = filterStudentsWithCommonCourses(allStudents);
 
 
                     /**
@@ -165,185 +199,28 @@ public class HomeActivity extends AppCompatActivity {
                 /**
                  * B. When SEARCH button is toggled OFF:
                  *      1. Stop bluetooth search (MS 1)
-                 *      2. Ask user to save session with <session_name> (MS 2) if new session is created
+                 *      2. Ask user to save session with <session_name> (MS 2)
                  *      3. Stop displaying list of students with common courses (MS 1)
                  */
                 else {
                     /**
-                     * 1. Stop bluetooth search (this is automatic with our bluetooth search functionality, I believe)
-                     */
-
-                    /**
-                     * 2. Ask user to save session with <session_name> if new session is created
-                     */
-                    if (new_sess) {
-                        saveNewSession();
-                        new_sess = false;       // reset new_sess flag
-                    }
-
-                    /**
-                     * 3. Stop displaying list of students with common courses
-                     */
-                    // Clear Student Item Adapter
-                    fillStudentItemAdapter(new ArrayList<>());
-                }
-            }
-        });
-
-        ToggleButton startSearchBySmallClass = findViewById(R.id.start_search_btn_bySmallClass);
-        startSearchBySmallClass.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            /**
-             * This method will execute the bluetooth search functionality for small classes when toggled on.
-             * @param buttonView
-             * @param isChecked boolean which represents state of startSearch ToggleButton
-             */
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-                if (isChecked) {
-                    /**
-                     * 1. Ask user if they want to resume a previous session or start a new session
-                     */
-                    startSession();
-                    /**
-                     * 2. Start bluetooth search
-                     */
-                    /**
-                     * 3. Filter Students with Common Courses (main Home Activity algorithm)
-                     *
-                     */
-                    filteredStudents = filterSmallCourse(fakeBluetoothStudents);
-                    /**
-                     * 4. Display list of Students with Common Courses
-                     */
-                    // fill Student Item Adapter with list of students with common courses
-                    fillStudentItemAdapter(filteredStudents);
-                }
-
-                else {
-                    /**
                      * 1. Stop bluetooth search
                      */
+
+
                     /**
                      * 2. Ask user to save session with <session_name>
                      */
-                    if (new_sess) {
-                        saveNewSession();
-                        new_sess = false;       // reset new_sess flag
-                    }
+
+
                     /**
                      * 3. Stop displaying list of students with common courses
                      */
                     // Clear Student Item Adapter
                     fillStudentItemAdapter(new ArrayList<>());
                 }
-
             }
         });
-
-
-        ToggleButton startSearchByQuarter = findViewById(R.id.start_search_btn_byQuarter);
-        startSearchByQuarter.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            /**
-             * This method will execute the bluetooth search functionality for this quarter only when toggled on.
-             * @param buttonView
-             * @param isChecked boolean which represents state of startSearch ToggleButton
-             */
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-                if (isChecked) {
-                    /**
-                     * 1. Ask user if they want to resume a previous session or start a new session
-                     */
-                    startSession();
-                    /**
-                     * 2. Start bluetooth search
-                     */
-                    /**
-                     * 3. Filter Students with Common Courses (main Home Activity algorithm)
-                     *
-                     */
-                    filteredStudents = filterStudentsWithThisQuarter(fakeBluetoothStudents);
-                    /**
-                     * 4. Display list of Students with Common Courses
-                     */
-                    // fill Student Item Adapter with list of students with common courses
-                    fillStudentItemAdapter(filteredStudents);
-                }
-
-                else {
-                    /**
-                     * 1. Stop bluetooth search
-                     */
-                    /**
-                     * 2. Ask user to save session with <session_name>
-                     */
-                    if (new_sess) {
-                        saveNewSession();
-                        new_sess = false;       // reset new_sess flag
-                    }
-                    /**
-                     * 3. Stop displaying list of students with common courses
-                     */
-                    // Clear Student Item Adapter
-                    fillStudentItemAdapter(new ArrayList<>());
-                }
-
-            }
-        });
-
-        ToggleButton startSearchByRecent = findViewById(R.id.start_search_btn_byRecent);
-        startSearchByRecent.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            /**
-             * This method will execute the bluetooth search functionality for most recent courses when toggled on.
-             * @param buttonView
-             * @param isChecked boolean which represents state of startSearch ToggleButton
-             */
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-                if (isChecked) {
-                    /**
-                     * 1. Ask user if they want to resume a previous session or start a new session
-                     */
-                    startSession();
-                    /**
-                     * 2. Start bluetooth search
-                     */
-                    /**
-                     * 3. Filter Students with Common Courses (main Home Activity algorithm)
-                     *
-                     */
-                    filteredStudents = filterStudentsWithRecent(fakeBluetoothStudents);
-                    /**
-                     * 4. Display list of Students with Common Courses
-                     */
-                    // fill Student Item Adapter with list of students with common courses
-                    fillStudentItemAdapter(filteredStudents);
-                }
-
-                else {
-                    /**
-                     * 1. Stop bluetooth search
-                     */
-                    /**
-                     * 2. Ask user to save session with <session_name>
-                     */
-                    if (new_sess) {
-                        saveNewSession();
-                        new_sess = false;       // reset new_sess flag
-                    }
-                    /**
-                     * 3. Stop displaying list of students with common courses
-                     */
-                    // Clear Student Item Adapter
-                    fillStudentItemAdapter(new ArrayList<>());
-                }
-
-            }
-        });
-
     }
 
     /**
@@ -373,7 +250,7 @@ public class HomeActivity extends AppCompatActivity {
     /**
      * A.1. Ask user if they want to resume a previous session or start a new session
      */
-    public void startSession() {
+    public void createNewContactDialog() {
         dialogBuilder = new AlertDialog.Builder(this);
         final View start_session = getLayoutInflater().inflate(R.layout.start_session, null);
 
@@ -401,7 +278,6 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 currSession = new Session(new ArrayList<>());   // start new blank Session
-                new_sess = true;
 
                 dialog.dismiss();                               // close start_session dialog
             }
@@ -409,138 +285,21 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     /**
-     * B.1. Ask user if they want to resume a previous session or start a new session
-     */
-    public void saveNewSession() {
-        dialogBuilder = new AlertDialog.Builder(this);
-        final View stop_session = getLayoutInflater().inflate(R.layout.stop_session, null);
-
-        // Create and show start_session contact dialog
-        dialogBuilder.setView(stop_session);
-        dialog = dialogBuilder.create();
-        dialog.show();
-
-        /**
-         * When new_session Button is clicked, BoF will start a new blank session
-         */
-        Button name_session = (Button) stop_session.findViewById(R.id.name_session_btn);
-        name_session.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                EditText name = stop_session.findViewById(R.id.name_session_edittext);
-                currSession.setName(name.getText().toString());                         // name session
-
-                dialog.dismiss();                                                       // close start_session dialog
-            }
-        });
-    }
-
-    /**
      * A.3. Filter Students with Common Courses (main Home Activity algorithm)
-     * @param bluetoothStudents
+     * @param allStudents
      * @return List<Student> of students who've taken a course in common with myUser
      */
-    public List<Student> filterStudentsWithCommonCourses(List<Student> bluetoothStudents) {
+    public List<Student> filterStudentsWithCommonCourses(List<Student> allStudents) {
         // Map which records number of common courses each student takes with myUser
-        Map<Student, Double> frequencyStudents = new HashMap<>();
+        Map<Student, Integer> frequencyStudents = new HashMap<>();
 
         // Count number of common courses each student takes with myUser
-        for (Student student : bluetoothStudents) {
-
-            double freq = 0;        // Initialize frequency level
-            for (Course course : student.getCourses())
-                for (Course c : myUser.getCourses())
-                    if (course.equals(c))
-                        freq++;
-
-            // Add to frequency map if there is a course in common with student and myUser
-            if (freq > 0)
-                frequencyStudents.put(student, freq);
-
-        }
-
-        // Sort frequency map by value
-        Map<Student, Double> frequencyStudents_sorted = sortByValue(frequencyStudents);
-
-        // Log frequency map student name and common course frequency
-        for (Map.Entry<Student, Double> entry : frequencyStudents_sorted.entrySet())
-            Log.i("HashMap", "key=" + entry.getKey().getFirstName() + ", value=" + entry.getValue());
-
-        return new ArrayList<>(frequencyStudents_sorted.keySet());
-    }
-
-    /**
-     * Filter Students with Common Courses with "prioritize small classes" priority
-     * @param students
-     * @return
-     */
-    public List<Student> filterSmallCourse(List<Student> students){
-
-        // Map of course size with weights in filter Small Course algorithm
-        Map<String, Double> courseSizeWeights = new HashMap<>();
-        courseSizeWeights.put("tiny", 1.00);
-        courseSizeWeights.put("small", 0.33);
-        courseSizeWeights.put("medium", 0.18);
-        courseSizeWeights.put("large", 0.10);
-        courseSizeWeights.put("huge", 0.06);
-        courseSizeWeights.put("gigantic", 0.03);
-
-        // Map which records Small Course algorithm score each student has in comparison with myUser
-        Map<Student,Double> map = new HashMap<>();
-
-        for(Student stu:students) {
-
-            double score = 0.0;     // Initialize frequency level
-            for (Course course: stu.getCourses())
-                for (Course c: myUser.getCourses())
-                    if (course.equals(c))
-                        score += courseSizeWeights.get(course.getCourseSize());
-
-            // Add score to map if there is a course in common with student and myUser
-            if (score > 0)
-                map.put(stu, score);
-
-        }
-
-        // Sort score map by value
-        Map<Student,Double> rtmap = sortByValue(map);
-
-        // Log each key-value pair in map of student name and Small Course score
-        for (Map.Entry<Student, Double> entry : rtmap.entrySet())
-            Log.i("HashMap", "key=" + entry.getKey().getFirstName() + ", value=" + entry.getValue());
-
-        return new ArrayList<>(rtmap.keySet());         // Return ArrayList of students sorted in Small Course algorithm order
-    }
-
-    /**
-     * Filter Students with Common Courses with "this quarter only" priority
-     * @param bluetoothStudents
-     * @return
-     */
-    public List<Student> filterStudentsWithThisQuarter(List<Student> bluetoothStudents) {
-        // Map which records number of common courses each student takes with myUser in this quarter
-        Map<Student, Double> frequencyStudents = new HashMap<>();
-
-        String year = "2022", quarter = "Winter";   // This quarter
-
-        // Traverse all Student objects
-        for (Student student : bluetoothStudents) {
-
-            double freq = 0; // set frequency level
+        for (Student student : allStudents) {
+            int freq = 0;
             for (Course course : student.getCourses()) {
-                //Traverse all the courses of the current student and judge the repetition rate of
-                // your own courses
-                /** I think this part can be written in this way
-                if(myUser.getCourses().contains(course)) {
-                    if(course.getCourseSize().equals(courseSize))
-                        freq++;
-                } **/
                 for (Course c : myUser.getCourses()) {
-                    if(course.equals(c)) {
-                        if(course.getYear().equals(year) && course.getQuarter().equals(quarter)) {
-                            freq++;
-                        }
-                    }
+                    if (course.equals(c))
+                        freq++;
                 }
             }
 
@@ -550,94 +309,35 @@ public class HomeActivity extends AppCompatActivity {
         }
 
         // Sort frequency map by value
-        Map<Student, Double> frequencyStudents_sorted = sortByValue(frequencyStudents);
-
-        // Log frequency map student name and common course frequency for this quarter
-        for (Map.Entry<Student, Double> entry : frequencyStudents_sorted.entrySet())
-            Log.i("HashMap", "key=" + entry.getKey().getFirstName() + ", value=" + entry.getValue());
-
-        return new ArrayList<>(frequencyStudents_sorted.keySet());
-    }
-
-
-    public List<Student> filterStudentsWithRecent(List<Student> bluetoothStudents) {
-        // Map which records recency algorithm score each student has in comparison with myUser
-        Map<Student, Double> frequencyStudents = new HashMap<>();
-
-        String year2022 = "2022", year2021 = "2021", year2020 = "2020";
-        String winterQuarter = "Winter", fallQuarter = "Fall", summerQuarter = "Summer", springQuarter = "Spring";
-
-        // Map which records recency algorithm score of each quarter and year
-        Map<String, Double> recencyMap = new HashMap<>();
-        recencyMap.put(winterQuarter+year2022, 0.0);      // This quarter
-        recencyMap.put(fallQuarter+year2021, 5.0);        // A quarter ago (Fall '21)
-        recencyMap.put(summerQuarter+year2021, 4.0);      // 2 quarters ago (Summer '21)
-        recencyMap.put(springQuarter+year2021, 3.0);      // 3 quarters ago (Spring '21)
-        recencyMap.put(winterQuarter+year2021, 2.0);      // 4 quarters ago (Winter '21)
-        recencyMap.put(fallQuarter+year2020, 1.0);        // 5 quarters ago (Fall '20)
-                                                                // Else too old, no added score
-
-        // Traverse all Student objects
-        for (Student student : bluetoothStudents) {
-
-            double freq = 0; // set frequency level
-            for (Course course : student.getCourses()) {
-                // Traverse all the courses of the current student and judge the repetition rate of
-                // your own courses
-                for (Course c : myUser.getCourses()) {
-                    if (course.equals(c)) {
-                        String quarter_year = course.getQuarter()+course.getYear();     // Quarter and year of current course
-
-                        // If course has a quarter and year within recencyMap, add recency score to current Student
-                        if (recencyMap.containsKey(quarter_year))
-                            freq += recencyMap.get(quarter_year);
-                    }
-                }
-            }
-
-            // Add to frequency map if there is a course in common with student and myUser
-            if (freq > 0)
-                frequencyStudents.put(student, freq);
-        }
-
-        // Sort frequency map by value
-        Map<Student, Double> frequencyStudents_sorted = sortByValue(frequencyStudents);
+        Map<Student, Integer> frequencyStudents_sorted = sortByValue(frequencyStudents);
 
         // Log frequency map student name and common course frequency
-        for (Map.Entry<Student, Double> entry : frequencyStudents_sorted.entrySet())
+        for (Map.Entry<Student, Integer> entry : frequencyStudents_sorted.entrySet())
             Log.i("HashMap", "key=" + entry.getKey().getFirstName() + ", value=" + entry.getValue());
 
         return new ArrayList<>(frequencyStudents_sorted.keySet());
     }
-
-
-
-
-
-
-
-
 
     /**
      * Helper function to sort HashMap by values
      * @param freq
      * @return Map sorted by values
      */
-    public Map<Student, Double> sortByValue(Map<Student, Double> freq) {
+    public Map<Student, Integer> sortByValue(Map<Student, Integer> freq) {
         // Create a linked list from elements of HashMap
-        List<Map.Entry<Student, Double>> linkedFreq = new LinkedList<>(freq.entrySet());
+        List<Map.Entry<Student, Integer>> linkedFreq = new LinkedList<>(freq.entrySet());
 
         // Sort the linked list
-        Collections.sort(linkedFreq, new Comparator<Map.Entry<Student, Double>>() {
+        Collections.sort(linkedFreq, new Comparator<Map.Entry<Student, Integer>>() {
             @Override
-            public int compare(Map.Entry<Student, Double> freq1, Map.Entry<Student, Double> freq2) {
+            public int compare(Map.Entry<Student, Integer> freq1, Map.Entry<Student, Integer> freq2) {
                 return freq2.getValue().compareTo(freq1.getValue());
             }
         });
 
         // Convert sorted linked list to HashMap
-        Map<Student, Double> freq_sorted = new LinkedHashMap<>();
-        for (Map.Entry<Student, Double> entry : linkedFreq)
+        Map<Student, Integer> freq_sorted = new LinkedHashMap<>();
+        for (Map.Entry<Student, Integer> entry : linkedFreq)
             freq_sorted.put(entry.getKey(), entry.getValue());
 
         return freq_sorted;
@@ -792,9 +492,207 @@ public class HomeActivity extends AppCompatActivity {
         Intent intent = new Intent(this, SessionActivity.class);
         startActivity(intent);
     }
+
+
+
+    // From here is the Nearby Code developed by me(Vishvesh). I'm just dumping it all here so that I can pull
+    // the ones wherever I see a need and use them.
+
+    // Callbacks for receiving payloads
+    private final PayloadCallback payloadCallback =
+            new PayloadCallback() {
+                @Override
+                public void onPayloadReceived(String endpointId, Payload payload) {
+                    received_text = new String(payload.asBytes(), UTF_8);
+                }
+
+                @Override
+                public void onPayloadTransferUpdate(String endpointId, PayloadTransferUpdate update) {
+                    if (update.getStatus() == Status.SUCCESS && received_text != null) {
+                        finishRound();
+                    }
+                }
+            };
+
+    // Callbacks for finding other devices
+    private final EndpointDiscoveryCallback endpointDiscoveryCallback =
+            new EndpointDiscoveryCallback() {
+                @Override
+                public void onEndpointFound(String endpointId, DiscoveredEndpointInfo info) {
+                    //onEndpointFound: endpoint found, connecting
+                    connectionsClient.requestConnection(profileName, endpointId, connectionLifecycleCallback);
+                }
+
+                @Override
+                public void onEndpointLost(String endpointId) {}
+            };
+
+    // Callbacks for connections to other devices
+    private final ConnectionLifecycleCallback connectionLifecycleCallback =
+            new ConnectionLifecycleCallback() {
+                @Override
+                public void onConnectionInitiated(String endpointId, ConnectionInfo connectionInfo) {
+                    // onConnectionInitiated: accepting connection
+                    connectionsClient.acceptConnection(endpointId, payloadCallback);
+                    classmateName = connectionInfo.getEndpointName();
+                }
+
+                @Override
+                public void onConnectionResult(String endpointId, ConnectionResolution result) {
+                    if (result.getStatus().isSuccess()) {
+                        // onConnectionResult: connection successful
+
+                        connectionsClient.stopDiscovery();
+                        connectionsClient.stopAdvertising();
+
+                        classmateEndpointId = endpointId;
+                        setclassmateName(classmateName);
+                        setStatusText("Status: Connected");
+                        setButtonState(true);
+                    } else {
+                        Toast.makeText(HomeActivity.this, "onConnectionResult: connection failed", Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                @Override
+                public void onDisconnected(String endpointId) {
+                    // onDisconnected: disconnected from the other classmate
+                    resetGame();
+                }
+            };
+
+    @Override
+    protected void onStop() {
+        connectionsClient.stopAllEndpoints();
+        resetGame();
+
+        super.onStop();
+    }
+
+    /** Finds an opponent to play the game with using Nearby Connections. */
+    public void findOpponent(View view) {
+        startAdvertising();
+        startDiscovery();
+        setStatusText("Status: Searching");
+    }
+
+    /** Disconnects from the opponent and reset the UI. */
+    public void disconnect(View view) {
+        connectionsClient.disconnectFromEndpoint(classmateEndpointId);
+        resetGame();
+    }
+
+    /** Starts looking for other players using Nearby Connections. */
+    private void startDiscovery() {
+        // Note: Discovery may fail. To keep this demo simple, we don't handle failures.
+        connectionsClient.startDiscovery(
+                getPackageName(), endpointDiscoveryCallback,
+                new DiscoveryOptions.Builder().setStrategy(STRATEGY).build());
+    }
+
+    /** Broadcasts our presence using Nearby Connections so other players can find us. */
+    private void startAdvertising() {
+        // Note: Advertising may fail. To keep this demo simple, we don't handle failures.
+        connectionsClient.startAdvertising(
+                profileName, getPackageName(), connectionLifecycleCallback,
+                new AdvertisingOptions.Builder().setStrategy(STRATEGY).build());
+    }
+
+    /** Wipes all game state and updates the UI accordingly. */
+    private void resetGame() {
+        classmateEndpointId = null;
+        classmateName = null;
+        received_text = null;
+
+        setclassmateName("");
+        setStatusText("Status: Disconnected. Not accepting connections");
+    }
+
+    /** Sends the user's selection of rock, paper, or scissors to the opponent. */
+    private void sendProfileData() {
+        connectionsClient.sendPayload(
+                classmateEndpointId, Payload.fromBytes(profileName.getBytes(UTF_8)));
+
+        setStatusText("Profile name sent");
+    }
+
+    /** Enables/disables buttons depending on the connection status. */
+    private void setButtonState(boolean connected) {
+        searchButton.setEnabled(true);
+        searchButton.setVisibility(connected ? View.GONE : View.VISIBLE);
+        disconnectButton.setVisibility(connected ? View.VISIBLE : View.GONE);
+
+        setGameChoicesEnabled(connected);
+    }
+
+    /** Determines the winner and update game state/UI after both players have chosen. */
+    private void finishRound() {
+        if (myChoice.beats(received_text)) {
+            // Win!
+            setStatusText(getString(R.string.win_message, myChoice.name(), received_text.name()));
+            myScore++;
+        } else if (myChoice == received_text) {
+            // Tie, same choice by both players
+            setStatusText(getString(R.string.tie_message, myChoice.name()));
+        } else {
+            // Loss
+            setStatusText(getString(R.string.loss_message, myChoice.name(), received_text.name()));
+            opponentScore++;
+        }
+
+        myChoice = null;
+        received_text = null;
+
+        updateScore(myScore, opponentScore);
+
+        // Ready for another round
+        setGameChoicesEnabled(true);
+    }
+
+    /** Shows a status message to the user. */
+    private void setStatusText(String text) {
+        statusText.setText(text);
+    }
+
+    /** Updates the opponent name on the UI. */
+    private void setclassmateName(String classmateName) {
+        connected_name_textview.setText(getString(R.string.opponent_name, classmateName));
+    }
+
+    /** Updates the running score ticker. */
+    private void updateScore(int myScore, int opponentScore) {
+        scoreText.setText(getString(R.string.game_score, myScore, opponentScore));
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 }
-
-
 
 
 /**
@@ -811,7 +709,7 @@ class Data {
      */
     public static List<Student> fab_students() {
         // All students is our fabricated list of students
-        List<Student> fakeBluetoothStudents = new ArrayList<>();
+        List<Student> allStudents = new ArrayList<>();
 
         // Student Zehua
         List<Course> zehua_courses = new ArrayList<>();
@@ -827,16 +725,13 @@ class Data {
         List<Course> vishvesh_courses = new ArrayList<>();
 
         vishvesh_courses.add(new Course("2022", "Winter", "CSE", "110", "large"));
-        vishvesh_courses.add(new Course("2020", "Fall", "CSE", "12", "large"));
-
 
         Student vishvesh = new Student("vishvesh", "vishesh.png", vishvesh_courses, false);
 
         // Student Derek
         List<Course> derek_courses = new ArrayList<>();
 
-        derek_courses.add(new Course("2022", "Winter", "COGS", "10", "tiny"));
-        derek_courses.add(new Course("2021", "Fall", "CSE", "100", "large"));
+        derek_courses.add(new Course("2022", "Winter", "COGS", "10", "huge"));
 
         Student derek = new Student("derek", "derek.png", derek_courses, false);
 
@@ -856,14 +751,14 @@ class Data {
 
         Student ivy = new Student("ivy", "ivy.png", ivy_courses, false);
 
-        // Add all Students into fakeBluetoothStudents
-        fakeBluetoothStudents.add(zehua);
-        fakeBluetoothStudents.add(vishvesh);
-        fakeBluetoothStudents.add(derek);
-        fakeBluetoothStudents.add(huaner);
-        fakeBluetoothStudents.add(ivy);
+        // Add all Students into allStudents
+        allStudents.add(zehua);
+        allStudents.add(vishvesh);
+        allStudents.add(derek);
+        allStudents.add(huaner);
+        allStudents.add(ivy);
 
-        return fakeBluetoothStudents;
+        return allStudents;
     }
 
     /**
@@ -873,7 +768,7 @@ class Data {
      */
     public static List<Session> fab_sessions() {
         // All sessions is our fabricated list of students
-        List<Session> fakeSessions = new ArrayList<>();
+        List<Session> allSessions = new ArrayList<>();
 
         // All students is our fabricated list of students
         List<Student> students1 = new ArrayList<>();
@@ -891,7 +786,7 @@ class Data {
         // Student Derek
         List<Course> derek_courses = new ArrayList<>();
 
-        derek_courses.add(new Course("2022", "Winter", "COGS", "10", "tiny"));
+        derek_courses.add(new Course("2022", "Winter", "COGS", "10", "huge"));
 
         Student derek = new Student("derek", "derek.png", derek_courses, false);
 
@@ -928,9 +823,11 @@ class Data {
         Session session2 = new Session("session 2", students2);
 
         // Add sessions to allSessions
-        fakeSessions.add(session1);
-        fakeSessions.add(session2);
+        allSessions.add(session1);
+        allSessions.add(session2);
 
-        return fakeSessions;
+        return allSessions;
     }
+
+    
 }
