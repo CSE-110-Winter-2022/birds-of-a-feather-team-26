@@ -40,6 +40,22 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.google.android.gms.nearby.Nearby;
+import com.google.android.gms.nearby.connection.AdvertisingOptions;
+import com.google.android.gms.nearby.connection.ConnectionInfo;
+import com.google.android.gms.nearby.connection.ConnectionLifecycleCallback;
+import com.google.android.gms.nearby.connection.ConnectionResolution;
+import com.google.android.gms.nearby.connection.ConnectionsClient;
+import com.google.android.gms.nearby.connection.DiscoveredEndpointInfo;
+import com.google.android.gms.nearby.connection.DiscoveryOptions;
+import com.google.android.gms.nearby.connection.EndpointDiscoveryCallback;
+import com.google.android.gms.nearby.connection.Payload;
+import com.google.android.gms.nearby.connection.PayloadCallback;
+import com.google.android.gms.nearby.connection.PayloadTransferUpdate;
+import com.google.android.gms.nearby.connection.PayloadTransferUpdate.Status;
+import com.google.android.gms.nearby.connection.Strategy;
+
+
 /**
  * DESCRIPTION
  * The Home Activity module is the Birds of a Feather homepage and takes care of the application's main functionality.
@@ -94,6 +110,18 @@ public class HomeActivity extends AppCompatActivity {
     private boolean new_sess = false;
 
     private String search_filter;
+    
+    
+    // Our handle to Nearby Connections
+    private ConnectionsClient connectionsClient;
+    // The text received using Nearby
+    private String received_text;
+    private String profileName;
+    private String classmateName;
+    private String[] classmateNames;
+    private String classmateEndpointId;
+    private static final Strategy STRATEGY = Strategy.P2P_STAR;
+    
 
     /**
      * Home Activity onCreate
@@ -102,7 +130,11 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
+        
+        // nearby connections client setup
+        connectionsClient = Nearby.getConnectionsClient(this);
+        resetNearby();
+        
         // Connect to BOF database
         db = AppDatabase.singleton(this);
 
@@ -154,7 +186,9 @@ public class HomeActivity extends AppCompatActivity {
                      * Set searching filter
                      */
                     search_filter = "default";
-
+                    
+                    //findClassmates(findViewById(android.R.id.content));
+                    
                     /**
                      * 1. Ask user if they want to resume a previous session or start a new session
                      */
@@ -171,6 +205,7 @@ public class HomeActivity extends AppCompatActivity {
                     /**
                      * 1. Stop bluetooth search (this is automatic with our bluetooth search functionality, I believe)
                      */
+                    disconnect(findViewById(android.R.id.content));
 
                     /**
                      * 2. Ask user to save session with <session_name> if new session is created
@@ -830,6 +865,153 @@ public class HomeActivity extends AppCompatActivity {
         Intent intent = new Intent(this, SessionActivity.class);
         startActivity(intent);
     }
+    
+    // Callbacks for receiving payloads
+    private final PayloadCallback payloadCallback =
+            new PayloadCallback() {
+                @Override
+                public void onPayloadReceived(String endpointId, Payload payload) {
+                    received_text = new String(payload.asBytes(), UTF_8);
+                }
+
+                @Override
+                public void onPayloadTransferUpdate(String endpointId, PayloadTransferUpdate update) {
+                    if (update.getStatus() == Status.SUCCESS && received_text != null) {
+                        finishRound();
+                    }
+                }
+            };
+
+    // Callbacks for finding other devices
+    private final EndpointDiscoveryCallback endpointDiscoveryCallback =
+            new EndpointDiscoveryCallback() {
+                @Override
+                public void onEndpointFound(String endpointId, DiscoveredEndpointInfo info) {
+                    //onEndpointFound: endpoint found, connecting
+                    connectionsClient.requestConnection(profileName, endpointId, connectionLifecycleCallback);
+                }
+
+                @Override
+                public void onEndpointLost(String endpointId) {}
+            };
+
+    // Callbacks for connections to other devices
+    private final ConnectionLifecycleCallback connectionLifecycleCallback =
+            new ConnectionLifecycleCallback() {
+                @Override
+                public void onConnectionInitiated(String endpointId, ConnectionInfo connectionInfo) {
+                    // onConnectionInitiated: accepting connection
+                    connectionsClient.acceptConnection(endpointId, payloadCallback);
+                    classmateName = connectionInfo.getEndpointName();
+                }
+
+                @Override
+                public void onConnectionResult(String endpointId, ConnectionResolution result) {
+                    if (result.getStatus().isSuccess()) {
+                        // onConnectionResult: connection successful
+
+                        connectionsClient.stopDiscovery();
+                        connectionsClient.stopAdvertising();
+
+                        classmateEndpointId = endpointId;
+                        setclassmateName(classmateName);
+                        setStatusText("Status: Connected");
+
+                    } else {
+                        Toast.makeText(HomeActivity.this, "onConnectionResult: connection failed", Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                @Override
+                public void onDisconnected(String endpointId) {
+                    // onDisconnected: disconnected from the other classmate
+                    resetNearby();
+                }
+            };
+
+    @Override
+    protected void onStop() {
+        connectionsClient.stopAllEndpoints();
+        resetNearby();
+
+        super.onStop();
+    }
+
+    /** Finds an opponent to play the game with using Nearby Connections. */
+    public void findClassmates(View view) {
+        startAdvertising();
+        startDiscovery();
+        setStatusText("Status: Searching");
+    }
+
+    /** Disconnects from the opponent and reset the UI. */
+    public void disconnect(View view) {
+        connectionsClient.disconnectFromEndpoint(classmateEndpointId);
+        resetNearby();
+    }
+
+    /** Starts looking for other players using Nearby Connections. */
+    private void startDiscovery() {
+        // Note: Discovery may fail. To keep this demo simple, we don't handle failures.
+        connectionsClient.startDiscovery(
+                getPackageName(), endpointDiscoveryCallback,
+                new DiscoveryOptions.Builder().setStrategy(STRATEGY).build());
+    }
+
+    /** Broadcasts our presence using Nearby Connections so other players can find us. */
+    private void startAdvertising() {
+        // Note: Advertising may fail. To keep this demo simple, we don't handle failures.
+        connectionsClient.startAdvertising(
+                profileName, getPackageName(), connectionLifecycleCallback,
+                new AdvertisingOptions.Builder().setStrategy(STRATEGY).build());
+    }
+
+    /** Wipes all game state and updates the UI accordingly. */
+    private void resetNearby() {
+        classmateEndpointId = null;
+        classmateName = null;
+        received_text = null;
+
+        setclassmateName("");
+        setStatusText("Status: Disconnected. Not accepting connections");
+    }
+
+    /** Sends the user's selection of rock, paper, or scissors to the opponent. */
+    private void sendProfileData() {
+        connectionsClient.sendPayload(
+                classmateEndpointId, Payload.fromBytes(profileName.getBytes(UTF_8)));
+
+        setStatusText("Profile name sent");
+    }
+
+
+    /** Finishes the particular round of searching for classmates */
+    private void finishRound() {
+        received_text = null;
+    }
+
+    /** Shows a status message to the user. */
+    private void setStatusText(String text) {
+        Toast.makeText(HomeActivity.this, "Status: Searching", Toast.LENGTH_LONG).show();
+    }
+
+    /** Updates the opponent name on the UI. */
+    private void setclassmateName(String classmateName) {
+        int length = classmateNames.length + 1;
+
+        String[] new_array = new String[length];
+
+        for(int i = 0; i< length + 1; i++){
+            new_array[i] = classmateNames[i];
+        }
+        new_array[length] = classmateName;
+
+        classmateNames = new_array;
+
+    }
+    
+    
+    
 }
 
 
