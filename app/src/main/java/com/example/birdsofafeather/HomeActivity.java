@@ -939,15 +939,23 @@ public class HomeActivity extends AppCompatActivity {
 
     /** Finds an opponent to play the game with using Nearby Connections. */
     public void findClassmates(View view) {
+       try{
         startAdvertising();
         startDiscovery();
         setStatusText("Status: Searching");
+       }
+        catch(Exception e){
+        }
     }
 
     /** Disconnects from the opponent and reset the UI. */
     public void disconnect(View view) {
+        try{
         connectionsClient.disconnectFromEndpoint(classmateEndpointId);
         resetNearby();
+        }
+        catch(Exception e){
+        }
     }
 
     /** Starts looking for other players using Nearby Connections. */
