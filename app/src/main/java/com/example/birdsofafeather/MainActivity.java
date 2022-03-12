@@ -36,7 +36,90 @@ import com.example.birdsofafeather.model.db.AppDatabase;
  **/
 
 public class MainActivity extends AppCompatActivity {
+    
+    private static final String TAG = "BirdsOfAFeather";
 
+    private static final String[] REQUIRED_PERMISSIONS;
+    static {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            REQUIRED_PERMISSIONS =
+                    new String[] {
+                            Manifest.permission.BLUETOOTH_SCAN,
+                            Manifest.permission.BLUETOOTH_ADVERTISE,
+                            Manifest.permission.BLUETOOTH_CONNECT,
+                            Manifest.permission.ACCESS_WIFI_STATE,
+                            Manifest.permission.CHANGE_WIFI_STATE,
+                            Manifest.permission.ACCESS_COARSE_LOCATION,
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                    };
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            REQUIRED_PERMISSIONS =
+                    new String[] {
+                            Manifest.permission.BLUETOOTH,
+                            Manifest.permission.BLUETOOTH_ADMIN,
+                            Manifest.permission.ACCESS_WIFI_STATE,
+                            Manifest.permission.CHANGE_WIFI_STATE,
+                            Manifest.permission.ACCESS_COARSE_LOCATION,
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                    };
+        } else {
+            REQUIRED_PERMISSIONS =
+                    new String[] {
+                            Manifest.permission.BLUETOOTH,
+                            Manifest.permission.BLUETOOTH_ADMIN,
+                            Manifest.permission.ACCESS_WIFI_STATE,
+                            Manifest.permission.CHANGE_WIFI_STATE,
+                            Manifest.permission.ACCESS_COARSE_LOCATION,
+                    };
+        }
+    }
+
+    private static final int REQUEST_CODE_REQUIRED_PERMISSIONS = 1;
+    
+    
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if (!hasPermissions(this, REQUIRED_PERMISSIONS)) {
+            requestPermissions(REQUIRED_PERMISSIONS, REQUEST_CODE_REQUIRED_PERMISSIONS);
+        }
+    }
+
+    /** Returns true if the app was granted all the permissions. Otherwise, returns false. */
+    private static boolean hasPermissions(Context context, String... permissions) {
+        for (String permission : permissions) {
+            if (ContextCompat.checkSelfPermission(context, permission)
+                    != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /** Handles user acceptance (or denial) of our permission request. */
+    @CallSuper
+    @Override
+    public void onRequestPermissionsResult(
+            int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode != REQUEST_CODE_REQUIRED_PERMISSIONS) {
+            return;
+        }
+
+        int i = 0;
+        for (int grantResult : grantResults) {
+            if (grantResult == PackageManager.PERMISSION_DENIED) {
+                Log.i(TAG, "Failed to request the permission " + permissions[i]);
+                Toast.makeText(this, "Missing Permissions! ", Toast.LENGTH_LONG).show();
+                return;
+            }
+            i++;
+        }
+    }
+    
+    
 
     /**
      * This method creates the Main Activity
